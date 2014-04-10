@@ -1,7 +1,6 @@
 package io;
 
-import java.util.logging.Logger;
-
+import android.util.Log;
 import io.packet.ServerPacket;
 import io.packet.server.RegisterPacket;
 import io.packet.server.LoginPacket;
@@ -10,8 +9,8 @@ import config.Config;
 public class Client extends TCPClient {
 	private boolean logged = false;
 	
-	public Client() throws Exception {
-		super(Config.host, Config.port);		
+	public Client() {
+		super(Config.host, Config.port);
 	}
 
 	public void recv(ServerPacket clientPacket) {
@@ -19,14 +18,14 @@ public class Client extends TCPClient {
 		case REGISTER:
 		case LOGIN:
 			if (isLogged()) {
-				System.out.println("Recieved auth packets when already logged in");
+				Log.e("Recv", "Recieved auth packets when already logged in");
 				System.exit(1);
 			}
 			break;
 		default:
 			if (!isLogged()) {
-				System.out.println("Recieved packets when not logged in");
-				System.exit(1);				
+				Log.e("Recv", "Recieved packets when not logged in");
+				System.exit(1);	
 			}
 			break;
 		}
@@ -34,13 +33,13 @@ public class Client extends TCPClient {
 		switch (clientPacket.getType())
 		{
 		case REGISTER:
-			RegisterPacket register = (RegisterPacket)clientPacket;			
+			RegisterPacket register = (RegisterPacket)clientPacket;	
 			switch (register.status) {
 			case SUCCESS:
-				System.out.println("Successfully registered in");
-				return;				
+				Log.d("Recv", "Successfully registered in");
+				return;	
 			case FAILURE:
-				System.out.println("Username has already being used");
+				Log.w("Recv", "Username has already being used");
 				return;
 			}
 			break;
@@ -48,11 +47,11 @@ public class Client extends TCPClient {
 			LoginPacket login = (LoginPacket)clientPacket;
 			switch (login.status) {
 			case SUCCESS:
-				System.out.println("Successfully logged in");
+				Log.d("Recv", "Successfully logged in");
 				logged = true;
 				return;
 			case FAILURE:
-				System.out.println("Wrong username or password");
+				Log.w("Recv", "Wrong username or password");
 				return;
 			}
 			break;
