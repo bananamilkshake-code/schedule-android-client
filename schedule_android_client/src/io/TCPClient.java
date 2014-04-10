@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import android.util.Log;
 import io.packet.ServerPacket;
 import io.packet.ClientPacket;
 
@@ -24,7 +25,7 @@ public abstract class TCPClient
 	private String host;
 	private int port;
 
-	public TCPClient(String host, int port) throws Exception {
+	public TCPClient(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
@@ -34,26 +35,21 @@ public abstract class TCPClient
 			disconnect();
 	}
 
-	public void connect() {
-		while (!connected) {
-			try {
-				socket = new Socket(host, port);
-				outToServer = new DataOutputStream(socket.getOutputStream());
-				inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	public void try_connect() {
+		if (connected) 
+			return;
+	
+		try {
+			socket = new Socket(host, port);
+			outToServer = new DataOutputStream(socket.getOutputStream());
+			inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-				reader = new StreamReader(inFromServer, this);
-				reader.start();
+			reader = new StreamReader(inFromServer, this);
+			reader.start();
 
-				connected = true;
-			} catch (IOException e) {
-				System.out.println("No server connection");
-				try {
-					Thread.sleep(TIMEOUT);
-				} catch (InterruptedException sleepException) {
-					System.out.print("Error on setting this thread to sleep");
-					sleepException.printStackTrace();
-				}
-			}		
+			connected = true;
+		} catch (IOException e) {
+			Log.w("TCPClient connect", "Server connection failed", e);
 		}
 	}
 
@@ -66,23 +62,21 @@ public abstract class TCPClient
 
 			socket.close();
 		} catch (IOException e) {
-			System.out.println("Error on disconnecting from server");
-			e.printStackTrace();
+			Log.w("TCP disconnect", "Error on disconnecting from server", e);
 		}
 		finally {
 			connected = false;
-			connect();
 		}
-	}
-
-	public boolean isConnected() {
-		return connected;
 	}
 
 	public void send(ClientPacket packet) throws Exception {
 		outToServer.writeByte((byte)(packet.getType().ordinal()));
 		outToServer.writeShort(packet.getSize());
 		packet.write(outToServer);
+	}
+
+	public boolean isConnected() {
+		return connected;
 	}
 
 	public abstract void recv(ServerPacket packet);

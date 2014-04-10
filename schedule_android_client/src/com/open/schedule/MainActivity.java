@@ -26,10 +26,9 @@ public class MainActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		
+
 		new ConnectionTask().execute("");
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,14 +70,25 @@ public class MainActivity extends ActionBarActivity {
 	{
 		@Override
 		protected Void doInBackground(String... params) {
-			try {
-				client = new Client();
-				client.connect();
-				Log.d("ServerConnection", "Connected");
-			} catch (Exception e) {
-				Log.e("ServerConnection", "Error on server connection", e);
+			while(true)
+			{
+				if (client == null)
+					client = new Client();
+
+				while(client.isConnected()); // Yuck!
+
+				client.try_connect();
+
+				if (!client.isConnected()) // Double Yuck!
+				{
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
-			return null;
 		}
 		
 	}
