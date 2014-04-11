@@ -1,16 +1,24 @@
 package io;
 
 import android.util.Log;
-import io.packet.ServerPacket;
-import io.packet.server.RegisterPacket;
-import io.packet.server.LoginPacket;
 import config.Config;
 
+import io.packet.ServerPacket;
+
+import io.packet.server.RegisterPacket;
+import io.packet.server.LoginPacket;
+
 public class Client extends TCPClient {	
+	private static final Client INSTANCE = new Client();
+	
 	private boolean logged = false;
 	
-	public Client() {
+	protected Client() {
 		super(Config.host, Config.port);
+	}
+	
+	public static Client getInstance() {
+		return INSTANCE;
 	}
 
 	public void recv(ServerPacket clientPacket) {
@@ -60,5 +68,9 @@ public class Client extends TCPClient {
 	
 	public boolean isLogged() {
 		return logged;
+	}
+	
+	public void authorise(String username, String password) {
+		INSTANCE.send(new io.packet.client.LoginPacket(username, password));
 	}
 }

@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
 	
-	private Client client = null;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,7 +24,26 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
-		new ConnectionTask().execute("");
+		new Thread() {
+			@Override
+			public void run() {
+				while(true)
+				{
+					while(Client.getInstance().isConnected()); // Yuck!
+
+					Client.getInstance().try_connect();
+
+					if (!Client.getInstance().isConnected()) // Double Yuck!
+					{
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}.start();
 	}
 
 	@Override
@@ -82,31 +99,23 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 		startActivity(loginIntent);
 	}
-
-	public class ConnectionTask extends AsyncTask<String, Void, Void> 
-	{
-		@Override
-		protected Void doInBackground(String... params) {
-			while(true)
-			{
-				if (client == null)
-					client = new Client();
 	
-				while(client.isConnected()); // Yuck!
+	private void connect() {
+		while(true)
+		{	
+			while(Client.getInstance().isConnected()); // Yuck!
 
-				client.try_connect();
+			Client.getInstance().try_connect();
 
-				if (!client.isConnected()) // Double Yuck!
-				{
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			if (!Client.getInstance().isConnected()) // Double Yuck!
+			{
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
-		
 	}
 }

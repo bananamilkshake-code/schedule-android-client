@@ -1,7 +1,6 @@
 package com.open.schedule;
 
 import io.Client;
-import io.packet.client.LoginPacket;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -141,8 +140,7 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+			new UserLoginTask().execute();
 		}
 	}
 
@@ -159,17 +157,13 @@ public class LoginActivity extends Activity {
 		// for very easy animations. If available, use these APIs to fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime);
+			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter() {
+			mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
+							mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 						}
 					});
 
@@ -191,15 +185,17 @@ public class LoginActivity extends Activity {
 	}
 
 	public class LoginActivityListener implements LoginListener {
-
 		@Override
 		public void loginEvent(LoginEvent event) {
+			showProgress(false);
+
 			switch (event.status) {
 			case SUCCESS:
 				finish();
 				break;
 			case FAILURE:
 				setAuthorisationFail();
+				showProgress(false);
 				break;
 			default:
 				break;
@@ -211,28 +207,18 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserLoginTask extends AsyncTask<Void, Void, Void> {
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected Void doInBackground(Void... params) {
+			if (!Client.getInstance().isConnected())
+				return null;
+			
 			String login = mEmailView.getText().toString();
 			String password = mPasswordView.getText().toString();
-			
-		//	Client.getInstance().send(new LoginPacket(login, password));
-			
-			return true;
-		}
 
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success) {
-				finish();
-			} else {
-				mPasswordView.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
+			Client.getInstance().authorise(login, password);
+			
+			return null;
 		}
 
 		@Override
