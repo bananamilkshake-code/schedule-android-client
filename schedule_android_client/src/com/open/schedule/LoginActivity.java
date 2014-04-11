@@ -1,5 +1,7 @@
 package com.open.schedule;
 
+import io.packet.client.LoginPacket;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import events.listeners.LoginListener;
+import events.objects.LoginEvent;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -149,6 +153,10 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	public void setAuthorisationFail() {
+		mPasswordView.setError(getString(R.string.error_invalid_auth));
+	}
+	
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -190,6 +198,23 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	public class LoginActivityListener implements LoginListener {
+
+		@Override
+		public void loginEvent(LoginEvent event) {
+			switch (event.status) {
+			case SUCCESS:
+				finish();
+				break;
+			case FAILURE:
+				setAuthorisationFail();
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
@@ -197,24 +222,12 @@ public class LoginActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
+			String login = mEmailView.getText().toString();
+			String password = mPasswordView.getText().toString();
+			
+			LoginPacket packet = new LoginPacket(login, password);
+			// send packet
+			
 			return true;
 		}
 

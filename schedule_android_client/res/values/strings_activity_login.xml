@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="title_activity_login">Sign in</string>
 
@@ -13,5 +13,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string android:id="@+id/action_register" android:layout_width="wrap_content" android:layout_height="wrap_content" name="action_register">Register</string>
+    <string android:id="@+id/error_invalid_password" android:layout_height="wrap_content" android:layout_width="wrap_content" name="error_invalid_auth">Wrong login or password</string>
 
 </resources>
