@@ -1,7 +1,7 @@
 package com.open.schedule;
 
+import io.Client;
 import io.packet.client.LoginPacket;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -225,8 +225,7 @@ public class LoginActivity extends Activity {
 			String login = mEmailView.getText().toString();
 			String password = mPasswordView.getText().toString();
 			
-			LoginPacket packet = new LoginPacket(login, password);
-			// send packet
+			Client.getInstance().send(new LoginPacket(login, password));
 			
 			return true;
 		}

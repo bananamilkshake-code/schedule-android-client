@@ -69,10 +69,15 @@ public abstract class TCPClient
 		}
 	}
 
-	public void send(ClientPacket packet) throws Exception {
-		outToServer.writeByte((byte)(packet.getType().ordinal()));
-		outToServer.writeShort(packet.getSize());
-		packet.write(outToServer);
+	public void send(ClientPacket packet) {
+		try {
+			outToServer.writeByte((byte)(packet.getType().ordinal()));
+			outToServer.writeShort(packet.getSize());
+			packet.write(outToServer);
+		} catch (IOException e) {
+			Log.w("TCPCLient", "Error on send", e);
+			disconnect();
+		}
 	}
 
 	public boolean isConnected() {

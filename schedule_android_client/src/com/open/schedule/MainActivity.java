@@ -18,8 +18,6 @@ import android.widget.Button;
 import android.os.Build;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
-
-	private Client client = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +33,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -94,14 +91,11 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		protected Void doInBackground(String... params) {
 			while(true)
 			{
-				if (client == null)
-					client = new Client();
+				while(Client.getInstance().isConnected()); // Yuck!
 
-				while(client.isConnected()); // Yuck!
+				Client.getInstance().try_connect();
 
-				client.try_connect();
-
-				if (!client.isConnected()) // Double Yuck!
+				if (!Client.getInstance().isConnected()) // Double Yuck!
 				{
 					try {
 						Thread.sleep(1000);

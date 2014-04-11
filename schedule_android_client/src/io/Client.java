@@ -7,9 +7,18 @@ import io.packet.server.LoginPacket;
 import config.Config;
 
 public class Client extends TCPClient {
+	private static Client INSTANCE = null;
+	
 	private boolean logged = false;
 	
-	public Client() {
+	public static Client getInstance() {
+		if (INSTANCE == null)
+			INSTANCE = new Client();
+		
+		return INSTANCE;
+	}
+	
+	private Client() {
 		super(Config.host, Config.port);
 	}
 
@@ -29,7 +38,7 @@ public class Client extends TCPClient {
 			}
 			break;
 		}
-		
+
 		switch (clientPacket.getType())
 		{
 		case REGISTER:
@@ -49,10 +58,8 @@ public class Client extends TCPClient {
 			case SUCCESS:
 				Log.d("Recv", "Successfully logged in");
 				logged = true;
-				return;
 			case FAILURE:
 				Log.w("Recv", "Wrong username or password");
-				return;
 			}
 			break;
 		default:
@@ -60,7 +67,7 @@ public class Client extends TCPClient {
 		}
 	}
 	
-	public boolean isLogged() {
-		return logged;
+	public static boolean isLogged() {
+		return INSTANCE.logged;
 	}
 }
