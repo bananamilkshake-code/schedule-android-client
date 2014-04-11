@@ -1,6 +1,5 @@
 package com.open.schedule;
 
-import io.Client;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -15,8 +14,13 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import events.listeners.LoginListener;
-import events.objects.LoginEvent;
+
+import events.listeners.EventListener;
+import events.objects.Event;
+import events.objects.EventWarehouse;
+
+import io.Client;
+import io.packet.server.LoginPacket;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -43,6 +47,8 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	
+	private LoginActivityListener loginListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,14 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
+		
+		loginListener = new LoginActivityListener();
+	}
+	
+	@Override
+	protected void onStop() {
+		 super.onStop();
+		 loginListener.shutdown();
 	}
 
 	@Override
@@ -184,22 +198,34 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public class LoginActivityListener implements LoginListener {
-		@Override
-		public void loginEvent(LoginEvent event) {
-			showProgress(false);
-
-			switch (event.status) {
-			case SUCCESS:
-				finish();
-				break;
-			case FAILURE:
-				setAuthorisationFail();
-				showProgress(false);
-				break;
-			default:
-				break;
+	public class LoginActivityListener implements EventListener {
+		public LoginActivityListener() {
+			super();
+			EventWarehouse.getInstance().addListener((EventListener)this, Event.Type.LOGIN);
+		}
+		
+		public void handle(Event event) {
+			switch (event.getType()) {
+			case LOGIN: {
+					showProgress(false);
+					LoginPacket.Status status = (LoginPacket.Status)event.getData();
+					switch (status) {
+					case SUCCESS:
+						finish();
+						break;
+					case FAILURE:
+						setAuthorisationFail();
+						break;
+					default:
+						break;
+					}
+				}
 			}
+			
+		}
+		
+		public final void shutdown() {
+			EventWarehouse.getInstance().removeListener((EventListener)this, Event.Type.LOGIN);
 		}
 	}
 	

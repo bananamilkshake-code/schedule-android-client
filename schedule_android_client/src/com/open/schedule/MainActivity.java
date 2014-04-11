@@ -4,7 +4,6 @@ import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -98,24 +97,5 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	private void openLoginActivity() {
 		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 		startActivity(loginIntent);
-	}
-	
-	private void connect() {
-		while(true)
-		{	
-			while(Client.getInstance().isConnected()); // Yuck!
-
-			Client.getInstance().try_connect();
-
-			if (!Client.getInstance().isConnected()) // Double Yuck!
-			{
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 }

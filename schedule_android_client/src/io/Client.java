@@ -2,9 +2,8 @@ package io;
 
 import android.util.Log;
 import config.Config;
-
+import events.objects.Event;
 import io.packet.ServerPacket;
-
 import io.packet.server.RegisterPacket;
 import io.packet.server.LoginPacket;
 
@@ -57,9 +56,12 @@ public class Client extends TCPClient {
 			case SUCCESS:
 				Log.d("Recv", "Successfully logged in");
 				logged = true;
+				break;
 			case FAILURE:
 				Log.w("Recv", "Wrong username or password");
+				break;
 			}
+			new Event(this, Event.Type.LOGIN, (Object)login.status);
 			break;
 		default:
 			break;
