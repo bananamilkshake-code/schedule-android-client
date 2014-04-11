@@ -4,6 +4,7 @@ import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.os.Build;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	private Client client = null;
 	
@@ -59,11 +62,30 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		return rootView;
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+			rootView.findViewById(R.id.btLogin).setOnClickListener((MainActivity)getActivity());
+			
+			return rootView;
 		}
+	}
+	
+	@Override
+	public void onClick(View view) {
+		switch(view.getId())
+		{
+		case R.id.btLogin:
+			openLoginActivity();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void openLoginActivity() {
+		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+		startActivity(loginIntent);
 	}
 
 	public class ConnectionTask extends AsyncTask<String, Void, Void> 

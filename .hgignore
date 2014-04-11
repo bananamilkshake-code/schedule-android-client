@@ -1,5 +1,10 @@
-# use glob syntax.
 syntax: glob
 
+schedule_android_client/bin
+appcompat_v7/bin
 .metadata
-bin
+
+*.class
+*.apk
+*.jar
+
