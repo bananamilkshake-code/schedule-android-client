@@ -6,19 +6,10 @@ import io.packet.server.RegisterPacket;
 import io.packet.server.LoginPacket;
 import config.Config;
 
-public class Client extends TCPClient {
-	private static Client INSTANCE = null;
-	
+public class Client extends TCPClient {	
 	private boolean logged = false;
 	
-	public static Client getInstance() {
-		if (INSTANCE == null)
-			INSTANCE = new Client();
-		
-		return INSTANCE;
-	}
-	
-	private Client() {
+	public Client() {
 		super(Config.host, Config.port);
 	}
 
@@ -67,7 +58,7 @@ public class Client extends TCPClient {
 		}
 	}
 	
-	public static boolean isLogged() {
-		return INSTANCE.logged;
+	public boolean isLogged() {
+		return logged;
 	}
 }

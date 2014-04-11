@@ -25,13 +25,6 @@ import events.objects.LoginEvent;
  */
 public class LoginActivity extends Activity {
 	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
-	/**
 	 * The default email to populate the email field with.
 	 */
 	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
@@ -186,8 +179,7 @@ public class LoginActivity extends Activity {
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
+							mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 						}
 					});
 		} else {
@@ -225,7 +217,7 @@ public class LoginActivity extends Activity {
 			String login = mEmailView.getText().toString();
 			String password = mPasswordView.getText().toString();
 			
-			Client.getInstance().send(new LoginPacket(login, password));
+		//	Client.getInstance().send(new LoginPacket(login, password));
 			
 			return true;
 		}

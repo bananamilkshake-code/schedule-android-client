@@ -2,22 +2,20 @@ package com.open.schedule;
 
 import io.Client;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.os.Build;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
+	
+	private Client client = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +61,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 			rootView.findViewById(R.id.btLogin).setOnClickListener((MainActivity)getActivity());
-			
+
 			return rootView;
 		}
 	}
@@ -91,11 +89,14 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		protected Void doInBackground(String... params) {
 			while(true)
 			{
-				while(Client.getInstance().isConnected()); // Yuck!
+				if (client == null)
+					client = new Client();
+	
+				while(client.isConnected()); // Yuck!
 
-				Client.getInstance().try_connect();
+				client.try_connect();
 
-				if (!Client.getInstance().isConnected()) // Double Yuck!
+				if (!client.isConnected()) // Double Yuck!
 				{
 					try {
 						Thread.sleep(1000);
