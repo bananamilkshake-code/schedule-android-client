@@ -4,6 +4,12 @@
     <string name="app_name">Open Schedule</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string android:layout_height="wrap_content" android:id="@+id/login_button" android:layout_width="wrap_content" name="login_button">Login</string>
+    <string android:id="@+id/login_button" name="login_button" android:layout_width="wrap_content" android:layout_height="wrap_content">Login</string>
+    <string name="title_activity_create_table">CreateTableActivity</string>
+    <string name="new_table_button">New Table</string>
+    <string name="button_new_table_create">Create</string>
+    <string name="text_new_table_name">Name</string>
+    <string name="text_new_table_description">Description</string>
+
 
 </resources>

@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 			rootView.findViewById(R.id.btLogin).setOnClickListener((MainActivity)getActivity());
+			rootView.findViewById(R.id.btNewTable).setOnClickListener((MainActivity)getActivity());
 
 			return rootView;
 		}
@@ -89,6 +90,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		case R.id.btLogin:
 			openLoginActivity();
 			break;
+		case R.id.btNewTable:
+			openNewTableActivity();
+			break;
 		default:
 			break;
 		}
@@ -97,5 +101,10 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	private void openLoginActivity() {
 		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 		startActivity(loginIntent);
+	}
+	
+	private void openNewTableActivity() {
+		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
+		startActivity(newTableIntent);
 	}
 }

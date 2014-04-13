@@ -4,6 +4,7 @@ import android.util.Log;
 import config.Config;
 import events.objects.Event;
 import io.packet.ServerPacket;
+import io.packet.client.CreateTablePacket;
 import io.packet.server.RegisterPacket;
 import io.packet.server.LoginPacket;
 
@@ -74,5 +75,9 @@ public class Client extends TCPClient {
 	
 	public void authorise(String username, String password) {
 		INSTANCE.send(new io.packet.client.LoginPacket(username, password));
+	}
+
+	public void createNewTable(String tableName, String tableDesc) {
+		INSTANCE.send(new io.packet.client.CreateTablePacket(tableName, tableDesc));
 	}
 }

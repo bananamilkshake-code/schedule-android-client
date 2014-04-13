@@ -9,7 +9,7 @@
     tools:context="com.open.schedule.MainActivity$PlaceholderFragment" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textTableName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
@@ -18,9 +18,18 @@
         android:id="@+id/btLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
+        android:layout_alignLeft="@+id/textTableName"
+        android:layout_alignRight="@+id/btNewTable"
+        android:layout_below="@+id/textTableName"
         android:layout_marginTop="33dp"
         android:text="@string/login_button" />
+
+    <Button
+        android:id="@+id/btNewTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btLogin"
+        android:layout_marginTop="23dp"
+        android:text="@string/new_table_button" />
 
 </RelativeLayout>

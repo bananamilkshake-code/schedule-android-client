@@ -7,7 +7,8 @@ public abstract class ClientPacket extends Packet {
 
 	public enum Type {
 		REGISTER,
-		LOGIN
+		LOGIN,
+		CREATE_TABLE
 	}
 
 	private final Type type;
