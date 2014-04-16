@@ -159,7 +159,9 @@ public class LoginActivity extends Activity {
 	}
 
 	public void setAuthorisationFail() {
-		mPasswordView.setError(getString(R.string.error_invalid_auth));
+		String error = getString(R.string.error_invalid_auth);
+		mPasswordView.setError(error);
+		mPasswordView.requestFocus();
 	}
 	
 	/**
@@ -216,8 +218,6 @@ public class LoginActivity extends Activity {
 					case FAILURE:
 						setAuthorisationFail();
 						break;
-					default:
-						break;
 					}
 				}
 			}
@@ -228,7 +228,7 @@ public class LoginActivity extends Activity {
 			EventWarehouse.getInstance().removeListener((EventListener)this, Event.Type.LOGIN);
 		}
 	}
-	
+
 	/**
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
