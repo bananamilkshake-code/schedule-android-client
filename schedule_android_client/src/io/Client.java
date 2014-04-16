@@ -1,5 +1,7 @@
 package io;
 
+import java.io.IOException;
+
 import android.util.Log;
 import config.Config;
 import events.objects.Event;
@@ -72,12 +74,20 @@ public class Client extends TCPClient {
 	public boolean isLogged() {
 		return logged;
 	}
-	
+
 	public void authorise(String username, String password) {
-		INSTANCE.send(new io.packet.client.LoginPacket(username, password));
+		try {
+			INSTANCE.send(new io.packet.client.LoginPacket(username, password));
+		} catch (IOException e) {
+			Log.w("Client", "Authorization error", e);
+		}
 	}
 
 	public void createNewTable(String tableName, String tableDesc) {
-		INSTANCE.send(new io.packet.client.CreateTablePacket(tableName, tableDesc));
+		try {
+			INSTANCE.send(new io.packet.client.CreateTablePacket(tableName, tableDesc));
+		} catch (IOException e) {
+			Log.w("Client", "New table creation error", e);
+		}
 	}
 }
