@@ -60,7 +60,7 @@ public abstract class TCPClient
 					recvPacket();
 				}
 			}
-		}.run();
+		}.start();
 	}
 
 	public void disconnect() {
