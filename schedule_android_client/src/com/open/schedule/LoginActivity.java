@@ -209,7 +209,6 @@ public class LoginActivity extends Activity {
 		public void handle(Event event) {
 			switch (event.getType()) {
 			case LOGIN: {
-					showProgress(false);
 					LoginPacket.Status status = (LoginPacket.Status)event.getData();
 					switch (status) {
 					case SUCCESS:

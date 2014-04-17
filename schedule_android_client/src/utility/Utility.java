@@ -2,7 +2,6 @@ package utility;
 
 
 public class Utility {
-
 	public static Short getShort(char[] buffer) {
 		int size = Short.SIZE / 8;
 		Short result = new Short((short) 0);
@@ -14,5 +13,9 @@ public class Utility {
 	
 	public static short bytesToShort(char[] buffer) {
 		return (short)(buffer[0] | buffer[1] << 8);
+	}
+	
+	public static long getUnixTime() {
+		return System.currentTimeMillis() / 1000L;
 	}
 }

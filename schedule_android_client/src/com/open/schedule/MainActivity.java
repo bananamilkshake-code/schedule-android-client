@@ -30,7 +30,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 				{
 					while(Client.getInstance().isConnected()); // Yuck!
 
-					Client.getInstance().try_connect();
+					Client.getInstance().tryConnect();
 
 					if (!Client.getInstance().isConnected()) // Double Yuck!
 					{

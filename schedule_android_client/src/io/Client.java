@@ -1,12 +1,13 @@
 package io;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import table.Table;
 import android.util.Log;
 import config.Config;
 import events.objects.Event;
 import io.packet.ServerPacket;
-import io.packet.client.CreateTablePacket;
 import io.packet.server.RegisterPacket;
 import io.packet.server.LoginPacket;
 
@@ -14,6 +15,9 @@ public class Client extends TCPClient {
 	private static final Client INSTANCE = new Client();
 	
 	private boolean logged = false;
+	private Integer id = 0;
+	
+	private ArrayList<Table> tables = new ArrayList<Table>();
 	
 	protected Client() {
 		super(Config.host, Config.port);
@@ -85,6 +89,7 @@ public class Client extends TCPClient {
 
 	public void createNewTable(String tableName, String tableDesc) {
 		try {
+			tables.add(new Table(this.id, tableName, tableDesc));
 			INSTANCE.send(new io.packet.client.CreateTablePacket(tableName, tableDesc));
 		} catch (IOException e) {
 			Log.w("Client", "New table creation error", e);

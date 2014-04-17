@@ -35,7 +35,7 @@ public abstract class TCPClient
 			disconnect();
 	}
 
-	public void try_connect() {
+	public void tryConnect() {
 		if (connected) 
 			return;
 	
@@ -57,7 +57,7 @@ public abstract class TCPClient
 					if (!connected)
 						return;
 
-					recv_packet();
+					recvPacket();
 				}
 			}
 		}.run();
@@ -77,7 +77,7 @@ public abstract class TCPClient
 		}
 	}
 
-	public void recv_packet() {
+	public void recvPacket() {
 		try {
 			char[] bufferType = new char[Packet.PACKET_TYPE_BYTE];
 			inFromServer.read(bufferType, 0, Packet.PACKET_TYPE_BYTE);
