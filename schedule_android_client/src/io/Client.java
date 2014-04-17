@@ -79,6 +79,12 @@ public class Client extends TCPClient {
 		return logged;
 	}
 
+	public void loadAuthParams() {
+		String username = "l@m.c";
+		String password = "qqqq";
+		this.authorise(username, password);
+	}
+	
 	public void authorise(String username, String password) {
 		try {
 			INSTANCE.send(new io.packet.client.LoginPacket(username, password));

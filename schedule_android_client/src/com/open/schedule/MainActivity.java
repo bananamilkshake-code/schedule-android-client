@@ -40,6 +40,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 							e.printStackTrace();
 						}
 					}
+					else {
+						Client.getInstance().loadAuthParams();
+					}
 				}
 			}
 		}.start();
