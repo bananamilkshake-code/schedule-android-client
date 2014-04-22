@@ -26,7 +26,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		Database database = new Database(this);
 		database.open();
 
-	//	Client.createInstance(database);
+		Client.createInstance(database);
 
 		new Thread() {
 			@Override

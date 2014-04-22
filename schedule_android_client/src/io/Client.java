@@ -2,16 +2,8 @@ package io;
 
 import java.io.IOException;
 
-import android.content.ContentProvider;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.open.schedule.MainActivity;
 
 import storage.database.Database;
 import storage.tables.Table;

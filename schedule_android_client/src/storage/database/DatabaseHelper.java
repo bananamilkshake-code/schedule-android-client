@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	private static final String CREATE_DB = 
 		"CREATE TABLE " + TABLE_USERS + " (" +
-				"id INT(10) AUTO_INCREMENT PRIMARY KEY," +
+				"id INT(10) PRIMARY KEY," +
 				"name VARCHAR(50) NOT NULL," +
 				"UNIQUE(id) " +
 			"); " +
