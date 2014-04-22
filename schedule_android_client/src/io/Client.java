@@ -1,9 +1,21 @@
 package io;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import table.Table;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.open.schedule.MainActivity;
+
+import storage.database.Database;
+import storage.tables.Table;
+import utility.Utility;
 import android.util.Log;
 import config.Config;
 import events.objects.Event;
@@ -12,18 +24,26 @@ import io.packet.server.RegisterPacket;
 import io.packet.server.LoginPacket;
 
 public class Client extends TCPClient {	
-	private static final Client INSTANCE = new Client();
+	private static Client INSTANCE = null;
 	
 	private boolean logged = false;
 	private Integer id = 0;
 	
-	private ArrayList<Table> tables = new ArrayList<Table>();
+	private Map<Integer, Table> tables = new HashMap<Integer, Table>();
 	
-	protected Client() {
+	private Database database = null;
+	
+	protected Client(Database database) {
 		super(Config.host, Config.port);
+		this.database = database;
+	}
+
+	public static void createInstance(Database database) {
+		INSTANCE = new Client(database);
 	}
 	
 	public static Client getInstance() {
+		assert INSTANCE != null;
 		return INSTANCE;
 	}
 
@@ -82,21 +102,23 @@ public class Client extends TCPClient {
 	public void loadAuthParams() {
 		String username = "l@m.c";
 		String password = "qqqq";
-		this.authorise(username, password);
+		this.login(username, password);
 	}
 	
-	public void authorise(String username, String password) {
+	public void login(String username, String password) {
 		try {
-			INSTANCE.send(new io.packet.client.LoginPacket(username, password));
+			send(new io.packet.client.LoginPacket(username, password));
 		} catch (IOException e) {
 			Log.w("Client", "Authorization error", e);
 		}
 	}
 
-	public void createNewTable(String tableName, String tableDesc) {
+	public void createNewTable(String name, String description) {
 		try {
-			tables.add(new Table(this.id, tableName, tableDesc));
-			INSTANCE.send(new io.packet.client.CreateTablePacket(tableName, tableDesc));
+			Table table = new Table(this.id, Utility.getUnixTime(), name, description);
+			Integer newTableId = database.createTable(table);
+			tables.put(newTableId, table);
+			send(new io.packet.client.CreateTablePacket(name, description));
 		} catch (IOException e) {
 			Log.w("Client", "New table creation error", e);
 		}

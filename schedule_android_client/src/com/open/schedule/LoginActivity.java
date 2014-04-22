@@ -206,7 +206,9 @@ public class LoginActivity extends Activity {
 			EventWarehouse.getInstance().addListener((EventListener)this, Event.Type.LOGIN);
 		}
 		
-		public void handle(Event event) {
+		public void handle(Event event) 
+		{
+			showProgress(false);
 			switch (event.getType()) {
 			case LOGIN: {
 					LoginPacket.Status status = (LoginPacket.Status)event.getData();
@@ -241,7 +243,7 @@ public class LoginActivity extends Activity {
 			String login = mEmailView.getText().toString();
 			String password = mPasswordView.getText().toString();
 
-			Client.getInstance().authorise(login, password);
+			Client.getInstance().login(login, password);
 			
 			return null;
 		}

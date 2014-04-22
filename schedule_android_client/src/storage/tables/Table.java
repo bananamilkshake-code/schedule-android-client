@@ -1,7 +1,9 @@
-package table;
+package storage.tables;
 
 import java.util.Map;
 import java.util.HashMap;
+
+import utility.Utility;
 
 public class Table extends ChangableData {
 	public enum Permission {
@@ -13,15 +15,21 @@ public class Table extends ChangableData {
 	private Map<Integer, Permission> readers = new HashMap<Integer, Permission>();
 	private Map<Integer, Task> tasks = new HashMap<Integer, Task>();
 
-	public Table() {}
+	public Table() {
+		
+	}
+	
+	public Table(Integer creatorId, Long creationTime, String name, String description) {
+		this();
+		this.change(new TableInfo(creatorId, creationTime, name, description));
+	}
 	
 	public Table(Integer creatorId, String name, String description) {
-		change((Change)(new TableInfo(creatorId, name, description)));
+		change((Change)(new TableInfo(creatorId, Utility.getUnixTime(), name, description)));
 	}
 
 	public void setPermission(int user_id, Permission permission) {
-		if (permission == Permission.NONE)
-		{
+		if (permission == Permission.NONE) {
 			readers.remove(user_id);
 			return;
 		}
@@ -29,20 +37,24 @@ public class Table extends ChangableData {
 		readers.put(user_id, permission);
 	}
 
-	public void addTask(Integer task_id, Task task) {
-		tasks.put(task_id, task);
+	public Task addTask(Integer task_id, Task task) {
+		return tasks.put(task_id, task);
 	}
 
 	public void removeTask(Integer task_id) {
 		tasks.remove(task_id);
 	}
+	
+	public Task getTask(Integer task_id) {
+		return tasks.get(task_id);
+	}
 
 	public class TableInfo extends Change {
-		private String name = null;
-		private String description = null;
+		public String name;
+		public String description;
 		
-		public TableInfo(Integer creatorId, String name, String description) {
-			super(creatorId);
+		public TableInfo(Integer creatorId, Long creationTime, String name, String description) {
+			super(creatorId, creationTime);
 			this.name = name;
 			this.description = description;
 		}

@@ -1,5 +1,6 @@
 package com.open.schedule;
 
+import storage.database.Database;
 import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -22,17 +23,21 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		Database database = new Database(this);
+		database.open();
+
+	//	Client.createInstance(database);
 
 		new Thread() {
 			@Override
 			public void run() {
 				while(true)
 				{
-					while(Client.getInstance().isConnected()); // Yuck!
+					while(Client.getInstance().isConnected());
 
 					Client.getInstance().tryConnect();
 
-					if (!Client.getInstance().isConnected()) // Double Yuck!
+					if (!Client.getInstance().isConnected())
 					{
 						try {
 							Thread.sleep(1000);

@@ -1,4 +1,4 @@
-package table;
+package storage.tables;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -13,6 +13,10 @@ public class ChangableData {
 	protected TreeMap<Long,Change> changes = new TreeMap<Long, Change>();
 	private long lastUpdate = 0;
 
+	public Entry<Long, Change> getInitial() {
+		return changes.firstEntry();
+	}
+	
 	public void change(Change change) {
 		Long current_time = Utility.getUnixTime(); 
 		changes.put(current_time, change);
@@ -42,9 +46,9 @@ public class ChangableData {
 		protected Integer creator_id;
 		protected long creationTime;
 
-		public Change(Integer creator_id) {
+		public Change(Integer creator_id, Long creationTime) {
 			this.creator_id = creator_id;
-			this.creationTime = Utility.getUnixTime();
+			this.creationTime = creationTime;
 		}
 
 		public abstract Boolean hasNulls();
