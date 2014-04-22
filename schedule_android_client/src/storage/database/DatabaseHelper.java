@@ -17,72 +17,83 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	private static final int DATABASE_VERSION = 1;
 
-	private static final String CREATE_DB = 
-		"CREATE TABLE " + TABLE_USERS + " (" +
-				"id INT(10) PRIMARY KEY," +
-				"name VARCHAR(50) NOT NULL," +
-				"UNIQUE(id) " +
-			"); " +
+	private static final String CREATE_USERS = 
+			"CREATE TABLE " + TABLE_USERS + " (" +
+					"id INT(10) PRIMARY KEY," +
+					"name VARCHAR(50) NOT NULL," +
+					"UNIQUE(id) " +
+				")";
+
+	private static final String CREATE_TABLES = 
 			"CREATE TABLE " + TABLE_TABLES + " (" +
-				"_id INT PRIMARY KEY," +
-				"id INT(10)," +
-				"last_update INT(10) NOT NULL DEFAULT 0," +
-				"UNIQUE(local_id, id)" +
-			");" +
+					"_id INT PRIMARY KEY," +
+					"id INT(10)," +
+					"last_update INT(10) NOT NULL DEFAULT 0," +
+					"UNIQUE(_id, id)" +
+				")";
+
+	private static final String CREATE_TASKS = 
 			"CREATE TABLE " + TABLE_TASKS + " (" +
-				"_id INT PRIMARY KEY," +
-				"id INT(10)," +
-				"table_id INT(10) NOT NULL," +
-				"last_update INT(10) NOT NULL DEFAULT 0," +
-				"FOREIGN KEY (table_id) REFERENCES tables(id)," +
-				"UNIQUE(local_id, id)" +
-			");" +
+					"_id INT PRIMARY KEY," +
+					"id INT(10)," +
+					"table_id INT(10) NOT NULL," +
+					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
+					"UNIQUE(_id, id)" +
+				")";
+	
+	private static final String CREATE_TABLES_CHANGES = 
 			"CREATE TABLE " + TABLE_TABLE_CHANGES + " (" +
-				"local_table_id INT PRIMARY KEY," +
-				"table_id INT(10)," +
-				"time INT(10) NOT NULL," +
-				"user_id INT(10) NOT NULL," +
-				"name VARCHAR(100)," +
-				"description TEXT," +
-				"FOREIGN KEY (table_id) REFERENCES tables(id)," +
-				"FOREIGN KEY (user_id) REFERENCES users(id)," +
-				"UNIQUE(local_table_id, table_id)" +
-			");" +
+					"local_table_id INT PRIMARY KEY," +
+					"table_id INT(10)," +
+					"time INT(10) NOT NULL," +
+					"user_id INT(10) NOT NULL," +
+					"name VARCHAR(100)," +
+					"description TEXT," +
+					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
+					"FOREIGN KEY (user_id) REFERENCES users(id)," +
+					"UNIQUE(local_table_id, table_id)" +
+				")";
+	
+	private static final String CREATE_TASKS_CHANGES = 
 			"CREATE TABLE " + TABLE_TASK_CHANGES + " (" +
-				"local_table_id INT(10) NOT NULL," +
-				"local_task_id INT(10) NOT NULL," +
-				"table_id INT(10)," +
-				"task_id INT(10)," +
-				"time INT(10) NOT NULL," +
-				"user_id INT(10) NOT NULL," +
-				"name VARCHAR(100)," +
-				"description TEXT," +
-				"start_date DATE," +
-				"completion_date DATE, " +
-				"end_time TIME," +
-				"FOREIGN KEY (table_id) REFERENCES tables(id)," +
-				"FOREIGN KEY (task_id) REFERENCES tasks(id)," +
-				"UNIQUE(local_table_id, local_task_id)," +
-				"UNIQUE(table_id, task_id)" +
-			");" +
+					"local_table_id INT(10) NOT NULL," +
+					"local_task_id INT(10) NOT NULL," +
+					"table_id INT(10)," +
+					"task_id INT(10)," +
+					"time INT(10) NOT NULL," +
+					"user_id INT(10) NOT NULL," +
+					"name VARCHAR(100)," +
+					"description TEXT," +
+					"start_date DATE," +
+					"completion_date DATE, " +
+					"end_time TIME," +
+					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
+					"FOREIGN KEY (task_id) REFERENCES tasks(id)," +
+					"UNIQUE(local_table_id, local_task_id)," +
+					"UNIQUE(table_id, task_id)" +
+				")";
+	
+	private static final String CREATE_COMMENTS = 
 			"CREATE TABLE comments (" +
-				"commentator_id INT(10) NOT NULL," +
-				"table_id INT(10) NOT NULL," +
-				"task_id INT(10) NOT NULL," +
-				"commentary TEXT NOT NULL," +
-				"time INT(10) NOT NULL," +
-				"FOREIGN KEY (commentator_id) REFERENCES users(id)," +
-				"FOREIGN KEY (table_id) REFERENCES tables(id)," +
-				"FOREIGN KEY (task_id) REFERENCES tasks(id)" +
-			");" +
+					"commentator_id INT(10) NOT NULL," +
+					"table_id INT(10) NOT NULL," +
+					"task_id INT(10) NOT NULL," +
+					"commentary TEXT NOT NULL," +
+					"time INT(10) NOT NULL," +
+					"FOREIGN KEY (commentator_id) REFERENCES users(id)," +
+					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
+					"FOREIGN KEY (task_id) REFERENCES tasks(id)" +
+				")";
+
+	private static final String CREATE_READERS = 
 			"CREATE TABLE " + TABLE_READERS + " (" +
-				"reader_id INT(10) NOT NULL," +
-				"table_id INT(10) NOT NULL," +
-				"permission TINYINT(1) NOT NULL," +
-				"FOREIGN KEY (reader_id) REFERENCES users(id)," +
-				"FOREIGN KEY (table_id) REFERENCES tables(id)," +
-				"UNIQUE(reader_id, table_id)" +
-			");";
+					"reader_id INT(10) NOT NULL," +
+					"table_id INT(10) NOT NULL," +
+					"permission TINYINT(1) NOT NULL," +
+					"FOREIGN KEY (reader_id) REFERENCES users(id)," +
+					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
+					"UNIQUE(reader_id, table_id)" +
+				")";
 	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -90,7 +101,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_DB);
+		db.execSQL(CREATE_USERS);
+		db.execSQL(CREATE_TABLES);
+		db.execSQL(CREATE_TASKS);
+		db.execSQL(CREATE_TABLES_CHANGES);
+		db.execSQL(CREATE_TASKS_CHANGES);
+		db.execSQL(CREATE_COMMENTS);
+		db.execSQL(CREATE_READERS);
 	}
 
 	@Override

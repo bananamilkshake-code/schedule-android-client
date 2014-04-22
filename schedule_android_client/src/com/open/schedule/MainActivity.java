@@ -23,10 +23,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		Database database = new Database(this);
-		database.open();
-
-		Client.createInstance(database);
+		
+		Client.createInstance(new Database(this));
 
 		new Thread() {
 			@Override

@@ -14,6 +14,7 @@ import storage.tables.Table.Permission;
 import storage.tables.Table.TableInfo;
 import storage.tables.Task.TaskChange;
 import storage.tables.Task;
+import utility.Utility;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -26,9 +27,6 @@ public class Database {
 	
 	public Database(Context context) {
 		this.dbHelper = new DatabaseHelper(context);
-	}
-	
-	public void open() {
 		this.database = dbHelper.getWritableDatabase();
 	}
 	
@@ -147,6 +145,7 @@ public class Database {
 	
 	public Integer createTable(Table table) {
 		ContentValues values = new ContentValues();
+		values.put("last_update", Utility.getUnixTime());
 		Integer table_id = (int) database.insert(DatabaseHelper.TABLE_TABLES, null, values);
 
 		Entry<Long, Change> firstChange = table.getInitial();
