@@ -21,13 +21,15 @@ public class Client extends TCPClient {
 	private boolean logged = false;
 	private Integer id = 0;
 	
-	private Map<Integer, Table> tables = new HashMap<Integer, Table>();
+	private HashMap<Integer, Table> tables = new HashMap<Integer, Table>();
 	
 	private Database database = null;
 	
 	protected Client(Database database) {
 		super(Config.host, Config.port);
 		this.database = database;
+
+		database.loadTables(tables);
 	}
 
 	public static void createInstance(Database database) {
@@ -111,6 +113,7 @@ public class Client extends TCPClient {
 			Integer newTableId = database.createTable(table);
 			tables.put(newTableId, table);
 			send(new io.packet.client.CreateTablePacket(name, description));
+			Log.d("Client", "New table created " + newTableId);
 		} catch (IOException e) {
 			Log.w("Client", "New table creation error", e);
 		}
