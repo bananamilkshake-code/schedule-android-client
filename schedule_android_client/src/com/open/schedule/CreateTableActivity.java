@@ -1,8 +1,8 @@
 package com.open.schedule;
 
-import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +13,9 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 
 public class CreateTableActivity extends ActionBarActivity implements OnClickListener {
+	public final static String EXTRA_NAME = "Table Name";
+	public final static String EXTRA_DESCRIPTION = "Table decription";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,6 +44,21 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	public void finish() {
+		Intent result = new Intent();
+		
+		String tableName = ((EditText)findViewById(R.id.editTableName)).getText().toString();
+		String tableDesc = ((EditText)findViewById(R.id.editTableDescription)).getText().toString();
+
+		result.putExtra(EXTRA_NAME, tableName);
+		result.putExtra(EXTRA_DESCRIPTION, tableDesc);
+
+		setResult(RESULT_OK, result);
+
+		super.finish();
+	}
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -53,30 +71,14 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_create_table, container, false);
-			
 			rootView.findViewById(R.id.btCreateTable).setOnClickListener((CreateTableActivity)getActivity());
-			
 			return rootView;
 		}
 	}
 	
 	@Override
 	public void onClick(View view) {
-		switch(view.getId())
-		{
-		case R.id.btCreateTable:
-			createNewTable();
-			break;
-		default:
-			break;
-		}
+		if (view.getId() == R.id.btCreateTable)
+			finish();
 	}
-	
-	private void createNewTable() {
-		String tableName = ((EditText)findViewById(R.id.editTableName)).getText().toString();
-		String tableDesc = ((EditText)findViewById(R.id.editTableDescription)).getText().toString();
-		Client.getInstance().createTable(tableName, tableDesc);
-		finish();
-	}
-
 }

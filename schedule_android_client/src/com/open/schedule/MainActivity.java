@@ -14,7 +14,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
-	
+
+	public static final int REQUEST_NEW_TABLE = 1;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,6 +71,22 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK)
+			return;
+		
+		switch (requestCode) {
+		case REQUEST_NEW_TABLE:
+			String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
+			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
+			Client.getInstance().createTable(true, name, description);
+			break;
+		default:
+			break;
+		}
+	}
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -111,6 +129,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	
 	private void openNewTableActivity() {
 		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
-		startActivity(newTableIntent);
+		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
 	}
 }
