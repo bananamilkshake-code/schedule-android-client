@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 
 public abstract class ClientPacket extends Packet {
 	public static final int MAX_PACKET_SIZE = Short.MAX_VALUE;
+	private final String UTF8_CHARSET = "UTF-8";
+
 	private ByteBuffer buffer = ByteBuffer.allocate(MAX_PACKET_SIZE);
 
 	public enum Type {
@@ -41,7 +43,7 @@ public abstract class ClientPacket extends Packet {
 	}
 	
 	protected void writeString(String string) throws IOException {
-		this.buffer.putShort((short)(Byte.SIZE * string.length()));
-		this.buffer.put(string.getBytes());
+		this.buffer.putShort((short)(2 * Byte.SIZE * string.length()));
+		this.buffer.put(string.getBytes(UTF8_CHARSET));
 	}
 }
