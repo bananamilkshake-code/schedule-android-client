@@ -101,6 +101,9 @@ public abstract class TCPClient
 	}
 	
 	public void send(ClientPacket packet) {
+		if (!connected)
+			return;
+
 		try {
 			packet.write(outToServer);
 		} catch (IOException e) {
