@@ -75,7 +75,7 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 	private void createNewTable() {
 		String tableName = ((EditText)findViewById(R.id.editTableName)).getText().toString();
 		String tableDesc = ((EditText)findViewById(R.id.editTableDescription)).getText().toString();
-		Client.getInstance().createNewTable(tableName, tableDesc);
+		Client.getInstance().createTable(tableName, tableDesc);
 		finish();
 	}
 

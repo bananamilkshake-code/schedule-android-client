@@ -1,12 +1,13 @@
 package io;
 
 import java.io.IOException;
-
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import storage.database.Database;
 import storage.tables.Table;
+import storage.tables.Table.Permission;
+import storage.tables.Task;
 import utility.Utility;
 import android.util.Log;
 import config.Config;
@@ -107,15 +108,41 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void createNewTable(String name, String description) {
+	public void createTable(Boolean local, String name, String description) {
 		try {
 			Table table = new Table(this.id, Utility.getUnixTime(), name, description);
 			Integer newTableId = database.createTable(table);
 			tables.put(newTableId, table);
-			send(new io.packet.client.CreateTablePacket(name, description));
 			Log.d("Client", "New table created " + newTableId);
+
+			if (local)
+				send(new io.packet.client.CreateTablePacket(name, description));
 		} catch (IOException e) {
 			Log.w("Client", "New table creation error", e);
 		}
+	}
+	
+	public void createTask(Integer tableId, String name, String description, Date startDate, Date endDate, Date endTime) {
+		Table table = tables.get(tableId);
+		Task task = new Task(this.id, Utility.getUnixTime(), name, description, startDate, endDate, endTime);
+		Integer taskId = database.createTask(tableId, task);
+		table.addTask(taskId, task);
+		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");
+	}
+	
+	public void changeTable(Integer userId, Integer tableId, String name, String description) {
+		Table table = tables.get(tableId);
+		table.change(table.new TableInfo(userId, Utility.getUnixTime(), name, description));
+		Log.d("Client", "Table " + tableId + " changed");
+	}
+	
+	public void createComment(Integer userId, Integer tableId, Integer taskId, String text, Long time) {
+		tables.get(tableId).getTask(taskId).addComment(userId, time, text);
+		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + text);
+	}
+	
+	public void changePermision(Integer tableId, Integer userId, Permission permission) {
+		tables.get(tableId).setPermission(userId, permission);
+		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
 	}
 }
