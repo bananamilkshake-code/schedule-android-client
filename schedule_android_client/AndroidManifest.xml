@@ -33,6 +33,10 @@
             android:name="com.open.schedule.CreateTableActivity"
             android:label="@string/title_activity_create_table" >
         </activity>
+        <activity
+            android:name="com.open.schedule.ViewTablesActivity"
+            android:label="@string/title_activity_view_tables" >
+        </activity>
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ public class ChangableData {
 		update();
 	}
 
-	Change getData() {
+	public Change getData() {
 		if (changes.size() == 0)
 			return null;
 
