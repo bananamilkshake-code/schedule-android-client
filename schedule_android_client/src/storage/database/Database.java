@@ -38,7 +38,8 @@ public class Database {
 		if (cursorTables.moveToFirst()) {
 			int id = cursorTables.getColumnIndex("_id");
 			while(!cursorTables.isAfterLast()) {
-				tables.put(cursorTables.getInt(id), new Table());
+				Integer idVal = cursorTables.getInt(id);
+				tables.put(idVal, new Table());
 				cursorTables.moveToNext();
 			}
 		}
@@ -57,7 +58,7 @@ public class Database {
 			while(!cursorChanges.isAfterLast()) {
 				Integer tableIdVal = cursorChanges.getInt(tableId);
 				
-				Table table = tables.get(cursorChanges.getInt(tableIdVal));
+				Table table = tables.get(tableIdVal);
 				if (table != null) {
 					Integer userIdVal = cursorChanges.getInt(userId);
 					Long timeVal = cursorChanges.getLong(time);

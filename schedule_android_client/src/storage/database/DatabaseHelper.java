@@ -19,14 +19,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	private static final String CREATE_USERS = 
 			"CREATE TABLE " + TABLE_USERS + " (" +
-					"id INT(10) PRIMARY KEY," +
+					"id INTEGER PRIMARY KEY," +
 					"name VARCHAR(50) NOT NULL," +
 					"UNIQUE(id) " +
 				")";
 
 	private static final String CREATE_TABLES = 
 			"CREATE TABLE " + TABLE_TABLES + " (" +
-					"_id INT PRIMARY KEY," +
+					"_id INTEGER PRIMARY KEY," +
 					"id INT(10)," +
 					"last_update INT(10) NOT NULL DEFAULT 0," +
 					"UNIQUE(_id, id)" +
@@ -72,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					"UNIQUE(local_table_id, local_task_id)," +
 					"UNIQUE(table_id, task_id)" +
 				")";
-	
+
 	private static final String CREATE_COMMENTS = 
 			"CREATE TABLE comments (" +
 					"commentator_id INT(10) NOT NULL," +
@@ -94,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
 					"UNIQUE(reader_id, table_id)" +
 				")";
-	
+
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
