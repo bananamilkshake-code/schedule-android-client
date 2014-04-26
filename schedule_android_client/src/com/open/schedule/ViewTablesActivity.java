@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
-
+import android.widget.TextView;
 import storage.tables.Table;
 import storage.tables.Table.TableInfo;
 import io.Client;
@@ -30,13 +29,7 @@ public class ViewTablesActivity extends ActionBarActivity implements OnItemClick
 
 		ListView listView = (ListView) findViewById(R.id.list_tables);
 
-		HashMap<Integer, Table> tables = Client.getInstance().getTables();
-
-		final ArrayList<String> list = new ArrayList<String>();
-		for (Table value : tables.values())
-			list.add(((TableInfo) value.getData()).name);
-
-		final TablesAdapter adapter = new TablesAdapter(ViewTablesActivity.this, android.R.layout.simple_list_item_1, list);
+		final TablesAdapter adapter = new TablesAdapter(Client.getInstance().getTables());
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(ViewTablesActivity.this);
 	}
@@ -73,24 +66,53 @@ public class ViewTablesActivity extends ActionBarActivity implements OnItemClick
 	private void viewTasks(Integer tableId) {
 	}
 
-	private class TablesAdapter extends ArrayAdapter<String> {
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-
-		public TablesAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
-			super(context, textViewResourceId, objects);
-			for (int i = 0; i < objects.size(); ++i) 
-				map.put(objects.get(i), i);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			String item = getItem(position);
-			return map.get(item);
+	public class TablesAdapter extends BaseAdapter {
+		HashMap<Integer, Table> tables;
+		ArrayList<Integer> idsByPos = new ArrayList<Integer>();
+		
+		public TablesAdapter(HashMap<Integer, Table> tables) {
+			this.tables = tables;
+			
+			for (Integer tableId : tables.keySet()) {
+				idsByPos.add(tableId);
+			}
 		}
 
 		@Override
 		public boolean hasStableIds() {
 			return true;
+		}
+
+		@Override
+		public int getCount() {
+			return tables.size();
+		}
+
+		@Override
+		public Table getItem(int position) {
+			return tables.get(idsByPos.get(position));
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View rowView, ViewGroup arg2) {
+			if (rowView == null) {
+				LayoutInflater inflater = (LayoutInflater) ViewTablesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				rowView = inflater.inflate(R.layout.item_table, arg2, false);
+			}
+
+			TextView tableName = (TextView)rowView.findViewById(R.id.item_table_name);
+			TextView tableDescription = (TextView)rowView.findViewById(R.id.item_table_description);
+
+			Table table = tables.get(idsByPos.get(position));
+			tableName.setText((CharSequence)(((TableInfo)table.getData()).name));
+			tableDescription.setText((CharSequence)(((TableInfo)table.getData()).description));
+
+			return rowView;
 		}
 	}
 }
