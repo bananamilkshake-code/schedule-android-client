@@ -28,13 +28,21 @@ public class ViewTablesActivity extends ActionBarActivity implements OnItemClick
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_tables);
 
-		if (savedInstanceState == null)
-			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
+		ListView listView = (ListView) findViewById(R.id.list_tables);
+
+		HashMap<Integer, Table> tables = Client.getInstance().getTables();
+
+		final ArrayList<String> list = new ArrayList<String>();
+		for (Table value : tables.values())
+			list.add(((TableInfo) value.getData()).name);
+
+		final TablesAdapter adapter = new TablesAdapter(ViewTablesActivity.this, android.R.layout.simple_list_item_1, list);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(ViewTablesActivity.this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.view_tables, menu);
 		return true;
@@ -54,7 +62,7 @@ public class ViewTablesActivity extends ActionBarActivity implements OnItemClick
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		switch (view.getId()) {
-		case R.id.listViewTables:
+		case R.id.list_tables:
 			viewTasks(position);
 			return;
 		default:
@@ -63,59 +71,26 @@ public class ViewTablesActivity extends ActionBarActivity implements OnItemClick
 	}
 
 	private void viewTasks(Integer tableId) {
-		
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
+	private class TablesAdapter extends ArrayAdapter<String> {
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		public PlaceholderFragment() {
+		public TablesAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
+			super(context, textViewResourceId, objects);
+			for (int i = 0; i < objects.size(); ++i) 
+				map.put(objects.get(i), i);
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_view_tables, container, false);
-
-			ListView listView = (ListView) rootView.findViewById(R.id.listViewTables);
-			final ArrayList<String> list = new ArrayList<String>();
-			HashMap<Integer, Table> tables = Client.getInstance().getTables();
-			
-			for (Table value : tables.values())
-				list.add(((TableInfo) value.getData()).name);
-			
-			final TablesAdapter adapter = new TablesAdapter((ViewTablesActivity)getActivity(), R.layout.fragment_view_tables, list);
-			listView.setAdapter(adapter);
-			
-			listView.setOnItemClickListener((ViewTablesActivity) getActivity());
-			fillTables(listView);
-
-			return rootView;
-		}
-		
-		private void fillTables(ListView tablesView) {
+		public long getItemId(int position) {
+			String item = getItem(position);
+			return map.get(item);
 		}
 
-		private class TablesAdapter extends ArrayAdapter<String> {
-			HashMap<String, Integer> map = new HashMap<String, Integer>();
-			
-			public TablesAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
-				super(context, textViewResourceId, objects);
-				for (int i = 0; i < objects.size(); ++i) 
-					map.put(objects.get(i), i);
-			}
-			
-			@Override
-			public long getItemId(int position) {
-				String item = getItem(position);
-				return map.get(item);
-			}
-			
-			@Override
-			public boolean hasStableIds() {
-				return true;
-			}
+		@Override
+		public boolean hasStableIds() {
+			return true;
 		}
 	}
 }
