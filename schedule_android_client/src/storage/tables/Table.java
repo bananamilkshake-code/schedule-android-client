@@ -1,6 +1,5 @@
 package storage.tables;
 
-import java.util.Map;
 import java.util.HashMap;
 
 import utility.Utility;
@@ -12,8 +11,8 @@ public class Table extends ChangableData {
 		WRITE
 	};
 
-	private Map<Integer, Permission> readers = new HashMap<Integer, Permission>();
-	private Map<Integer, Task> tasks = new HashMap<Integer, Task>();
+	private HashMap<Integer, Permission> readers = new HashMap<Integer, Permission>();
+	private HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
 
 	public Table() {
 		
@@ -69,5 +68,13 @@ public class Table extends ChangableData {
 			if (this.description == null)
 				this.description = ((TableInfo)prev).description;
 		}
+	}
+	
+	public final HashMap<Integer, Permission> getReaders() {
+		return readers;
+	}
+	
+	public final HashMap<Integer, Task> getTasks() {
+		return tasks;
 	}
 }

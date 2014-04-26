@@ -32,4 +32,13 @@
         android:layout_marginTop="23dp"
         android:text="@string/new_table_button" />
 
+    <Button
+        android:id="@+id/btViewTables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btNewTable"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="23dp"
+        android:text="@string/view_tables_button" />
+
 </RelativeLayout>

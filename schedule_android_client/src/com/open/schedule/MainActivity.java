@@ -31,14 +31,12 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		new Thread() {
 			@Override
 			public void run() {
-				while(true)
-				{
+				while(true) {
 					while(Client.getInstance().isConnected());
 
 					Client.getInstance().tryConnect();
 
-					if (!Client.getInstance().isConnected())
-					{
+					if (!Client.getInstance().isConnected()) {
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -81,11 +79,44 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		case REQUEST_NEW_TABLE:
 			String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
 			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
-			Client.getInstance().createTable(true, name, description);
+			Client.getInstance().createTable(Client.getInstance().getId(), true, name, description);
 			break;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch(view.getId())
+		{
+		case R.id.btLogin:
+			openLoginActivity();
+			return;
+		case R.id.btNewTable:
+			openNewTableActivity();
+			return;
+		case R.id.btViewTables:
+			openViewTablesActivity();
+			return;
+		default:
+			return;
+		}
+	}
+	
+	private void openLoginActivity() {
+		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+		startActivity(loginIntent);
+	}
+	
+	private void openNewTableActivity() {
+		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
+		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
+	}
+	
+	private void openViewTablesActivity() {
+		Intent viewTablesIntent = new Intent(MainActivity.this, ViewTablesActivity.class);
+		startActivity(viewTablesIntent);
 	}
 
 	/**
@@ -102,33 +133,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 			rootView.findViewById(R.id.btLogin).setOnClickListener((MainActivity)getActivity());
 			rootView.findViewById(R.id.btNewTable).setOnClickListener((MainActivity)getActivity());
+			rootView.findViewById(R.id.btViewTables).setOnClickListener((MainActivity)getActivity());
 
 			return rootView;
 		}
-	}
-	
-	@Override
-	public void onClick(View view) {
-		switch(view.getId())
-		{
-		case R.id.btLogin:
-			openLoginActivity();
-			break;
-		case R.id.btNewTable:
-			openNewTableActivity();
-			break;
-		default:
-			break;
-		}
-	}
-	
-	private void openLoginActivity() {
-		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-		startActivity(loginIntent);
-	}
-	
-	private void openNewTableActivity() {
-		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
-		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
 	}
 }

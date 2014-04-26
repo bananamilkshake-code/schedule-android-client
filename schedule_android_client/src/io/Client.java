@@ -21,7 +21,7 @@ public class Client extends TCPClient {
 	
 	private boolean logged = false;
 	private Integer id = 0;
-	
+
 	private HashMap<Integer, Table> tables = new HashMap<Integer, Table>();
 	
 	private Database database = null;
@@ -40,6 +40,10 @@ public class Client extends TCPClient {
 	public static Client getInstance() {
 		assert INSTANCE != null;
 		return INSTANCE;
+	}
+	
+	public Integer getId() {
+		return id;
 	}
 
 	public void recv(ServerPacket clientPacket) {
@@ -100,7 +104,7 @@ public class Client extends TCPClient {
 		this.login(username, password);
 	}
 	
-	public void login(String username, String password) {
+	public void login(String username, String password) {		
 		try {
 			send(new io.packet.client.LoginPacket(username, password));
 		} catch (IOException e) {
@@ -108,10 +112,10 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void createTable(Boolean local, String name, String description) {
+	public void createTable(Integer userId, Boolean local, String name, String description) {
 		try {
 			Table table = new Table(this.id, Utility.getUnixTime(), name, description);
-			Integer newTableId = database.createTable(table);
+			Integer newTableId = database.createTable(userId, table);
 			tables.put(newTableId, table);
 			Log.d("Client", "New table created " + newTableId);
 
@@ -122,10 +126,10 @@ public class Client extends TCPClient {
 		}
 	}
 	
-	public void createTask(Integer tableId, String name, String description, Date startDate, Date endDate, Date endTime) {
+	public void createTask(Integer userId, Integer tableId, String name, String description, Date startDate, Date endDate, Date endTime) {
 		Table table = tables.get(tableId);
 		Task task = new Task(this.id, Utility.getUnixTime(), name, description, startDate, endDate, endTime);
-		Integer taskId = database.createTask(tableId, task);
+		Integer taskId = database.createTask(userId, tableId, task);
 		table.addTask(taskId, task);
 		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");
 	}
@@ -144,5 +148,9 @@ public class Client extends TCPClient {
 	public void changePermision(Integer tableId, Integer userId, Permission permission) {
 		tables.get(tableId).setPermission(userId, permission);
 		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
+	}
+	
+	public final HashMap<Integer, Table> getTables() {
+		return tables;
 	}
 }

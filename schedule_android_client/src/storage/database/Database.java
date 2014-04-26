@@ -143,46 +143,48 @@ public class Database {
 		cursor.close();
 	}
 	
-	public Integer createTable(Table table) {
+	public Integer createTable(Integer userId, Table table) {
 		ContentValues values = new ContentValues();
 		values.put("last_update", Utility.getUnixTime());
-		Integer table_id = (int) database.insert(DatabaseHelper.TABLE_TABLES, null, values);
+		Integer tableId = (int) database.insert(DatabaseHelper.TABLE_TABLES, null, values);
 
 		Entry<Long, Change> firstChange = table.getInitial();
 		Long time = (Long) firstChange.getKey();
 		Table.TableInfo change = (TableInfo) firstChange.getValue();
-		changeTable(table_id, change, time);
+		changeTable(userId, tableId, change, time);
 
-		return table_id;
+		return tableId;
 	}
 	
-	public Integer createTask(Integer tableId, Task task) {
+	public Integer createTask(Integer userId, Integer tableId, Task task) {
 		ContentValues values = new ContentValues();
 		values.put("table_id", tableId);
-		Integer task_id = (int) database.insert(DatabaseHelper.TABLE_TASKS, null, values);
+		Integer taskId = (int) database.insert(DatabaseHelper.TABLE_TASKS, null, values);
 		
 		Entry<Long, Change> firstChange = task.getInitial();
 		Long time = (Long) firstChange.getKey();
 		Task.TaskChange change = (TaskChange) firstChange.getValue();
 
-		changeTask(tableId, task_id, change, time);
+		changeTask(userId, tableId, taskId, change, time);
 
-		return task_id;
+		return taskId;
 	}
 	
-	public void changeTable(Integer table_id, Table.TableInfo change, Long time) {
+	public void changeTable(Integer userId, Integer tableId, Table.TableInfo change, Long time) {
 		ContentValues values = new ContentValues();
-		values.put("table_id", table_id);
+		values.put("user_id", userId);
+		values.put("table_id", tableId);
 		values.put("time", time);
 		values.put("name", change.name);
 		values.put("description", change.description);
 		database.insert(DatabaseHelper.TABLE_TABLE_CHANGES, null, values);
 	}
 
-	public void changeTask(Integer table_id, Integer task_id, Task.TaskChange change,Long time) {
+	public void changeTask(Integer userId, Integer tableId, Integer taskId, Task.TaskChange change,Long time) {
 		ContentValues values = new ContentValues();
-		values.put("table_id", table_id);
-		values.put("task_id", task_id);
+		values.put("user_id", userId);
+		values.put("table_id", tableId);
+		values.put("task_id", taskId);
 		values.put("time", time);
 		values.put("name", change.name);
 		values.put("description", change.description);

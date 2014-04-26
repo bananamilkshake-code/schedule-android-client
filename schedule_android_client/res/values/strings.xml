@@ -10,6 +10,7 @@
     <string name="button_new_table_create">Create</string>
     <string name="text_new_table_name">Name</string>
     <string name="text_new_table_description">Description</string>
-
+    <string name="view_tables_button">View tables</string>
+    <string name="title_activity_view_tables">ViewTables</string>
 
 </resources>

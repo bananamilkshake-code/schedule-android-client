@@ -15,7 +15,7 @@ import android.widget.EditText;
 public class CreateTableActivity extends ActionBarActivity implements OnClickListener {
 	public final static String EXTRA_NAME = "Table Name";
 	public final static String EXTRA_DESCRIPTION = "Table decription";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

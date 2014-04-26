@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String TABLE_TASK_CHANGES = "task_changes";
 	public static final String TABLE_COMMENTS = "comments";
 	public static final String TABLE_READERS = "readers";
-	
+
 	private static final int DATABASE_VERSION = 1;
 
 	private static final String CREATE_USERS = 
@@ -108,6 +108,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		db.execSQL(CREATE_TASKS_CHANGES);
 		db.execSQL(CREATE_COMMENTS);
 		db.execSQL(CREATE_READERS);
+
+		db.execSQL("INSERT INTO users(id, name) VALUES (0, \"\")");
 	}
 
 	@Override
