@@ -46,18 +46,20 @@ public class Database {
 
 		String[] columnsChanges = {"table_id", "time", "user_id", "name", "description"};
 		Cursor cursorChanges = database.query(DatabaseHelper.TABLE_TABLE_CHANGES, columnsChanges, null, null, null, null, null);
-		
-		int table_id = cursorChanges.getColumnIndex("table_id");
-		int time = cursorChanges.getColumnIndex("time");
-		int user_id = cursorChanges.getColumnIndex("user_id");
-		int name = cursorChanges.getColumnIndex("name");
-		int description = cursorChanges.getColumnIndex("description");
 
 		if (cursorChanges.moveToFirst()) {
+			int tableId = cursorChanges.getColumnIndex("table_id");
+			int time = cursorChanges.getColumnIndex("time");
+			int userId = cursorChanges.getColumnIndex("user_id");
+			int name = cursorChanges.getColumnIndex("name");
+			int description = cursorChanges.getColumnIndex("description");
+
 			while(!cursorChanges.isAfterLast()) {
-				Table table = tables.get(cursorChanges.getInt(table_id));
+				Integer tableIdVal = cursorChanges.getInt(tableId);
+				
+				Table table = tables.get(cursorChanges.getInt(tableIdVal));
 				if (table != null) {
-					Integer userIdVal = cursorChanges.getInt(user_id);
+					Integer userIdVal = cursorChanges.getInt(userId);
 					Long timeVal = cursorChanges.getLong(time);
 					String nameVal = cursorChanges.getString(name);
 					String descriptionVal = cursorChanges.getString(description);
@@ -126,21 +128,21 @@ public class Database {
 		String[] columns = {"table_id", "task_id", "commentator_id", "time", "commentary"};
 		Cursor cursor = database.query(DatabaseHelper.TABLE_COMMENTS, columns, null, null, null, null, "table_id, task_id, time");
 
-		int table_id = cursor.getColumnIndex("table_id");
-		int task_id = cursor.getColumnIndex("task_id");
-		int time_id = cursor.getColumnIndex("time");
-		int commentator_id = cursor.getColumnIndex("commentator_id");
-		int text_id = cursor.getColumnIndex("text");
+		int tableId = cursor.getColumnIndex("table_id");
+		int taskId = cursor.getColumnIndex("task_id");
+		int timeId = cursor.getColumnIndex("time");
+		int commentatorId = cursor.getColumnIndex("commentator_id");
+		int textId = cursor.getColumnIndex("text");
 		
 		if (cursor.moveToFirst()) {
 			while(!cursor.isAfterLast()) {
-				Integer tableIdVal = cursor.getInt(table_id);
-				Integer taskIdVal = cursor.getInt(task_id);
+				Integer tableIdVal = cursor.getInt(tableId);
+				Integer taskIdVal = cursor.getInt(taskId);
 				Task task = tables.get(tableIdVal).getTask(taskIdVal);
 				if (task != null) {
-					Integer commentatorVal = cursor.getInt(commentator_id);
-					Long timeVal = cursor.getLong(time_id);
-					String textVal = cursor.getString(text_id);
+					Integer commentatorVal = cursor.getInt(commentatorId);
+					Long timeVal = cursor.getLong(timeId);
+					String textVal = cursor.getString(textId);
 					task.addComment(commentatorVal, timeVal, textVal);
 				}
 				cursor.moveToNext();
