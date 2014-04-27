@@ -5,10 +5,12 @@ import java.util.HashMap;
 
 import storage.database.Database;
 import storage.tables.Table;
+import storage.tables.Table.TableInfo;
 import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,14 +20,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	public static final int REQUEST_NEW_TABLE = 1;
 
-	private ArrayList<String> tablesTitles = new ArrayList<String>();
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	
@@ -35,15 +37,11 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 
 		Client.createInstance(new Database(this));
-		
-		HashMap<Integer, Table> tables = Client.getInstance().getTables();
-		for (Table table : tables.values()) {
-			tablesTitles.add(((Table.TableInfo)table.getData()).name);
-		}
+
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 		
-		drawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, (String[]) tablesTitles.toArray(new String[tablesTitles.size()])));
+		drawerList.setAdapter(new TablesAdapter(Client.getInstance().getTables()));
 		drawerList.setOnItemClickListener(new DrawerItemClickListener());
 		
 		if (savedInstanceState == null) {
@@ -151,6 +149,56 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			selectItem(position);
+		}
+	}
+
+	public class TablesAdapter extends BaseAdapter {
+		HashMap<Integer, Table> tables;
+		ArrayList<Integer> idsByPos = new ArrayList<Integer>();
+		
+		public TablesAdapter(HashMap<Integer, Table> tables) {
+			this.tables = tables;
+			
+			for (Integer tableId : tables.keySet()) {
+				idsByPos.add(tableId);
+			}
+		}
+
+		@Override
+		public boolean hasStableIds() {
+			return true;
+		}
+
+		@Override
+		public int getCount() {
+			return tables.size();
+		}
+
+		@Override
+		public Table getItem(int position) {
+			return tables.get(idsByPos.get(position));
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View rowView, ViewGroup arg2) {
+			if (rowView == null) {
+				LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				rowView = inflater.inflate(R.layout.item_table, arg2, false);
+			}
+
+			TextView tableName = (TextView)rowView.findViewById(R.id.item_table_name);
+			TextView tableDescription = (TextView)rowView.findViewById(R.id.item_table_description);
+
+			Table table = tables.get(idsByPos.get(position));
+			tableName.setText((CharSequence)(((TableInfo)table.getData()).name));
+			tableDescription.setText((CharSequence)(((TableInfo)table.getData()).description));
+
+			return rowView;
 		}
 	}
 
