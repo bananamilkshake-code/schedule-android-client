@@ -31,7 +31,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <ListView
-            android:id="@+id/listView1"
+            android:id="@+id/list_tasks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -41,7 +41,7 @@
         </ListView>
 
         <Button
-            android:id="@+id/btAddTask"
+            android:id="@+id/btCreateTask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/text_table_description"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/text_table_name"
-            android:layout_toLeftOf="@+id/btAddTask"
+            android:layout_toLeftOf="@+id/btCreateTask"
             android:text="@string/button_add_user" />
 
     </RelativeLayout>

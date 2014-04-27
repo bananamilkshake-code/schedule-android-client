@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/item_task_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="20dp"
+        android:text="Name"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/item_task_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/item_task_name"
+        android:layout_below="@+id/item_task_name"
+        android:text="Description"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/item_task_date_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/item_task_name"
+        android:layout_centerHorizontal="true"
+        android:text="06.05.2014"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/item_task_date_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/item_task_date_start"
+        android:layout_alignBottom="@+id/item_task_date_start"
+        android:layout_marginLeft="17dp"
+        android:layout_toRightOf="@+id/item_task_date_start"
+        android:text="07.05.2014"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/item_task_time_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/item_task_time_start"
+        android:layout_alignBottom="@+id/item_task_time_start"
+        android:layout_alignLeft="@+id/item_task_date_end"
+        android:text="13:40"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/item_task_time_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/item_task_date_start"
+        android:layout_below="@+id/item_task_date_start"
+        android:text="11:00"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="13sp" />
+
+</RelativeLayout>

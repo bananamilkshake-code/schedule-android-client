@@ -56,7 +56,6 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 		result.putExtra(EXTRA_DESCRIPTION, tableDesc);
 
 		setResult(RESULT_OK, result);
-
 		super.finish();
 	}
 

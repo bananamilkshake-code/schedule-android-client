@@ -117,6 +117,7 @@ public class Client extends TCPClient {
 			Table table = new Table(this.id, Utility.getUnixTime(), name, description);
 			Integer newTableId = database.createTable(userId, table);
 			tables.put(newTableId, table);
+			changePermision(newTableId, getId(), Permission.WRITE);
 			Log.d("Client", "New table created " + newTableId);
 
 			if (local)
@@ -126,9 +127,9 @@ public class Client extends TCPClient {
 		}
 	}
 	
-	public void createTask(Integer userId, Integer tableId, String name, String description, Date startDate, Date endDate, Date endTime) {
+	public void createTask(Integer userId, Long time, Integer tableId, String name, String description, Date startDate, Date endDate, Date endTime) {
 		Table table = tables.get(tableId);
-		Task task = new Task(this.id, Utility.getUnixTime(), name, description, startDate, endDate, endTime);
+		Task task = new Task(userId, time, name, description, startDate, endDate, endTime);
 		Integer taskId = database.createTask(userId, tableId, task);
 		table.addTask(taskId, task);
 		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");

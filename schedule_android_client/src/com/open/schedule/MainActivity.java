@@ -61,9 +61,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			public void run() {
 				while(true) {
 					while(Client.getInstance().isConnected());
-
 					Client.getInstance().tryConnect();
-
 					if (!Client.getInstance().isConnected()) {
 						try {
 							Thread.sleep(1000);
@@ -109,9 +107,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
 			Client.getInstance().createTable(Client.getInstance().getId(), true, name, description);
 			((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
-			break;
+			return;
 		default:
-			break;
+			return;
 		}
 	}
 
