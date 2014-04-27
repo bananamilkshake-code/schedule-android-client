@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,11 +21,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
+	public static final String TABLE_ID = "TABLE_ID";
 
 	public static final int REQUEST_NEW_TABLE = 1;
 
@@ -40,10 +43,15 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
-		
+
 		drawerList.setAdapter(new TablesAdapter(Client.getInstance().getTables()));
-		drawerList.setOnItemClickListener(new DrawerItemClickListener());
-		
+		drawerList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				showTableInfo(position);
+			}
+		});
+
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
@@ -60,7 +68,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
-							e.printStackTrace();
+							Log.e("MainActivity", "Connection sleep", e);
 						}
 					}
 					else {
@@ -94,12 +102,13 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != RESULT_OK)
 			return;
-		
+
 		switch (requestCode) {
 		case REQUEST_NEW_TABLE:
 			String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
 			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
 			Client.getInstance().createTable(Client.getInstance().getId(), true, name, description);
+			((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
 			break;
 		default:
 			break;
@@ -108,48 +117,39 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		switch(view.getId())
-		{
+		switch(view.getId()) {
 		case R.id.btLogin:
 			openLoginActivity();
 			return;
 		case R.id.btNewTable:
 			openNewTableActivity();
 			return;
-		case R.id.btViewTables:
-			openViewTablesActivity();
-			return;
 		default:
 			return;
 		}
 	}
-	
+
 	private void openLoginActivity() {
 		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 		startActivity(loginIntent);
 	}
-	
+
 	private void openNewTableActivity() {
 		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
 		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
 	}
-	
-	private void openViewTablesActivity() {
-		Intent viewTablesIntent = new Intent(MainActivity.this, ViewTablesActivity.class);
-		startActivity(viewTablesIntent);
-	}
-	
 
-	private void selectItem(int position) {
-		drawerList.setItemChecked(position, true);
+	private void openViewTableActivity(Integer position) {
+		Intent viewTableIntent = new Intent(MainActivity.this, ViewTableActivity.class);
+		Integer tableId = (int) drawerList.getAdapter().getItemId(position);
+		viewTableIntent.putExtra(TABLE_ID, tableId);
+		startActivity(viewTableIntent);
+	}
+
+	private void showTableInfo(int tableId) {
+		drawerList.setItemChecked(tableId, true);
+		openViewTableActivity(tableId);
 		drawerLayout.closeDrawer(drawerList);
-	}
-
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			selectItem(position);
-		}
 	}
 
 	public class TablesAdapter extends BaseAdapter {
@@ -181,7 +181,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 		@Override
 		public long getItemId(int position) {
-			return position;
+			return idsByPos.get(position);
 		}
 
 		@Override

@@ -13,5 +13,7 @@
     <string name="view_tables_button">View tables</string>
     <string name="title_activity_view_tables">ViewTables</string>
     <string name="title_activity_view_tasks">ViewTasksActivity</string>
+    <string name="add_task">Add task</string>
+    <string name="button_add_user">Add user</string>
 
 </resources>

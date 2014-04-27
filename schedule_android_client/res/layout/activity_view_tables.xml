@@ -3,13 +3,61 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.open.schedule.ViewTablesActivity"
+    tools:context="com.open.schedule.ViewTableActivity"
     tools:ignore="MergeRootFrame" >
 
-    <ListView
-        android:id="@+id/list_tables"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/text_table_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginTop="20dp"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/text_table_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_table_name"
+            android:layout_below="@+id/text_table_name"
+            android:text="Desription"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/text_table_description"
+            android:layout_marginTop="30dp" >
+
+        </ListView>
+
+        <Button
+            android:id="@+id/btAddTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/text_table_description"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="22dp"
+            android:text="@string/add_task" />
+
+        <Button
+            android:id="@+id/btAddUser"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/text_table_name"
+            android:layout_toLeftOf="@+id/btAddTask"
+            android:text="@string/button_add_user" />
+
+    </RelativeLayout>
 
 </FrameLayout>

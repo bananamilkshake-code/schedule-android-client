@@ -34,7 +34,7 @@
             android:label="@string/title_activity_create_table" >
         </activity>
         <activity
-            android:name="com.open.schedule.ViewTablesActivity"
+            android:name="com.open.schedule.ViewTableActivity"
             android:label="@string/title_activity_view_tables" >
         </activity>
         <activity
