@@ -1,9 +1,14 @@
 package com.open.schedule;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import storage.database.Database;
+import storage.tables.Table;
 import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,21 +17,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	public static final int REQUEST_NEW_TABLE = 1;
 
+	private ArrayList<String> tablesTitles = new ArrayList<String>();
+	private DrawerLayout drawerLayout;
+	private ListView drawerList;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		Client.createInstance(new Database(this));
+		
+		HashMap<Integer, Table> tables = Client.getInstance().getTables();
+		for (Table table : tables.values()) {
+			tablesTitles.add(((Table.TableInfo)table.getData()).name);
+		}
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawerList = (ListView) findViewById(R.id.left_drawer);
+		
+		drawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, (String[]) tablesTitles.toArray(new String[tablesTitles.size()])));
+		drawerList.setOnItemClickListener(new DrawerItemClickListener());
+		
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		
-		Client.createInstance(new Database(this));
 
 		new Thread() {
 			@Override
@@ -118,14 +140,25 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		Intent viewTablesIntent = new Intent(MainActivity.this, ViewTablesActivity.class);
 		startActivity(viewTablesIntent);
 	}
+	
+
+	private void selectItem(int position) {
+		drawerList.setItemChecked(position, true);
+		drawerLayout.closeDrawer(drawerList);
+	}
+
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			selectItem(position);
+		}
+	}
 
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
+		public PlaceholderFragment() {}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

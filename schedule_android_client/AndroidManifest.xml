@@ -37,6 +37,10 @@
             android:name="com.open.schedule.ViewTablesActivity"
             android:label="@string/title_activity_view_tables" >
         </activity>
+        <activity
+            android:name="com.open.schedule.ViewTasksActivity"
+            android:label="@string/title_activity_view_tasks" >
+        </activity>
     </application>
 
 </manifest>

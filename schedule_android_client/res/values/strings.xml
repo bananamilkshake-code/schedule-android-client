@@ -12,5 +12,6 @@
     <string name="text_new_table_description">Description</string>
     <string name="view_tables_button">View tables</string>
     <string name="title_activity_view_tables">ViewTables</string>
+    <string name="title_activity_view_tasks">ViewTasksActivity</string>
 
 </resources>
