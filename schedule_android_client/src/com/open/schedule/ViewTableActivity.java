@@ -1,7 +1,6 @@
 package com.open.schedule;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import storage.database.Database;
 import storage.tables.Table;
 import storage.tables.Table.TableInfo;
@@ -33,11 +33,13 @@ import io.Client;
 public class ViewTableActivity extends ActionBarActivity implements OnClickListener {
 
 	public final int REQUEST_CREATE_TASK = 1;
-	
+
 	public final String TABLE_ID = "TABLE_ID";
-	
+
 	private Integer tableId;
 	private Table table;
+	
+	private ListView tasksList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,11 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
 		table = Client.getInstance().getTables().get(tableId);
 
+		tasksList = (ListView) findViewById(R.id.list_tasks);
+		Button createTask = (Button) findViewById(R.id.btCreateTask);
 		showTable();
+
+		createTask.setOnClickListener((OnClickListener) ViewTableActivity.this);
 	}
 
 	@Override
@@ -65,8 +71,6 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		return super.onOptionsItemSelected(item);
 	}
 
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-	private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -87,14 +91,15 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 			Date endTimeVal = null;
 
 			try {
-				startDateVal = dateFormatter.parse(startDate);
-				endDateVal = dateFormatter.parse(endDate);
-				endTimeVal = timeFormatter.parse(endTime);
+				startDateVal = CreateTaskActivity.dateFormatter.parse(startDate);
+				endDateVal = CreateTaskActivity.dateFormatter.parse(endDate);
+				endTimeVal = CreateTaskActivity.timeFormatter.parse(endTime);
 			} catch (ParseException e) {
 				Log.w(Database.class.getName(), "Date task changes parsing", e);
 			}
 
 			Client.getInstance().createTask(Client.getInstance().getId(), Utility.getUnixTime(), tableId, name, description, startDateVal, endDateVal, endTimeVal);
+			((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();
 			return;
 		default:
 			return;
@@ -108,15 +113,11 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		((TextView) findViewById(R.id.text_table_name)).setText(name);
 		((TextView) findViewById(R.id.text_table_description)).setText(description);
 
-		ListView tasksList = (ListView) findViewById(R.id.list_tasks);
 		tasksList.setAdapter(new TasksAdapter(table.getTasks()));
 		tasksList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
 		});
-		
-		Button createTask = (Button) findViewById(R.id.btCreateTask);
-		createTask.setOnClickListener((OnClickListener) ViewTableActivity.this);
 	}
 
 	public void showCreateTaskActivity() {
@@ -141,9 +142,8 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		
 		public TasksAdapter(HashMap<Integer, Task> tasks) {
 			this.tasks = tasks;
-
-			for (Integer tableId : tasks.keySet()) {
-				idsByPos.add(tableId);
+			for (Integer taskId : tasks.keySet()) {
+				idsByPos.add(taskId);
 			}
 		}
 
