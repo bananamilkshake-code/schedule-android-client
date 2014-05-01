@@ -121,7 +121,7 @@ public class Client extends TCPClient {
 			Log.d("Client", "New table created " + newTableId);
 
 			if (local)
-				send(new io.packet.client.CreateTablePacket(name, description));
+				send(new io.packet.client.CreateTablePacket(Utility.getUnixTime(), name, description));
 		} catch (IOException e) {
 			Log.w("Client", "New table creation error", e);
 		}

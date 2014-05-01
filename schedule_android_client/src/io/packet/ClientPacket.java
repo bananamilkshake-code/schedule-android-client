@@ -11,7 +11,12 @@ public abstract class ClientPacket extends Packet {
 	public enum Type {
 		REGISTER,
 		LOGIN,
-		CREATE_TABLE
+		CREATE_TABLE,
+		CREATE_TASK,
+		TABLE_CHANGE,
+		TASK_CHANGE,
+		PERMISSION,
+		COMMENTARY
 	}
 
 	private final Type type;
@@ -36,12 +41,33 @@ public abstract class ClientPacket extends Packet {
 
 		outToServer.write(data);
 	}
+
 	public short getSize() {
 		return (short) this.buffer.position();
 	}
 	
-	protected void writeString(String string) throws IOException {
-		this.buffer.putShort((short)(Byte.SIZE * string.length()));
-		this.buffer.put(string.getBytes());
+	protected void writeString(String value) throws IOException {
+		this.buffer.putShort((short)(Byte.SIZE * value.length()));
+		this.buffer.put(value.getBytes());
+	}
+	
+	protected void writeFixedString(String value) throws IOException {
+		this.buffer.put(value.getBytes());
+	}
+	
+	protected void writeByte(Byte value) throws IOException {
+		this.buffer.put(value);
+	}
+	
+	protected void writeShort(Short value) throws IOException {
+		this.buffer.putShort(value);
+	}
+	
+	protected void writeInt(Integer value) throws IOException {
+		this.buffer.putInt(value);
+	}
+	
+	protected void writeLong(Long value) throws IOException {
+		this.buffer.putLong(value);
 	}
 }
