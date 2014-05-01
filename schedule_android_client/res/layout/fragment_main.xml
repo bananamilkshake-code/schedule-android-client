@@ -8,37 +8,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.open.schedule.MainActivity$PlaceholderFragment" >
 
-    <TextView
-        android:id="@+id/textTableName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
     <Button
         android:id="@+id/btLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textTableName"
-        android:layout_alignRight="@+id/btNewTable"
-        android:layout_below="@+id/textTableName"
         android:layout_marginTop="33dp"
+        android:minWidth="100dip"
         android:text="@string/login_button" />
 
     <Button
         android:id="@+id/btNewTable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btLogin"
-        android:layout_marginTop="23dp"
-        android:text="@string/new_table_button" />
-
-    <Button
-        android:id="@+id/btViewTables"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btNewTable"
+        android:layout_alignBaseline="@+id/btLogin"
+        android:layout_alignBottom="@+id/btLogin"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="23dp"
-        android:text="@string/view_tables_button" />
+        android:layout_marginRight="38dp"
+        android:text="@string/new_table_button" />
 
 </RelativeLayout>

@@ -207,7 +207,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 			rootView.findViewById(R.id.btLogin).setOnClickListener((MainActivity)getActivity());
 			rootView.findViewById(R.id.btNewTable).setOnClickListener((MainActivity)getActivity());
-			rootView.findViewById(R.id.btViewTables).setOnClickListener((MainActivity)getActivity());
 
 			return rootView;
 		}
