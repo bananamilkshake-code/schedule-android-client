@@ -156,12 +156,39 @@ public class Client extends TCPClient {
 		Table table = tables.get(tableId);
 		table.change(table.new TableInfo(userId, Utility.getUnixTime(), name, description));
 		Log.d("Client", "Table " + tableId + " changed");
+
+		if (local) {
+			try {
+				send(new io.packet.client.ChangeTablePacket(tableId, Utility.getUnixTime(), name, description));
+			} catch (IOException e) {
+				Log.w("Client", "Table " + tableId + " change error", e);
+			}
+		}
+	}
+	
+	public void changeTask(Integer userId, Boolean local, Long time, Integer tableId, Integer taskId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+		Table table = tables.get(tableId);
+		Task task = table.getTask(taskId);
+		task.change(task.new TaskChange(userId, time, name, description, startDate, endDate, startTime, endTime));
+		
+		if (local) {
+			String startDateVal = dateFormatter.format(startDate);
+			String endDateVal = dateFormatter.format(endDate);
+			String startTimeVal = timeFormatter.format(startTime);
+			String endTimeVal = timeFormatter.format(endTime);
+
+			try {
+				send(new io.packet.client.ChangeTaskPacket(taskId, tableId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+			} catch (IOException e) {
+				Log.w("Client", "New task creation error", e);
+			}
+		}
 	}
 
 	public void createComment(Integer userId, Boolean local, Integer tableId, Integer taskId, String comment, Long time) {
 		tables.get(tableId).getTask(taskId).addComment(userId, time, comment);
 		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
-		
+
 		if (local) {
 			try {
 				send(new io.packet.client.CreateComment(tableId, taskId, time, comment));
@@ -174,7 +201,7 @@ public class Client extends TCPClient {
 	public void changePermision(Boolean local, Integer tableId, Integer userId, Permission permission) {
 		tables.get(tableId).setPermission(userId, permission);
 		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
-		
+
 		if (local) {
 			try {
 				send(new io.packet.client.PermissionPacket(userId, tableId, (byte)(permission.ordinal())));
