@@ -1,6 +1,8 @@
 package io;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -18,14 +20,14 @@ import io.packet.server.LoginPacket;
 
 public class Client extends TCPClient {	
 	private static Client INSTANCE = null;
-	
+
 	private boolean logged = false;
 	private Integer id = 0;
 
 	private HashMap<Integer, Table> tables = new HashMap<Integer, Table>();
-	
+
 	private Database database = null;
-	
+
 	protected Client(Database database) {
 		super(Config.host, Config.port);
 		this.database = database;
@@ -113,44 +115,76 @@ public class Client extends TCPClient {
 	}
 
 	public void createTable(Integer userId, Boolean local, String name, String description) {
-		try {
-			Table table = new Table(this.id, Utility.getUnixTime(), name, description);
-			Integer newTableId = database.createTable(userId, table);
-			tables.put(newTableId, table);
-			changePermision(newTableId, getId(), Permission.WRITE);
-			Log.d("Client", "New table created " + newTableId);
+		Table table = new Table(this.id, Utility.getUnixTime(), name, description);
+		Integer newTableId = database.createTable(userId, table);
+		tables.put(newTableId, table);
+		changePermision(local, newTableId, getId(), Permission.WRITE);
+		Log.d("Client", "New table created " + newTableId);
 
-			if (local)
-				send(new io.packet.client.CreateTablePacket(Utility.getUnixTime(), name, description));
+		if (local)
+		try {
+			send(new io.packet.client.CreateTablePacket(Utility.getUnixTime(), name, description));
 		} catch (IOException e) {
 			Log.w("Client", "New table creation error", e);
 		}
 	}
-	
-	public void createTask(Integer userId, Long time, Integer tableId, String name, String description, Date startDate, Date endDate, Date endTime) {
+
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy");
+	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm");
+
+	public void createTask(Integer userId, Boolean local, Long time, Integer tableId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		Table table = tables.get(tableId);
-		Task task = new Task(userId, time, name, description, startDate, endDate, endTime);
+		Task task = new Task(userId, time, name, description, startDate, endDate, startTime, endTime);
 		Integer taskId = database.createTask(userId, tableId, task);
 		table.addTask(taskId, task);
 		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");
+
+		if (local) {
+			String startDateVal = dateFormatter.format(startDate);
+			String endDateVal = dateFormatter.format(endDate);
+			String startTimeVal = timeFormatter.format(startTime);
+			String endTimeVal = timeFormatter.format(endTime);
+
+			try {
+				send(new io.packet.client.CreateTaskPacket(time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+			} catch (IOException e) {
+				Log.w("Client", "New task creation error", e);
+			}
+		}
 	}
-	
-	public void changeTable(Integer userId, Integer tableId, String name, String description) {
+
+	public void changeTable(Integer userId, Boolean local, Integer tableId, String name, String description) {
 		Table table = tables.get(tableId);
 		table.change(table.new TableInfo(userId, Utility.getUnixTime(), name, description));
 		Log.d("Client", "Table " + tableId + " changed");
 	}
-	
-	public void createComment(Integer userId, Integer tableId, Integer taskId, String text, Long time) {
-		tables.get(tableId).getTask(taskId).addComment(userId, time, text);
-		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + text);
+
+	public void createComment(Integer userId, Boolean local, Integer tableId, Integer taskId, String comment, Long time) {
+		tables.get(tableId).getTask(taskId).addComment(userId, time, comment);
+		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
+		
+		if (local) {
+			try {
+				send(new io.packet.client.CreateComment(tableId, taskId, time, comment));
+			} catch (IOException e) {
+				Log.w("Client", "New comment creation error", e);
+			}
+		}
 	}
-	
-	public void changePermision(Integer tableId, Integer userId, Permission permission) {
+
+	public void changePermision(Boolean local, Integer tableId, Integer userId, Permission permission) {
 		tables.get(tableId).setPermission(userId, permission);
 		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
+		
+		if (local) {
+			try {
+				send(new io.packet.client.PermissionPacket(userId, tableId, (byte)(permission.ordinal())));
+			} catch (IOException e) {
+				Log.w("Client", "Changin permission error", e);
+			}
+		}
 	}
-	
+
 	public final HashMap<Integer, Table> getTables() {
 		return tables;
 	}

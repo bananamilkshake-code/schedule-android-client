@@ -88,17 +88,19 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 
 			Date startDateVal = null;
 			Date endDateVal = null;
+			Date startTimeVal = null;
 			Date endTimeVal = null;
 
 			try {
 				startDateVal = CreateTaskActivity.dateFormatter.parse(startDate);
 				endDateVal = CreateTaskActivity.dateFormatter.parse(endDate);
+				startTimeVal = CreateTaskActivity.timeFormatter.parse(startTime);
 				endTimeVal = CreateTaskActivity.timeFormatter.parse(endTime);
 			} catch (ParseException e) {
 				Log.w(Database.class.getName(), "Date task changes parsing", e);
 			}
 
-			Client.getInstance().createTask(Client.getInstance().getId(), Utility.getUnixTime(), tableId, name, description, startDateVal, endDateVal, endTimeVal);
+			Client.getInstance().createTask(Client.getInstance().getId(), true, Utility.getUnixTime(), tableId, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
 			((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();
 			return;
 		default:
