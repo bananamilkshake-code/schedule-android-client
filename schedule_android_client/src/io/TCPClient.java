@@ -64,10 +64,11 @@ public abstract class TCPClient
 	}
 
 	public void disconnect() {
+		this.clear();
+
 		try {
 			inFromServer.close();
 			outToServer.close();
-
 			socket.close();
 		} catch (IOException e) {
 			Log.w("TCP disconnect", "Error on disconnecting from server", e);
@@ -117,4 +118,5 @@ public abstract class TCPClient
 	}
 
 	public abstract void recv(ServerPacket packet);
+	protected abstract void clear();
 }

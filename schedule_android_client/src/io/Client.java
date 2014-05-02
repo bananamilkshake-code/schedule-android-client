@@ -214,4 +214,9 @@ public class Client extends TCPClient {
 	public final HashMap<Integer, Table> getTables() {
 		return tables;
 	}
+
+	@Override
+	protected void clear() {
+		logged = false;
+	}
 }
