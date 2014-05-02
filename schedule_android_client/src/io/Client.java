@@ -1,7 +1,6 @@
 package io;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -146,7 +145,7 @@ public class Client extends TCPClient {
 			String endTimeVal = timeFormatter.format(endTime);
 
 			try {
-				send(new io.packet.client.CreateTaskPacket(time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+				send(new io.packet.client.CreateTaskPacket(tableId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
 			} catch (IOException e) {
 				Log.w("Client", "New task creation error", e);
 			}
