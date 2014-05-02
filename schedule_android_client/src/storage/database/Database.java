@@ -89,7 +89,8 @@ public class Database {
 		int name = cursorChanges.getColumnIndex("name");
 		int description = cursorChanges.getColumnIndex("description");
 		int startDate = cursorChanges.getColumnIndex("start_date");
-		int endDate = cursorChanges.getColumnIndex("completion_date");
+		int endDate = cursorChanges.getColumnIndex("end_date");
+		int startTime = cursorChanges.getColumnIndex("start_time");
 		int endTime = cursorChanges.getColumnIndex("end_time");
 		
 		if (cursorChanges.moveToFirst()) {
@@ -106,17 +107,19 @@ public class Database {
 				String descVal = cursorChanges.getString(description);
 				Date startDateVal = null;
 				Date endDateVal = null;
+				Date startTimeVal = null;
 				Date endTimeVal = null;
 	
 				try {
 					startDateVal = dateFormatter.parse(cursorChanges.getString(startDate));
 					endDateVal = dateFormatter.parse(cursorChanges.getString(endDate));
+					startTimeVal = timeFormatter.parse(cursorChanges.getString(startTime));
 					endTimeVal = timeFormatter.parse(cursorChanges.getString(endTime));
 				} catch (ParseException e) {
 					Log.w(Database.class.getName(), "Date task changes parsing", e);
 				}
 	
-				task.change(task.new TaskChange(userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, endTimeVal));
+				task.change(task.new TaskChange(userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, startTimeVal, endTimeVal));
 				cursorChanges.moveToNext();
 			}
 		}
