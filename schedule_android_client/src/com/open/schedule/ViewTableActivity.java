@@ -141,9 +141,6 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 
 		public TasksAdapter(HashMap<Integer, Task> tasks) {
 			this.tasks = tasks;
-			for (Integer taskId : tasks.keySet()) {
-				idsByPos.add(taskId);
-			}
 		}
 
 		@Override
@@ -163,11 +160,16 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 
 		@Override
 		public long getItemId(int position) {
-			return idsByPos.get(position);
+			return position;
 		}
 
 		@Override
 		public View getView(int position, View rowView, ViewGroup arg2) {
+			idsByPos.clear();
+			for (Integer taskId : tasks.keySet()) {
+				idsByPos.add(taskId);
+			}
+
 			if (rowView == null) {
 				LayoutInflater inflater = (LayoutInflater) ViewTableActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				rowView = inflater.inflate(R.layout.item_task, arg2, false);
