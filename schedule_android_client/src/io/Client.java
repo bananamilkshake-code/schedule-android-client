@@ -187,6 +187,7 @@ public class Client extends TCPClient {
 
 	public void createComment(Integer userId, Boolean local, Integer tableId, Integer taskId, String comment, Long time) {
 		tables.get(tableId).getTask(taskId).addComment(userId, time, comment);
+		database.createComment(tableId, taskId, time, getId(), comment);
 		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
 
 		if (local) {
@@ -200,6 +201,7 @@ public class Client extends TCPClient {
 
 	public void changePermision(Boolean local, Integer tableId, Integer userId, Permission permission) {
 		tables.get(tableId).setPermission(userId, permission);
+		database.setPermission(tableId, userId, permission);
 		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
 
 		if (local) {

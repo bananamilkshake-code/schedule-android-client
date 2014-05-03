@@ -14,9 +14,7 @@ public class Table extends ChangableData {
 	private HashMap<Integer, Permission> readers = new HashMap<Integer, Permission>();
 	private HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
 
-	public Table() {
-		
-	}
+	public Table() {}
 	
 	public Table(Integer creatorId, Long creationTime, String name, String description) {
 		this();

@@ -31,7 +31,10 @@ import io.Client;
 
 public class ViewTableActivity extends ActionBarActivity implements OnClickListener {
 
-	public final int REQUEST_CREATE_TASK = 1;
+	public static final int REQUEST_CREATE_TASK = 1;
+	
+	public static final String TABLE_ID = "tableId";
+	public static final String TASK_ID = "taskId";
 
 	private Integer tableId;
 	private Table table;
@@ -103,7 +106,7 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 			return;
 		}
 	}
-	
+
 	private void showTable() {
 		String name = ((Table.TableInfo)table.getData()).name;
 		String description = ((Table.TableInfo)table.getData()).description;
@@ -115,8 +118,17 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		tasksList.setAdapter(new TasksAdapter(table.getTasks()));
 		tasksList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				showComments(Long.valueOf(id).intValue());
+			}
 		});
+	}
+
+	private void showComments(Integer taskId) {
+		Intent intent = new Intent(ViewTableActivity.this, CreateCommentActivity.class);
+		intent.putExtra(TABLE_ID, this.tableId);
+		intent.putExtra(TASK_ID, taskId);
+		startActivity(intent);
 	}
 
 	public void showCreateTaskActivity() {
@@ -160,7 +172,7 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 
 		@Override
 		public long getItemId(int position) {
-			return position;
+			return idsByPos.get(position);
 		}
 
 		@Override

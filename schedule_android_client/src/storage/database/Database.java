@@ -196,6 +196,17 @@ public class Database {
 		return taskId;
 	}
 	
+	public void createComment(Integer tableId, Integer taskId, Long time, Integer userId, String text) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.TABLE_ID, tableId);
+		values.put(DatabaseHelper.TASK_ID, taskId);
+		values.put(DatabaseHelper.USER_ID, userId);
+		values.put(DatabaseHelper.TIME, time);
+		values.put(DatabaseHelper.COMMENTS_TEXT, text);
+		Long res = database.insert(DatabaseHelper.TABLE_COMMENTS, null, values);
+		Log.d("Comment creation", res.toString());
+	}
+	
 	public void changeTable(Integer userId, Integer tableId, Table.TableInfo change, Long time) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.USER_ID, userId);

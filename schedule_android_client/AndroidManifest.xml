@@ -45,6 +45,10 @@
             android:name="com.open.schedule.CreateTaskActivity"
             android:label="@string/title_activity_create_task" >
         </activity>
+        <activity
+            android:name="com.open.schedule.CreateCommentActivity"
+            android:label="@string/title_activity_crearte_comment" >
+        </activity>
     </application>
 
 </manifest>

@@ -23,14 +23,18 @@ public class Task extends ChangableData {
 	public void addComment(Integer commentatorId, Long time, String text) {
 		comments.add(new Comment(commentatorId, time, text));
 	}
+	
+	public TreeSet<Comment> getComments() {
+		return comments;
+	}
 
 	public class Comment {
-		public Integer commentator_id;
+		public Integer commentatorId;
 		public Long time;
 		public String text;
 
 		public Comment(Integer commentatorId, Long time, String text) {
-			this.commentator_id = commentatorId;
+			this.commentatorId = commentatorId;
 			this.time = time;
 			this.text = text;
 		}
