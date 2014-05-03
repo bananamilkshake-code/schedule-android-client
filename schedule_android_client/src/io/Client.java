@@ -113,11 +113,11 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void createTable(Integer userId, Boolean local, String name, String description) {
-		Table table = new Table(this.id, Utility.getUnixTime(), name, description);
+	public void createTable(Integer userId, Boolean local, Long time, String name, String description) {
+		Table table = new Table(this.id, time, name, description);
 		Integer newTableId = database.createTable(userId, table);
 		tables.put(newTableId, table);
-		changePermision(local, newTableId, getId(), Permission.WRITE);
+		changePermision(false, newTableId, getId(), Permission.WRITE);
 		Log.d("Client", "New table created " + newTableId);
 
 		if (local)
@@ -152,9 +152,9 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void changeTable(Integer userId, Boolean local, Integer tableId, String name, String description) {
+	public void changeTable(Integer userId, Boolean local, Long time, Integer tableId, String name, String description) {
 		Table table = tables.get(tableId);
-		table.change(table.new TableInfo(userId, Utility.getUnixTime(), name, description));
+		table.change(time, table.new TableInfo(userId, time, name, description));
 		Log.d("Client", "Table " + tableId + " changed");
 
 		if (local) {
@@ -165,12 +165,12 @@ public class Client extends TCPClient {
 			}
 		}
 	}
-	
+
 	public void changeTask(Integer userId, Boolean local, Long time, Integer tableId, Integer taskId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		Table table = tables.get(tableId);
 		Task task = table.getTask(taskId);
-		task.change(task.new TaskChange(userId, time, name, description, startDate, endDate, startTime, endTime));
-		
+		task.change(time, task.new TaskChange(userId, time, name, description, startDate, endDate, startTime, endTime));
+
 		if (local) {
 			String startDateVal = dateFormatter.format(startDate);
 			String endDateVal = dateFormatter.format(endDate);

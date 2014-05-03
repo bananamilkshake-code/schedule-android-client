@@ -6,6 +6,7 @@ import java.util.HashMap;
 import storage.database.Database;
 import storage.tables.Table;
 import storage.tables.Table.TableInfo;
+import utility.Utility;
 import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -27,13 +28,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
+	public static final int TIMEOUT_CONNECTION_CHECK = 5000;
+	
 	public static final String TABLE_ID = "TABLE_ID";
 
 	public static final int REQUEST_NEW_TABLE = 1;
 
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 					Client.getInstance().tryConnect();
 					if (!Client.getInstance().isConnected()) {
 						try {
-							Thread.sleep(1000);
+							Thread.sleep(TIMEOUT_CONNECTION_CHECK);
 						} catch (InterruptedException e) {
 							Log.e("MainActivity", "Connection sleep", e);
 						}
@@ -101,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		case REQUEST_NEW_TABLE:
 			String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
 			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
-			Client.getInstance().createTable(Client.getInstance().getId(), true, name, description);
+			Client.getInstance().createTable(Client.getInstance().getId(), true, Utility.getUnixTime(), name, description);
 			((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
 			return;
 		default:

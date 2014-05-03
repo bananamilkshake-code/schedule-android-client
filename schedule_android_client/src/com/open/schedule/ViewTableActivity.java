@@ -22,19 +22,16 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import storage.database.Database;
 import storage.tables.Table;
-import storage.tables.Table.TableInfo;
 import storage.tables.Task;
+import storage.tables.Task.TaskChange;
 import utility.Utility;
 import io.Client;
 
 public class ViewTableActivity extends ActionBarActivity implements OnClickListener {
 
 	public final int REQUEST_CREATE_TASK = 1;
-
-	public final String TABLE_ID = "TABLE_ID";
 
 	private Integer tableId;
 	private Table table;
@@ -49,11 +46,10 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
 		table = Client.getInstance().getTables().get(tableId);
 
-		tasksList = (ListView) findViewById(R.id.list_tasks);
 		Button createTask = (Button) findViewById(R.id.btCreateTask);
-		showTable();
-
 		createTask.setOnClickListener((OnClickListener) ViewTableActivity.this);
+
+		showTable();
 	}
 
 	@Override
@@ -115,6 +111,7 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		((TextView) findViewById(R.id.text_table_name)).setText(name);
 		((TextView) findViewById(R.id.text_table_description)).setText(description);
 
+		tasksList = (ListView) findViewById(R.id.list_tasks);
 		tasksList.setAdapter(new TasksAdapter(table.getTasks()));
 		tasksList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -181,8 +178,8 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 
 			Task task = tasks.get(idsByPos.get(position));
 
-			taskName.setText((CharSequence)(((TableInfo)task.getData()).name));
-			taskDescription.setText((CharSequence)(((TableInfo)table.getData()).description));
+			taskName.setText((CharSequence)(((TaskChange)task.getData()).name));
+			taskDescription.setText((CharSequence)(((TaskChange)task.getData()).description));
 
 			return rowView;
 		}

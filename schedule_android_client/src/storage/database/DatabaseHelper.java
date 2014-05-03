@@ -43,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	private static final String CREATE_TABLES_CHANGES = 
 			"CREATE TABLE " + TABLE_TABLE_CHANGES + " (" +
-					"local_table_id INT PRIMARY KEY," +
+					"global_table_id INT(10)," +
 					"table_id INT(10)," +
 					"time INT(10) NOT NULL," +
 					"user_id INT(10) NOT NULL," +
@@ -51,25 +51,27 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					"description TEXT," +
 					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
 					"FOREIGN KEY (user_id) REFERENCES users(id)," +
-					"UNIQUE(local_table_id, table_id)" +
+					"UNIQUE(global_table_id)," +
+					"UNIQUE(table_id)" +
 				")";
-	
+
 	private static final String CREATE_TASKS_CHANGES = 
 			"CREATE TABLE " + TABLE_TASK_CHANGES + " (" +
-					"local_table_id INT(10) NOT NULL," +
-					"local_task_id INT(10) NOT NULL," +
-					"table_id INT(10)," +
-					"task_id INT(10)," +
+					"global_table_id INT(10)," +
+					"global_task_id INT(10)," +
+					"table_id INT(10) NOT NULL," +
+					"task_id INT(10) NOT NULL," +
 					"time INT(10) NOT NULL," +
 					"user_id INT(10) NOT NULL," +
 					"name VARCHAR(100)," +
 					"description TEXT," +
 					"start_date DATE," +
-					"completion_date DATE, " +
-					"end_time TIME," +
+					"end_date DATE, " +
+					"start_time TIME, " +
+					"end_time TIME, " +
 					"FOREIGN KEY (table_id) REFERENCES tables(id)," +
 					"FOREIGN KEY (task_id) REFERENCES tasks(id)," +
-					"UNIQUE(local_table_id, local_task_id)," +
+					"UNIQUE(global_table_id, global_task_id)," +
 					"UNIQUE(table_id, task_id)" +
 				")";
 

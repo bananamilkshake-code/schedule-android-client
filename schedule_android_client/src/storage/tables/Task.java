@@ -15,27 +15,27 @@ public class Task extends ChangableData {
 		});
 	}
 	
-	public Task(Integer creator_id, Long creationTime, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+	public Task(Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		this();
-		this.change(new TaskChange(creator_id, creationTime, name, description, startDate, endDate, startTime, endTime));
+		this.change(time, new TaskChange(creatorId, time, name, description, startDate, endDate, startTime, endTime));
 	}
 
-	public void addComment(Integer commentator_id, Long time, String text) {
-		comments.add(new Comment(commentator_id, time, text));
+	public void addComment(Integer commentatorId, Long time, String text) {
+		comments.add(new Comment(commentatorId, time, text));
 	}
-	
+
 	public class Comment {
 		public Integer commentator_id;
 		public Long time;
 		public String text;
 
-		public Comment(Integer commentator_id, Long time, String text) {
-			this.commentator_id = commentator_id;
+		public Comment(Integer commentatorId, Long time, String text) {
+			this.commentator_id = commentatorId;
 			this.time = time;
 			this.text = text;
 		}
 	}
-	
+
 	public class TaskChange extends Change {
 		public String name = null;
 		public String description = null;
@@ -43,9 +43,9 @@ public class Task extends ChangableData {
 		public Date endDate = null;
 		public Date startTime = null;
 		public Date endTime = null;
-		
-		public TaskChange(Integer creator_id, Long creationTime, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
-			super(creator_id, creationTime);
+
+		public TaskChange(Integer creatorId, Long creationTime, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+			super(creatorId, creationTime);
 			this.name = name;
 			this.description = description;
 			this.startDate = startDate;

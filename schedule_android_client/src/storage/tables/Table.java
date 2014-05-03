@@ -20,11 +20,11 @@ public class Table extends ChangableData {
 	
 	public Table(Integer creatorId, Long creationTime, String name, String description) {
 		this();
-		this.change(new TableInfo(creatorId, creationTime, name, description));
+		this.change(creationTime, new TableInfo(creatorId, creationTime, name, description));
 	}
 	
-	public Table(Integer creatorId, String name, String description) {
-		change((Change)(new TableInfo(creatorId, Utility.getUnixTime(), name, description)));
+	public Table(Long time, Integer creatorId, String name, String description) {
+		change(time, (Change)(new TableInfo(creatorId, time, name, description)));
 	}
 
 	public void setPermission(int user_id, Permission permission) {
@@ -36,16 +36,17 @@ public class Table extends ChangableData {
 		readers.put(user_id, permission);
 	}
 
-	public Task addTask(Integer task_id, Task task) {
-		return tasks.put(task_id, task);
+	public Task addTask(Integer taskId, Task task) {
+		tasks.put(taskId, task);
+		return tasks.get(taskId);
 	}
 
-	public void removeTask(Integer task_id) {
-		tasks.remove(task_id);
+	public void removeTask(Integer taskId) {
+		tasks.remove(taskId);
 	}
 	
-	public Task getTask(Integer task_id) {
-		return tasks.get(task_id);
+	public Task getTask(Integer taskId) {
+		return tasks.get(taskId);
 	}
 
 	public class TableInfo extends Change {

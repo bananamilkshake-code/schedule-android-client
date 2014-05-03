@@ -64,7 +64,7 @@ public class Database {
 					Long timeVal = cursorChanges.getLong(time);
 					String nameVal = cursorChanges.getString(name);
 					String descriptionVal = cursorChanges.getString(description);
-					table.change(table.new TableInfo(userIdVal, timeVal, nameVal, descriptionVal));
+					table.change(timeVal, table.new TableInfo(userIdVal, timeVal, nameVal, descriptionVal));
 				}
 				cursorChanges.moveToNext();
 			}
@@ -74,33 +74,38 @@ public class Database {
 		loadTasks(tables);
 	}
 
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-	private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
+	private final String startDateColName = "strftime(\'%Y-%m-%d\', start_date)";
+	private final String endDateColName = "strftime(\'%Y-%m-%d\', end_date)";
+	private final String startTimeColName = "strftime(\'%H:M:%S\', start_time)";
+	private final String endTimeColName = "strftime(\'%H:M:%S\', end_time)";
+	
 	private void loadTasks(HashMap<Integer, Table> tables) {
 		String[] columnsChanges = {"task_id", "table_id", "time", "user_id", "name", 
-				"description", "start_date", "completion_date", "end_time"};
+				"description", startDateColName, endDateColName, startTimeColName, endTimeColName};
 		Cursor cursorChanges = database.query(DatabaseHelper.TABLE_TASK_CHANGES, columnsChanges, null, null, null, null, null);
 
-		int table_id = cursorChanges.getColumnIndex("table_id");
-		int task_id = cursorChanges.getColumnIndex("task_id");
-		int time = cursorChanges.getColumnIndex("time");
-		int user_id = cursorChanges.getColumnIndex("user_id");
-		int name = cursorChanges.getColumnIndex("name");
-		int description = cursorChanges.getColumnIndex("description");
-		int startDate = cursorChanges.getColumnIndex("start_date");
-		int endDate = cursorChanges.getColumnIndex("end_date");
-		int startTime = cursorChanges.getColumnIndex("start_time");
-		int endTime = cursorChanges.getColumnIndex("end_time");
-		
 		if (cursorChanges.moveToFirst()) {
+			int table_id = cursorChanges.getColumnIndex("table_id");
+			int task_id = cursorChanges.getColumnIndex("task_id");
+			int time = cursorChanges.getColumnIndex("time");
+			int user_id = cursorChanges.getColumnIndex("user_id");
+			int name = cursorChanges.getColumnIndex("name");
+			int description = cursorChanges.getColumnIndex("description");
+			int startDate = cursorChanges.getColumnIndex(startDateColName);
+			int endDate = cursorChanges.getColumnIndex(endDateColName);
+			int startTime = cursorChanges.getColumnIndex(startTimeColName);
+			int endTime = cursorChanges.getColumnIndex(endTimeColName);
+
 			while(!cursorChanges.isAfterLast()) {
 				Integer tableIdVal = cursorChanges.getInt(table_id);
 				Integer taskIdVal = cursorChanges.getInt(task_id);
 				Task task = tables.get(table_id).getTask(taskIdVal);
 				if (task == null)
 					task = tables.get(tableIdVal).addTask(taskIdVal, new Task());
-	
+
 				Integer userIdVal = cursorChanges.getInt(user_id);
 				Long timeVal = cursorChanges.getLong(time);
 				String nameVal = cursorChanges.getString(name);
@@ -109,22 +114,33 @@ public class Database {
 				Date endDateVal = null;
 				Date startTimeVal = null;
 				Date endTimeVal = null;
-	
+
 				try {
-					startDateVal = dateFormatter.parse(cursorChanges.getString(startDate));
-					endDateVal = dateFormatter.parse(cursorChanges.getString(endDate));
-					startTimeVal = timeFormatter.parse(cursorChanges.getString(startTime));
-					endTimeVal = timeFormatter.parse(cursorChanges.getString(endTime));
+					String val = cursorChanges.getString(startDate);
+					if (val == null)
+						startDateVal = dateFormatter.parse("2014-05-05");
+					
+					val = cursorChanges.getString(endDate);
+					if (val == null)
+						endDateVal = dateFormatter.parse("2014-05-05");
+					
+					val = cursorChanges.getString(startTime);
+					if (val == null)
+						startTimeVal = timeFormatter.parse("11:12:00");
+					
+					val = cursorChanges.getString(endTime);
+					if (val == null)
+						endTimeVal = timeFormatter.parse("11:12:00");
 				} catch (ParseException e) {
 					Log.w(Database.class.getName(), "Date task changes parsing", e);
 				}
-	
-				task.change(task.new TaskChange(userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, startTimeVal, endTimeVal));
+
+				task.change(timeVal, task.new TaskChange(userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, startTimeVal, endTimeVal));
 				cursorChanges.moveToNext();
 			}
 		}
 		cursorChanges.close();
-		
+
 		loadComments(tables);
 	}
 	
@@ -189,7 +205,8 @@ public class Database {
 		values.put("time", time);
 		values.put("name", change.name);
 		values.put("description", change.description);
-		database.insert(DatabaseHelper.TABLE_TABLE_CHANGES, null, values);
+		Long res = database.insert(DatabaseHelper.TABLE_TABLE_CHANGES, null, values);
+		Log.d("ChangeTable", res.toString());
 	}
 
 	public void changeTask(Integer userId, Integer tableId, Integer taskId, Task.TaskChange change,Long time) {
@@ -200,10 +217,13 @@ public class Database {
 		values.put("time", time);
 		values.put("name", change.name);
 		values.put("description", change.description);
-		values.put("start_time", change.startDate.toString());
-		values.put("completion_date", change.endDate.toString());
+		String val = change.startDate.toString();
+		values.put("start_time", val);
+		values.put("end_date", change.endDate.toString());
+		values.put("start_time", change.startTime.toString());
 		values.put("end_time", change.endTime.toString());
-		database.insert(DatabaseHelper.TABLE_TASK_CHANGES, null, values);
+		Long res = database.insert(DatabaseHelper.TABLE_TASK_CHANGES, null, values);
+		Log.d("ChangeTask", res.toString());
 	}
 
 	public void setPermission(Integer table_id, Integer user_id, Table.Permission permission) {
