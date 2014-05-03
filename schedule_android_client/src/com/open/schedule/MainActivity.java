@@ -155,6 +155,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		
 		public TablesAdapter(HashMap<Integer, Table> tables) {
 			this.tables = tables;
+			updateTablesIds();
 		}
 
 		@Override
@@ -174,15 +175,12 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 		@Override
 		public long getItemId(int position) {
-			return position;
+			return idsByPos.get(position);
 		}
 
 		@Override
 		public View getView(int position, View rowView, ViewGroup arg2) {
-			idsByPos.clear();
-			for (Integer tableId : tables.keySet()) {
-				idsByPos.add(tableId);
-			}
+			updateTablesIds();
 
 			if (rowView == null) {
 				LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -197,6 +195,13 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			tableDescription.setText((CharSequence)(((TableInfo)table.getData()).description));
 
 			return rowView;
+		}
+		
+		private void updateTablesIds() {
+			idsByPos.clear();
+			for (Integer tableId : tables.keySet()) {
+				idsByPos.add(tableId);
+			}
 		}
 	}
 
