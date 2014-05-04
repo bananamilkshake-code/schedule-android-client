@@ -63,6 +63,14 @@ public class Tables {
 		return table.getTaskId(taskGlobalId);
 	}
 	
+	public Integer findInnerTable(Integer tableId) {
+		return tables.get(tableId).getGlobalId();
+	}
+	
+	public Integer findInnerTask(Integer tableId, Integer taskId) {
+		return tables.get(tableId).getTask(taskId).getGlobalId();
+	}
+	
 	public void changeTableId(Integer tableGlobalId) {
 		tableGlobalId = indexId.get(tableGlobalId);
 	}
@@ -73,7 +81,7 @@ public class Tables {
 			Log.w("Tables", "changeTaskId found null table with inner id " + tableId);
 			return;
 		}
-		
+
 		taskGlobalId = table.getTaskId(taskGlobalId);
 	}
 	

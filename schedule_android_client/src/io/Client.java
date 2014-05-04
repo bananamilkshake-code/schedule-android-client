@@ -134,11 +134,12 @@ public class Client extends TCPClient {
 		changePermision(false, newTableId, getId(), Permission.WRITE);
 		Log.d("Client", "New table created " + newTableId);
 
-		if (local)
-		try {
-			send(new io.packet.client.CreateTablePacket(Utility.getUnixTime(), name, description));
-		} catch (IOException e) {
-			Log.w("Client", "New table creation error", e);
+		if (local) {
+			try {
+				send(new io.packet.client.CreateTablePacket(Utility.getUnixTime(), name, description));
+			} catch (IOException e) {
+				Log.w("Client", "New table creation error", e);
+			}
 		}
 	}
 
@@ -158,7 +159,8 @@ public class Client extends TCPClient {
 			String endTimeVal = timeFormatter.format(endTime);
 
 			try {
-				send(new io.packet.client.CreateTaskPacket(tableId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+				Integer tableGlobalId = tables.findInnerTable(tableId);
+				send(new io.packet.client.CreateTaskPacket(tableGlobalId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
 			} catch (IOException e) {
 				Log.w("Client", "New task creation error", e);
 			}
@@ -172,7 +174,9 @@ public class Client extends TCPClient {
 
 		if (local) {
 			try {
-				send(new io.packet.client.CreateComment(tableId, taskId, time, comment));
+				Integer tableGlobalId = tables.findInnerTable(tableId);
+				Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
+				send(new io.packet.client.CreateComment(tableGlobalId, taskGlobalId, time, comment));
 			} catch (IOException e) {
 				Log.w("Client", "New comment creation error", e);
 			}
@@ -193,7 +197,8 @@ public class Client extends TCPClient {
 
 		if (local) {
 			try {
-				send(new io.packet.client.ChangeTablePacket(tableId, Utility.getUnixTime(), name, description));
+				Integer tableGlobalId = tables.findInnerTable(tableId);
+				send(new io.packet.client.ChangeTablePacket(tableGlobalId, Utility.getUnixTime(), name, description));
 			} catch (IOException e) {
 				Log.w("Client", "Table " + tableId + " change error", e);
 			}
@@ -221,7 +226,9 @@ public class Client extends TCPClient {
 			String endTimeVal = timeFormatter.format(endTime);
 
 			try {
-				send(new io.packet.client.ChangeTaskPacket(taskId, tableId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+				Integer tableGlobalId = tables.findInnerTable(tableId);
+				Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
+				send(new io.packet.client.ChangeTaskPacket(taskGlobalId, tableGlobalId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
 			} catch (IOException e) {
 				Log.w("Client", "New task creation error", e);
 			}
@@ -235,7 +242,8 @@ public class Client extends TCPClient {
 
 		if (local) {
 			try {
-				send(new io.packet.client.PermissionPacket(userId, tableId, (byte)(permission.ordinal())));
+				Integer tableGlobalId = tables.findInnerTable(tableId);
+				send(new io.packet.client.PermissionPacket(tableGlobalId, userId, (byte)(permission.ordinal())));
 			} catch (IOException e) {
 				Log.w("Client", "Changin permission error", e);
 			}

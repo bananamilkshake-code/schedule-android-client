@@ -12,7 +12,7 @@ public class ChangableData {
 
 	protected TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
 	private long lastUpdate = 0;
-	private Integer globalId = null;
+	private Integer globalId;
 
 	public Entry<Long, Change> getInitial() {
 		return changes.firstEntry();
@@ -40,6 +40,10 @@ public class ChangableData {
 		}
 
 		return info;
+	}
+	
+	public Integer getGlobalId() {
+		return this.globalId;
 	}
 
 	protected void update() {
