@@ -5,7 +5,14 @@ import io.packet.server.*;
 public abstract class ServerPacket extends Packet {
 	public enum Type {
 		REGISTER,
-		LOGIN
+		LOGIN,
+		GLOBAL_TABLE_ID,		// Локальная база данных клиента занесена в глобальную базу даных
+		GLOBAL_TASK_ID,			// Локальное задание клиента занесено в глобальную базу данных
+		CHANGE_TABLE,			// Так же используется для создания новой таблицы
+		CHANGE_TASK,			// Так же используется для создания нового расписания
+		PERMISSION,
+		COMMENTARY,
+		USER
 	}
 
 	private final Type type;

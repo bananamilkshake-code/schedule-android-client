@@ -74,7 +74,7 @@ public class Database {
 			}
 		}
 		cursorChanges.close();
-		
+
 		loadTasks(tables);
 	}
 
@@ -271,11 +271,12 @@ public class Database {
 			ContentValues values = new ContentValues();
 			values.put(DatabaseHelper.TABLE_ID, table_id);
 			values.put(DatabaseHelper.USER_ID, user_id);
+			values.put(DatabaseHelper.READERS_PERMISSION, permission.ordinal());
 			database.replace(DatabaseHelper.TABLE_READERS, null, values);
 		}
 	}
 
-	public void newUser(Integer user_id, String name) {
+	public void addUser(Integer user_id, String name) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.USER_ID, user_id);
 		values.put(DatabaseHelper.USERS_NAME, name);

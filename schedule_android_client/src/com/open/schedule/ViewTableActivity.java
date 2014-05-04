@@ -99,7 +99,7 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 				Log.w(Database.class.getName(), "Date task changes parsing", e);
 			}
 
-			Client.getInstance().createTask(Client.getInstance().getId(), true, Utility.getUnixTime(), tableId, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
+			Client.getInstance().createTask(true, tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
 			((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();
 			return;
 		default:

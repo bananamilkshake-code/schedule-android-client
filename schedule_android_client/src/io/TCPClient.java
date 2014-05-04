@@ -86,7 +86,7 @@ public abstract class TCPClient
 
 			char[] bufferSize = new char[Packet.PACKET_SIZE_BYTE];
 			inFromServer.read(bufferSize, 0, Packet.PACKET_SIZE_BYTE);
-			Short size = Utility.getShort(bufferSize);
+			Short size = Utility.getShort(bufferSize, 0);
 
 			char[] buffer = new char[size];
 			inFromServer.read(buffer, 0, size);

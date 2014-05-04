@@ -104,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		case REQUEST_NEW_TABLE:
 			String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
 			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
-			Client.getInstance().createTable(Client.getInstance().getId(), true, Utility.getUnixTime(), name, description);
+			Client.getInstance().createTable(true, Client.getInstance().getId(), Utility.getUnixTime(), name, description);
 			((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
 			return;
 		default:

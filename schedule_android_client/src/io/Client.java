@@ -1,21 +1,21 @@
 package io;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+
+import android.util.Log;
 
 import storage.database.Database;
 import storage.tables.Table;
 import storage.tables.Table.Permission;
 import storage.tables.Task;
 import utility.Utility;
-import android.util.Log;
 import config.Config;
 import events.objects.Event;
 import io.packet.ServerPacket;
-import io.packet.server.RegisterPacket;
-import io.packet.server.LoginPacket;
 
 public class Client extends TCPClient {	
 	private static Client INSTANCE = null;
@@ -23,7 +23,8 @@ public class Client extends TCPClient {
 	private  boolean logged = false;
 	private Integer id = 0;
 
-	private HashMap<Integer, Table> tables = new HashMap<Integer, Table>();
+	private Tables tables  = new Tables();
+	private Users users = new Users();
 
 	private Database database = null;
 
@@ -31,7 +32,7 @@ public class Client extends TCPClient {
 		super(Config.host, Config.port);
 		this.database = database;
 
-		database.loadTables(tables);
+		database.loadTables(this.tables.getTables());
 	}
 
 	public static void createInstance(Database database) {
@@ -46,9 +47,23 @@ public class Client extends TCPClient {
 	public Integer getId() {
 		return id;
 	}
+	
+	public boolean isLogged() {
+		return logged;
+	}
 
-	public void recv(ServerPacket clientPacket) {
-		switch (clientPacket.getType()) {
+	public final HashMap<Integer, Table> getTables() {
+		return tables.getTables();
+	}
+
+	@Override
+	protected void clear() {
+		logged = false;
+	}
+
+	@Override
+	public void recv(ServerPacket packet) {
+		switch (packet.getType()) {
 		case REGISTER:
 		case LOGIN:
 			if (isLogged()) {
@@ -64,41 +79,38 @@ public class Client extends TCPClient {
 			break;
 		}
 
-		switch (clientPacket.getType())
+		switch (packet.getType())
 		{
 		case REGISTER:
-			RegisterPacket register = (RegisterPacket)clientPacket;	
-			switch (register.status) {
-			case SUCCESS:
-				Log.d("Recv", "Successfully registered in");
-				return;	
-			case FAILURE:
-				Log.w("Recv", "Username has already being used");
-				return;
-			}
+			this.register((io.packet.server.RegisterPacket) packet);
 			break;
 		case LOGIN:
-			LoginPacket login = (LoginPacket)clientPacket;
-			switch (login.status) {
-			case SUCCESS:
-				Log.d("Recv", "Successfully logged in");
-				logged = true;
-				id = login.id;
-				database.updateUserId(id);
-				break;
-			case FAILURE:
-				Log.w("Recv", "Wrong username or password");
-				break;
-			}
-			new Event(this, Event.Type.LOGIN, (Object)login.status);
+			this.login((io.packet.server.LoginPacket) packet);
+			break;
+		case CHANGE_TABLE:
+			this.changeTable((io.packet.server.ChangeTablePacket) packet);
+			break;
+		case CHANGE_TASK:
+			this.changeTask((io.packet.server.ChangeTaskPacket) packet);
+			break;
+		case COMMENTARY:
+			this.createCommentary((io.packet.server.CommentaryPacket) packet);
+			break;
+		case GLOBAL_TABLE_ID:
+			this.updateGlobalTableId((io.packet.server.GlobalTableIdPacket) packet);
+			break;
+		case GLOBAL_TASK_ID:
+			this.updateGlobalTaskId((io.packet.server.GlobalTaskIdPacket) packet);
+			break;
+		case PERMISSION:
+			this.changePermission((io.packet.server.PermissionPacket) packet);
+			break;
+		case USER:
+			this.addUser((io.packet.server.UserPacket) packet);
 			break;
 		default:
 			break;
 		}
-	}
-	
-	public boolean isLogged() {
-		return logged;
 	}
 
 	public void loadAuthParams() {
@@ -107,7 +119,7 @@ public class Client extends TCPClient {
 		this.login(username, password);
 	}
 	
-	public void login(String username, String password) {		
+	public void login(String username, String password) {
 		try {
 			send(new io.packet.client.LoginPacket(username, password));
 		} catch (IOException e) {
@@ -115,10 +127,10 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void createTable(Integer userId, Boolean local, Long time, String name, String description) {
+	public void createTable(Boolean local, Integer userId, Long time, String name, String description) {
 		Table table = new Table(this.id, time, name, description);
 		Integer newTableId = database.createTable(userId, table);
-		tables.put(newTableId, table);
+		tables.createTable(newTableId, table);
 		changePermision(false, newTableId, getId(), Permission.WRITE);
 		Log.d("Client", "New table created " + newTableId);
 
@@ -133,11 +145,10 @@ public class Client extends TCPClient {
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy");
 	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm");
 
-	public void createTask(Integer userId, Boolean local, Long time, Integer tableId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
-		Table table = tables.get(tableId);
+	public void createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		Task task = new Task(userId, time, name, description, startDate, endDate, startTime, endTime);
 		Integer taskId = database.createTask(userId, tableId, task);
-		table.addTask(taskId, task);
+		tables.createTask(tableId, taskId, task);
 		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");
 
 		if (local) {
@@ -154,9 +165,30 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void changeTable(Integer userId, Boolean local, Long time, Integer tableId, String name, String description) {
-		Table table = tables.get(tableId);
-		table.change(time, table.new TableInfo(userId, time, name, description));
+	public void createComment(Boolean local, Integer tableId, Integer taskId, Long time, Integer userId, String comment) {
+		tables.createComment(tableId, taskId, userId, time, comment);
+		database.createComment(tableId, taskId, time, getId(), comment);
+		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
+
+		if (local) {
+			try {
+				send(new io.packet.client.CreateComment(tableId, taskId, time, comment));
+			} catch (IOException e) {
+				Log.w("Client", "New comment creation error", e);
+			}
+		}
+	}
+
+	public void changeTable(Boolean local, Integer tableId, Long time, Integer userId, String name, String description) {
+		if (!local) {
+			if (tables.findGlobalTable(tableId) == null)
+				this.createTable(false, userId, time, name, description);
+			Integer tableGlobalId = new Integer(tableId);
+			tables.changeTableId(tableId);
+			tables.updateTableGlobalId(tableId, tableGlobalId);
+		}
+
+		tables.changeTable(tableId, userId, time, name, description);
 		Log.d("Client", "Table " + tableId + " changed");
 
 		if (local) {
@@ -168,10 +200,19 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void changeTask(Integer userId, Boolean local, Long time, Integer tableId, Integer taskId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
-		Table table = tables.get(tableId);
-		Task task = table.getTask(taskId);
-		task.change(time, task.new TaskChange(userId, time, name, description, startDate, endDate, startTime, endTime));
+	public void changeTask(Boolean local, Integer tableId, Integer taskId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+		if (!local) {
+			Integer tableGlobalId = new Integer(tableId);
+			tables.changeTableId(tableId);
+			if (tables.findGlobalTask(tableId, taskId) == null)
+				this.createTask(local, tableId, time, userId, name, description, startDate, endDate, startTime, endTime);
+			Integer taskGlobalId = new Integer(taskId);
+			tables.changeTaskId(tableId, taskId);
+			tables.updateTaskGlobalId(tableGlobalId, taskGlobalId, taskId);
+		}
+
+		tables.changeTask(tableId, taskId, userId, time, name, description, startDate, endDate, startTime, endTime);
+		Log.d("Client", "Task " + taskId + " for table " + tableId + " changed");
 
 		if (local) {
 			String startDateVal = dateFormatter.format(startDate);
@@ -187,22 +228,8 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void createComment(Integer userId, Boolean local, Integer tableId, Integer taskId, String comment, Long time) {
-		tables.get(tableId).getTask(taskId).addComment(userId, time, comment);
-		database.createComment(tableId, taskId, time, getId(), comment);
-		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
-
-		if (local) {
-			try {
-				send(new io.packet.client.CreateComment(tableId, taskId, time, comment));
-			} catch (IOException e) {
-				Log.w("Client", "New comment creation error", e);
-			}
-		}
-	}
-
 	public void changePermision(Boolean local, Integer tableId, Integer userId, Permission permission) {
-		tables.get(tableId).setPermission(userId, permission);
+		tables.changePermission(tableId, userId, permission);
 		database.setPermission(tableId, userId, permission);
 		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
 
@@ -214,13 +241,76 @@ public class Client extends TCPClient {
 			}
 		}
 	}
-
-	public final HashMap<Integer, Table> getTables() {
-		return tables;
+	
+	private void register(io.packet.server.RegisterPacket packet) {
+		switch (packet.status) {
+		case SUCCESS:
+			Log.d("Recv", "Successfully registered in");
+			return;	
+		case FAILURE:
+			Log.w("Recv", "Username has already being used");
+			return;
+		}
+	}
+	
+	private void login(io.packet.server.LoginPacket packet) {
+		switch (packet.status) {
+		case SUCCESS:
+			Log.d("Recv", "Successfully logged in");
+			logged = true;
+			id = packet.id;
+			database.updateUserId(id);
+			break;
+		case FAILURE:
+			Log.w("Recv", "Wrong username or password");
+			break;
+		}
+		new Event(this, Event.Type.LOGIN, (Object)packet.status);
 	}
 
-	@Override
-	protected void clear() {
-		logged = false;
+	private void changeTable(io.packet.server.ChangeTablePacket packet) {
+		this.changeTable(false, packet.tableGlobalId, packet.time, packet.userId, packet.name, packet.description);
+	}
+	
+	private void changeTask(io.packet.server.ChangeTaskPacket packet) {
+		Date startDate = null;
+		Date endDate = null;
+		Date startTime = null;
+		Date endTime = null;
+
+		try {
+			startDate = dateFormatter.parse(packet.startDate);
+			endDate = dateFormatter.parse(packet.endDate);
+			startTime = timeFormatter.parse(packet.startTime);
+			endTime = timeFormatter.parse(packet.endTime);
+		} catch (ParseException e) {
+			Log.w("Client", "ChangeTaskPacket parsing", e);
+		}
+		
+		this.changeTask(false, packet.tableGlobalId, packet.taskGlobalId, packet.time, packet.userId, packet.name, packet.description, 
+					startDate, endDate, startTime, endTime);
+	}
+
+	private void createCommentary(io.packet.server.CommentaryPacket packet) {
+		this.createComment(false, packet.tableGlobalId, packet.taskGlobalId, packet.time, packet.userId, packet.comment);
+	}
+
+	private void updateGlobalTableId(io.packet.server.GlobalTableIdPacket packet) {
+		tables.updateTableGlobalId(packet.tableId, packet.tableGlobalId);
+		database.updateTableGlobalId(packet.tableId, packet.tableGlobalId);
+	}
+	
+	private void updateGlobalTaskId(io.packet.server.GlobalTaskIdPacket packet) {
+		tables.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
+		database.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
+	}
+
+	private void changePermission(io.packet.server.PermissionPacket packet) {
+		this.changePermision(false, packet.tableGlobalId, packet.userId, Table.Permission.values()[packet.permission]);
+	}
+	
+	private void addUser(io.packet.server.UserPacket packet) {
+		users.add(packet.userId, packet.name);
+		database.addUser(packet.userId, packet.name);
 	}
 }

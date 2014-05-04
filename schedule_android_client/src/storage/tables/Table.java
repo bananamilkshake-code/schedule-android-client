@@ -13,6 +13,7 @@ public class Table extends ChangableData {
 
 	private HashMap<Integer, Permission> readers = new HashMap<Integer, Permission>();
 	private HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
+	private HashMap<Integer, Integer> indexId = new HashMap<Integer, Integer>();
 
 	public Table() {}
 	
@@ -20,7 +21,7 @@ public class Table extends ChangableData {
 		this();
 		this.change(creationTime, new TableInfo(creatorId, creationTime, name, description));
 	}
-	
+
 	public Table(Long time, Integer creatorId, String name, String description) {
 		change(time, (Change)(new TableInfo(creatorId, time, name, description)));
 	}
@@ -46,11 +47,20 @@ public class Table extends ChangableData {
 	public Task getTask(Integer taskId) {
 		return tasks.get(taskId);
 	}
+	
+	public void updateTaskGlobalId(Integer taskId, Integer taskGlobalId) {
+		tasks.get(taskId).updateglobalId(taskGlobalId);
+		indexId.put(taskGlobalId, taskId);
+	}
+	
+	public Integer getTaskId(Integer taskGlobalId) {
+		return indexId.get(taskGlobalId);
+	}
 
 	public class TableInfo extends Change {
 		public String name;
 		public String description;
-		
+
 		public TableInfo(Integer creatorId, Long creationTime, String name, String description) {
 			super(creatorId, creationTime);
 			this.name = name;

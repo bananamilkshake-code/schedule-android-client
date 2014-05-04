@@ -56,16 +56,13 @@ public class CreateCommentActivity extends ActionBarActivity {
 
 	private void addComment(String text) {
 		Integer userId = Client.getInstance().getId();
-		Client.getInstance().createComment(userId, true, tableId, taskId, text, Utility.getUnixTime());
+		Client.getInstance().createComment(true, tableId, taskId, Utility.getUnixTime(), userId, text);
 	}
 	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-		
-		
-		
 		public PlaceholderFragment() {}
 
 		@Override
@@ -124,7 +121,7 @@ public class CreateCommentActivity extends ActionBarActivity {
 		}
 
 		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-		
+
 		@Override
 		public View getView(int position, View rowView, ViewGroup arg2) {
 			if (rowView == null) {
