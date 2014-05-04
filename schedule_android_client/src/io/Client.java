@@ -20,7 +20,7 @@ import io.packet.server.LoginPacket;
 public class Client extends TCPClient {	
 	private static Client INSTANCE = null;
 
-	private boolean logged = false;
+	private  boolean logged = false;
 	private Integer id = 0;
 
 	private HashMap<Integer, Table> tables = new HashMap<Integer, Table>();
@@ -83,6 +83,8 @@ public class Client extends TCPClient {
 			case SUCCESS:
 				Log.d("Recv", "Successfully logged in");
 				logged = true;
+				id = login.id;
+				database.updateUserId(id);
 				break;
 			case FAILURE:
 				Log.w("Recv", "Wrong username or password");

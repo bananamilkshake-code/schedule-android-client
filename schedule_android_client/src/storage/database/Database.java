@@ -29,11 +29,11 @@ public class Database {
 		this.dbHelper = new DatabaseHelper(context);
 		this.database = dbHelper.getWritableDatabase();
 	}
-	
+
 	public void close() {
 		dbHelper.close();
 	}
-	
+
 	public void loadTables(HashMap<Integer, Table> tables) {
 		String[] columns = {DatabaseHelper.INNER_ID};
 		Cursor cursorTables = database.query(DatabaseHelper.TABLE_TABLES, columns, null, null, null, null, null);
@@ -141,7 +141,7 @@ public class Database {
 
 		loadComments(tables);
 	}
-	
+
 	public void loadComments(HashMap<Integer, Table> tables) {
 		String[] columns = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, DatabaseHelper.COMMENTS_TEXT};
 		Cursor cursor = database.query(DatabaseHelper.TABLE_COMMENTS, columns, null, null, null, null, DatabaseHelper.TABLE_ID + ", " + DatabaseHelper.TASK_ID + ", " + DatabaseHelper.COMMENTS_TEXT);
@@ -151,7 +151,7 @@ public class Database {
 		int time = cursor.getColumnIndex(DatabaseHelper.TIME);
 		int userId = cursor.getColumnIndex(DatabaseHelper.USER_ID);
 		int textId = cursor.getColumnIndex(DatabaseHelper.COMMENTS_TEXT);
-		
+
 		if (cursor.moveToFirst()) {
 			while(!cursor.isAfterLast()) {
 				Integer tableIdVal = cursor.getInt(tableId);
@@ -168,7 +168,7 @@ public class Database {
 		}
 		cursor.close();
 	}
-	
+
 	public Integer createTable(Integer userId, Table table) {
 		ContentValues values = new ContentValues();
 		values.put("last_update", Utility.getUnixTime());
@@ -181,7 +181,7 @@ public class Database {
 
 		return tableId;
 	}
-	
+
 	public Integer createTask(Integer userId, Integer tableId, Task task) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.TABLE_ID, tableId);
@@ -195,7 +195,7 @@ public class Database {
 
 		return taskId;
 	}
-	
+
 	public void createComment(Integer tableId, Integer taskId, Long time, Integer userId, String text) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.TABLE_ID, tableId);
@@ -234,6 +234,35 @@ public class Database {
 		Log.d("ChangeTask", res.toString());
 	}
 
+	public void updateTableGlobalId(Integer tableId, Integer tableGlobalId) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.GLOBAL_ID, tableGlobalId);
+		database.update(DatabaseHelper.TABLE_TABLES, values, DatabaseHelper.INNER_ID + " =?", new String[] {tableId.toString()});
+	}
+
+	public void updateTaskGlobalId(Integer taskId, Integer tableGlobalId, Integer taskGlobalId) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.GLOBAL_ID, tableGlobalId);
+		String columns[] = {DatabaseHelper.INNER_ID};
+		String whereArg = DatabaseHelper.GLOBAL_ID + " = " + tableGlobalId.toString();
+		Cursor cursor;
+
+		cursor = database.query(DatabaseHelper.TABLE_TABLES, columns, whereArg, null, null, null, null);
+		if (!cursor.moveToFirst()) {
+			cursor.close();
+			return;
+		}
+
+		Integer tableId = 0;
+		while(!cursor.isAfterLast()) 
+			tableId = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.INNER_ID));
+		cursor.close();
+
+		values = new ContentValues();
+		values.put(DatabaseHelper.GLOBAL_ID, taskGlobalId);
+		database.update(DatabaseHelper.TABLE_TASKS, values, DatabaseHelper.TABLE_ID + " =? AND " + DatabaseHelper.INNER_ID + " = ?", new String[] {tableId.toString(), taskId.toString()});
+	}
+
 	public void setPermission(Integer table_id, Integer user_id, Table.Permission permission) {
 		if (permission == Permission.NONE) {
 			database.delete(DatabaseHelper.TABLE_READERS, DatabaseHelper.USER_ID + " = ?", new String[] {user_id.toString()});
@@ -251,5 +280,18 @@ public class Database {
 		values.put(DatabaseHelper.USER_ID, user_id);
 		values.put(DatabaseHelper.USERS_NAME, name);
 		database.insert(DatabaseHelper.TABLE_USERS, null, values);
+	}
+	
+	public void updateUserId(Integer userId) {
+		ContentValues userValues = new ContentValues();
+		userValues.put(DatabaseHelper.GLOBAL_ID, userId);
+		database.update(DatabaseHelper.TABLE_USERS, userValues, DatabaseHelper.GLOBAL_ID + " =?", new String[] {userId.toString()});
+
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.USER_ID, userId);
+		String tablesToUpdate[] = {DatabaseHelper.TABLE_TABLE_CHANGES, DatabaseHelper.TABLE_TASK_CHANGES, DatabaseHelper.TABLE_READERS, DatabaseHelper.TABLE_COMMENTS};
+		for (String table : tablesToUpdate) {
+			database.update(table, values, DatabaseHelper.USER_ID + " =?", new String[] {userId.toString()});
+		}
 	}
 }

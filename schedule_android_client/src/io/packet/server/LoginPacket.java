@@ -1,5 +1,6 @@
 package io.packet.server;
 
+import utility.Utility;
 import io.packet.ServerPacket;
 
 public class LoginPacket extends ServerPacket {
@@ -9,6 +10,7 @@ public class LoginPacket extends ServerPacket {
 	}
 
 	public Status status;
+	public Integer id;	
 	
 	public LoginPacket() {
 		super(ServerPacket.Type.LOGIN);
@@ -17,5 +19,9 @@ public class LoginPacket extends ServerPacket {
 	@Override
 	public void init(char[] data) {
 		this.status = Status.values()[data[0]];
+		
+		if (this.status == Status.SUCCESS) {
+			this.id = Utility.getInt(data, 1);
+		}
 	}
 }
