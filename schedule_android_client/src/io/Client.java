@@ -287,7 +287,7 @@ public class Client extends TCPClient {
 		String name = tableInfo.name;
 		String description = tableInfo.description;
 		try {
-			send(new io.packet.client.CreateTablePacket(time, name, description));
+			send(new io.packet.client.CreateTablePacket(tableId, time, name, description));
 		} catch (IOException e) {
 			Log.w("Client", "New table creation error", e);
 		}
@@ -308,7 +308,7 @@ public class Client extends TCPClient {
 		String endTimeVal = timeFormatter.format(task.endTime);
 
 		try {
-			send(new io.packet.client.CreateTaskPacket(tableGlobalId, time, task.name, task.description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+			send(new io.packet.client.CreateTaskPacket(taskId, tableGlobalId, time, task.name, task.description, startDateVal, endDateVal, startTimeVal, endTimeVal));
 		} catch (IOException e) {
 			Log.w("Client", "New task creation error", e);
 		}
