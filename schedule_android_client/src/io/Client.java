@@ -5,14 +5,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import android.util.Log;
-
 import storage.database.Database;
+import storage.tables.ChangableData.Change;
 import storage.tables.Table;
 import storage.tables.Table.Permission;
+import storage.tables.Table.TableInfo;
 import storage.tables.Task;
-import utility.Utility;
+import storage.tables.Task.TaskChange;
 import config.Config;
 import events.objects.Event;
 import io.packet.ServerPacket;
@@ -127,44 +129,32 @@ public class Client extends TCPClient {
 		}
 	}
 
-	public void createTable(Boolean local, Integer userId, Long time, String name, String description) {
+	public Integer createTable(Boolean local, Integer userId, Long time, String name, String description) {
 		Table table = new Table(this.id, time, name, description);
-		Integer newTableId = database.createTable(userId, table);
-		tables.createTable(newTableId, table);
-		changePermision(false, newTableId, getId(), Permission.WRITE);
-		Log.d("Client", "New table created " + newTableId);
+		Integer tableId = database.createTable(userId, table);
+		tables.createTable(tableId, table);
+		changePermision(false, tableId, getId(), Permission.WRITE);
+		Log.d("Client", "New table created " + tableId);
 
-		if (local) {
-			try {
-				send(new io.packet.client.CreateTablePacket(Utility.getUnixTime(), name, description));
-			} catch (IOException e) {
-				Log.w("Client", "New table creation error", e);
-			}
-		}
+		if (local)
+			syncTable(tableId);
+		
+		return tableId;
 	}
 
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy");
 	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm");
 
-	public void createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+	public Integer createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		Task task = new Task(userId, time, name, description, startDate, endDate, startTime, endTime);
 		Integer taskId = database.createTask(userId, tableId, task);
 		tables.createTask(tableId, taskId, task);
 		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");
 
-		if (local) {
-			String startDateVal = dateFormatter.format(startDate);
-			String endDateVal = dateFormatter.format(endDate);
-			String startTimeVal = timeFormatter.format(startTime);
-			String endTimeVal = timeFormatter.format(endTime);
-
-			try {
-				Integer tableGlobalId = tables.findInnerTable(tableId);
-				send(new io.packet.client.CreateTaskPacket(tableGlobalId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
-			} catch (IOException e) {
-				Log.w("Client", "New task creation error", e);
-			}
-		}
+		if (local)
+			syncTask(tableId, taskId);
+		
+		return taskId;
 	}
 
 	public void createComment(Boolean local, Integer tableId, Integer taskId, Long time, Integer userId, String comment) {
@@ -172,15 +162,8 @@ public class Client extends TCPClient {
 		database.createComment(tableId, taskId, time, getId(), comment);
 		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
 
-		if (local) {
-			try {
-				Integer tableGlobalId = tables.findInnerTable(tableId);
-				Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
-				send(new io.packet.client.CreateComment(tableGlobalId, taskGlobalId, time, comment));
-			} catch (IOException e) {
-				Log.w("Client", "New comment creation error", e);
-			}
-		}
+		if (local) 
+			syncComment(tableId, taskId, time, comment);
 	}
 
 	public void changeTable(Boolean local, Integer tableId, Long time, Integer userId, String name, String description) {
@@ -195,44 +178,25 @@ public class Client extends TCPClient {
 		tables.changeTable(tableId, userId, time, name, description);
 		Log.d("Client", "Table " + tableId + " changed");
 
-		if (local) {
-			try {
-				Integer tableGlobalId = tables.findInnerTable(tableId);
-				send(new io.packet.client.ChangeTablePacket(tableGlobalId, Utility.getUnixTime(), name, description));
-			} catch (IOException e) {
-				Log.w("Client", "Table " + tableId + " change error", e);
-			}
-		}
+		if (local) 
+			syncChangeTable(tableId, time);
 	}
 
 	public void changeTask(Boolean local, Integer tableId, Integer taskId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		if (!local) {
 			Integer tableGlobalId = new Integer(tableId);
 			tables.changeTableId(tableId);
-			if (tables.findGlobalTask(tableId, taskId) == null)
-				this.createTask(local, tableId, time, userId, name, description, startDate, endDate, startTime, endTime);
 			Integer taskGlobalId = new Integer(taskId);
-			tables.changeTaskId(tableId, taskId);
+			if (tables.findGlobalTask(tableId, taskId) == null)
+				taskId = this.createTask(local, tableId, time, userId, name, description, startDate, endDate, startTime, endTime);
 			tables.updateTaskGlobalId(tableGlobalId, taskGlobalId, taskId);
 		}
 
 		tables.changeTask(tableId, taskId, userId, time, name, description, startDate, endDate, startTime, endTime);
 		Log.d("Client", "Task " + taskId + " for table " + tableId + " changed");
 
-		if (local) {
-			String startDateVal = dateFormatter.format(startDate);
-			String endDateVal = dateFormatter.format(endDate);
-			String startTimeVal = timeFormatter.format(startTime);
-			String endTimeVal = timeFormatter.format(endTime);
-
-			try {
-				Integer tableGlobalId = tables.findInnerTable(tableId);
-				Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
-				send(new io.packet.client.ChangeTaskPacket(taskGlobalId, tableGlobalId, time, name, description, startDateVal, endDateVal, startTimeVal, endTimeVal));
-			} catch (IOException e) {
-				Log.w("Client", "New task creation error", e);
-			}
-		}
+		if (local) 
+			syncChangeTask(tableId, taskId, time);
 	}
 
 	public void changePermision(Boolean local, Integer tableId, Integer userId, Permission permission) {
@@ -240,14 +204,8 @@ public class Client extends TCPClient {
 		database.setPermission(tableId, userId, permission);
 		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
 
-		if (local) {
-			try {
-				Integer tableGlobalId = tables.findInnerTable(tableId);
-				send(new io.packet.client.PermissionPacket(tableGlobalId, userId, (byte)(permission.ordinal())));
-			} catch (IOException e) {
-				Log.w("Client", "Changin permission error", e);
-			}
-		}
+		if (local) 
+			syncPermission(userId, tableId, permission);
 	}
 	
 	private void register(io.packet.server.RegisterPacket packet) {
@@ -320,5 +278,101 @@ public class Client extends TCPClient {
 	private void addUser(io.packet.server.UserPacket packet) {
 		users.add(packet.userId, packet.name);
 		database.addUser(packet.userId, packet.name);
+	}
+	
+	private void syncTable(Integer tableId) {
+		Entry<Long, Change> entry = tables.getTables().get(tableId).getInitial();
+		Long time = entry.getKey();
+		TableInfo tableInfo = (TableInfo) entry.getValue();
+		String name = tableInfo.name;
+		String description = tableInfo.description;
+		try {
+			send(new io.packet.client.CreateTablePacket(time, name, description));
+		} catch (IOException e) {
+			Log.w("Client", "New table creation error", e);
+		}
+	}
+	
+	private void syncTask(Integer tableId, Integer taskId) {
+		Integer tableGlobalId = tables.findInnerTable(tableId);
+		if (tableGlobalId == null)
+			return;
+		
+		Entry<Long, Change> entry = tables.getTables().get(tableId).getTask(taskId).getInitial();
+		Long time = entry.getKey();
+		TaskChange task = (TaskChange) entry.getValue();
+
+		String startDateVal = dateFormatter.format(task.startDate);
+		String endDateVal = dateFormatter.format(task.endDate);
+		String startTimeVal = timeFormatter.format(task.startTime);
+		String endTimeVal = timeFormatter.format(task.endTime);
+
+		try {
+			send(new io.packet.client.CreateTaskPacket(tableGlobalId, time, task.name, task.description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+		} catch (IOException e) {
+			Log.w("Client", "New task creation error", e);
+		}
+	}
+	
+	private void syncComment(Integer tableId, Integer taskId, Long time, String comment) {
+		Integer tableGlobalId = tables.findInnerTable(tableId);
+		Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
+		if (tableGlobalId == null || taskGlobalId == null)
+			return;
+
+		try {
+			send(new io.packet.client.CreateComment(tableGlobalId, taskGlobalId, time, comment));
+		} catch (IOException e) {
+			Log.w("Client", "New comment creation error", e);
+		}
+	}
+	
+	private void syncChangeTable(Integer tableId, Long time) {
+		Integer tableGlobalId = tables.findInnerTable(tableId);
+		if (tableGlobalId == null)
+			return;
+		
+		TableInfo tableInfo = (TableInfo) tables.getTables().get(tableId).getChange(time);
+
+		String name = tableInfo.name;
+		String description = tableInfo.description;
+
+		try {
+			send(new io.packet.client.ChangeTablePacket(tableGlobalId, time, name, description));
+		} catch (IOException e) {
+			Log.w("Client", "Table " + tableId + " change error", e);
+		}
+	}
+
+	private void syncChangeTask(Integer tableId, Integer taskId, Long time) {
+		Integer tableGlobalId = tables.findInnerTable(tableId);
+		Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
+		if (tableGlobalId == null || taskGlobalId == null)
+			return;
+		
+		TaskChange task = (TaskChange) tables.getTables().get(tableId).getTask(taskId).getChange(time);
+
+		String startDateVal = dateFormatter.format(task.startDate);
+		String endDateVal = dateFormatter.format(task.endDate);
+		String startTimeVal = timeFormatter.format(task.startTime);
+		String endTimeVal = timeFormatter.format(task.endTime);
+
+		try {
+			send(new io.packet.client.ChangeTaskPacket(taskGlobalId, tableGlobalId, time, task.name, task.description, startDateVal, endDateVal, startTimeVal, endTimeVal));
+		} catch (IOException e) {
+			Log.w("Client", "New task creation error", e);
+		}
+	}
+	
+	private void syncPermission(Integer userId, Integer tableId, Permission permission) {
+		Integer tableGlobalId = tables.findInnerTable(tableId);
+		if (tableGlobalId == null)
+			return;
+	
+		try {
+			send(new io.packet.client.PermissionPacket(tableGlobalId, userId, (byte)(permission.ordinal())));
+		} catch (IOException e) {
+			Log.w("Client", "Changin permission error", e);
+		}
 	}
 }

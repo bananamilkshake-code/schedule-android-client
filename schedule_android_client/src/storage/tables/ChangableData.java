@@ -35,11 +35,14 @@ public class ChangableData {
 
 		NavigableMap<Long, Change> reverseChanges = changes.descendingMap();
 		Collection<Entry<Long, Change>> set = reverseChanges.entrySet();
-		for (Iterator<Entry<Long, Change>> iter = set.iterator(); iter.hasNext() && info.hasNulls();) {
+		for (Iterator<Entry<Long, Change>> iter = set.iterator(); iter.hasNext() && info.hasNulls();)
 			info.merge(iter.next().getValue());
-		}
 
 		return info;
+	}
+	
+	public Change getChange(Long time) {
+		return changes.get(time);
 	}
 	
 	public Integer getGlobalId() {
