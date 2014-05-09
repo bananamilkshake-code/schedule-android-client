@@ -7,7 +7,7 @@ public class GlobalTableIdPacket extends ServerPacket {
 	public Integer tableId;
 	public Integer tableGlobalId;
 	
-	GlobalTableIdPacket() {
+	public GlobalTableIdPacket() {
 		super(ServerPacket.Type.GLOBAL_TABLE_ID);
 	}
 

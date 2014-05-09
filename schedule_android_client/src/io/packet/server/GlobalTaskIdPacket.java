@@ -8,7 +8,7 @@ public class GlobalTaskIdPacket extends ServerPacket {
 	public Integer taskGlobalId;
 	public Integer tableGlobalId;
 	
-	GlobalTaskIdPacket() {
+	public GlobalTaskIdPacket() {
 		super(ServerPacket.Type.GLOBAL_TASK_ID);
 	}
 

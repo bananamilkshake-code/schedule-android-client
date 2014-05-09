@@ -23,9 +23,23 @@ public abstract class ServerPacket extends Packet {
 			return new RegisterPacket();
 		case LOGIN:
 			return new LoginPacket();
-		default:
-			return null;
+		case GLOBAL_TABLE_ID:
+			return new GlobalTableIdPacket();
+		case GLOBAL_TASK_ID:
+			return new GlobalTaskIdPacket();
+		case CHANGE_TABLE:
+			return new ChangeTablePacket();
+		case CHANGE_TASK:
+			return new ChangeTaskPacket();
+		case COMMENTARY:
+			return new CommentaryPacket();
+		case PERMISSION:
+			return new PermissionPacket();
+		case USER:
+			return new UserPacket();
 		}
+		
+		return null;
 	}
 
 	protected ServerPacket(Type type) {

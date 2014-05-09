@@ -2,8 +2,6 @@ package io;
 
 import java.util.HashMap;
 
-import storage.tables.Table.Permission;
-
 public class Users {
 	private HashMap<Integer, User> users = new HashMap<Integer, User>();
 
