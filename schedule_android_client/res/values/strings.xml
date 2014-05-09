@@ -23,5 +23,6 @@
     <string name="button_create_task">Create</string>
     <string name="title_activity_crearte_comment">CrearteCommentActivity</string>
     <string name="button_comment_add">Add</string>
+    <string name="hint_add_comment">New comment</string>
 
 </resources>

@@ -38,10 +38,6 @@
             android:label="@string/title_activity_view_tables" >
         </activity>
         <activity
-            android:name="com.open.schedule.ViewTasksActivity"
-            android:label="@string/title_activity_view_tasks" >
-        </activity>
-        <activity
             android:name="com.open.schedule.CreateTaskActivity"
             android:label="@string/title_activity_create_task" >
         </activity>

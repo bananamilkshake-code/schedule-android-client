@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -32,8 +33,8 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 	public static final String START_TIME = "task_start_time";
 	public static final String END_TIME = "task_end_time";
 
-	public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
-	public static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+	public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+	public static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

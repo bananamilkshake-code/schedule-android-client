@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import android.util.Log;
@@ -142,8 +143,8 @@ public class Client extends TCPClient {
 		return tableId;
 	}
 
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy");
-	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm");
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy", Locale.US);
+	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm", Locale.US);
 
 	public Integer createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		Task task = new Task(userId, time, name, description, startDate, endDate, startTime, endTime);
@@ -170,7 +171,7 @@ public class Client extends TCPClient {
 		if (!local) {
 			if (tables.findGlobalTable(tableId) == null)
 				this.createTable(false, userId, time, name, description);
-			Integer tableGlobalId = new Integer(tableId);
+			Integer tableGlobalId = Integer.valueOf(tableId);
 			tables.changeTableId(tableId);
 			tables.updateTableGlobalId(tableId, tableGlobalId);
 		}
@@ -184,9 +185,9 @@ public class Client extends TCPClient {
 
 	public void changeTask(Boolean local, Integer tableId, Integer taskId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		if (!local) {
-			Integer tableGlobalId = new Integer(tableId);
+			Integer tableGlobalId = Integer.valueOf(tableId);
 			tables.changeTableId(tableId);
-			Integer taskGlobalId = new Integer(taskId);
+			Integer taskGlobalId = Integer.valueOf(taskId);
 			if (tables.findGlobalTask(tableId, taskId) == null)
 				taskId = this.createTask(local, tableId, time, userId, name, description, startDate, endDate, startTime, endTime);
 			tables.updateTaskGlobalId(tableGlobalId, taskGlobalId, taskId);

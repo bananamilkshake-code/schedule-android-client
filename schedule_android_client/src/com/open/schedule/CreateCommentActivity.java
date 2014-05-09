@@ -1,6 +1,7 @@
 package com.open.schedule;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TreeSet;
 
 import storage.tables.Table;
@@ -120,7 +121,7 @@ public class CreateCommentActivity extends ActionBarActivity {
 			return position;
 		}
 
-		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.US);
 
 		@Override
 		public View getView(int position, View rowView, ViewGroup arg2) {

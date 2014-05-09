@@ -32,7 +32,7 @@
         android:layout_centerHorizontal="true"
         android:text="06.05.2014"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/item_task_date_end"
@@ -44,7 +44,7 @@
         android:layout_toRightOf="@+id/item_task_date_start"
         android:text="07.05.2014"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/item_task_time_end"

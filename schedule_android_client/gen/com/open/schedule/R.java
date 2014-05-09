@@ -1209,30 +1209,31 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
-        public static final int action_forgot_password=0x7f0a0028;
-        public static final int action_register=0x7f0a002e;
+        public static final int action_forgot_password=0x7f0a0029;
+        public static final int action_register=0x7f0a002f;
         public static final int action_settings=0x7f0a000f;
-        public static final int action_sign_in_register=0x7f0a0026;
-        public static final int action_sign_in_short=0x7f0a0027;
+        public static final int action_sign_in_register=0x7f0a0027;
+        public static final int action_sign_in_short=0x7f0a0028;
         public static final int add_task=0x7f0a0019;
         public static final int app_name=0x7f0a000d;
         public static final int button_add_user=0x7f0a001a;
         public static final int button_comment_add=0x7f0a0022;
         public static final int button_create_task=0x7f0a0020;
         public static final int button_new_table_create=0x7f0a0013;
-        public static final int error_field_required=0x7f0a002d;
-        public static final int error_incorrect_password=0x7f0a002c;
-        public static final int error_invalid_auth=0x7f0a002f;
-        public static final int error_invalid_email=0x7f0a002a;
-        public static final int error_invalid_password=0x7f0a002b;
+        public static final int error_field_required=0x7f0a002e;
+        public static final int error_incorrect_password=0x7f0a002d;
+        public static final int error_invalid_auth=0x7f0a0030;
+        public static final int error_invalid_email=0x7f0a002b;
+        public static final int error_invalid_password=0x7f0a002c;
         public static final int hello_world=0x7f0a000e;
+        public static final int hint_add_comment=0x7f0a0023;
         public static final int login_button=0x7f0a0010;
-        public static final int login_progress_signing_in=0x7f0a0029;
+        public static final int login_progress_signing_in=0x7f0a002a;
         public static final int new_table_button=0x7f0a0012;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f0a0024;
-        public static final int prompt_password=0x7f0a0025;
+        public static final int prompt_email=0x7f0a0025;
+        public static final int prompt_password=0x7f0a0026;
         public static final int text_new_table_description=0x7f0a0015;
         public static final int text_new_table_name=0x7f0a0014;
         public static final int text_task_dates=0x7f0a001e;
@@ -1242,7 +1243,7 @@ containing a value of this type.
         public static final int title_activity_crearte_comment=0x7f0a0021;
         public static final int title_activity_create_table=0x7f0a0011;
         public static final int title_activity_create_task=0x7f0a001b;
-        public static final int title_activity_login=0x7f0a0023;
+        public static final int title_activity_login=0x7f0a0024;
         public static final int title_activity_view_tables=0x7f0a0017;
         public static final int title_activity_view_tasks=0x7f0a0018;
         public static final int view_tables_button=0x7f0a0016;

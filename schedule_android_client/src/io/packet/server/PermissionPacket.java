@@ -15,8 +15,8 @@ public class PermissionPacket extends ServerPacket {
 	@Override
 	public void init(char[] data) {
 		Integer offset = 0;
-		this.userId = Utility.getInt(data, offset);
-		this.tableGlobalId = Utility.getInt(data, offset += Integer.SIZE);
+		this.tableGlobalId = Utility.getInt(data, offset);
+		this.userId = Utility.getInt(data, offset += Integer.SIZE);
 		this.permission = Utility.getByte(data, offset += Integer.SIZE);
 	}
 }

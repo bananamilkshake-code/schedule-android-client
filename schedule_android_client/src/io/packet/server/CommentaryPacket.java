@@ -20,8 +20,8 @@ public class CommentaryPacket extends ServerPacket {
 		int offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
 		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE);
-		this.userId = Utility.getInt(data, offset += Integer.SIZE);
 		this.time = Utility.getLong(data, offset += Integer.SIZE);
+		this.userId = Utility.getInt(data, offset += Long.SIZE);
 		Short commentLength = Utility.getShort(data, offset += Long.SIZE);
 		this.comment = new String(data, offset += Short.SIZE, commentLength);
 	}

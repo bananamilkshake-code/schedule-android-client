@@ -26,7 +26,7 @@ public class ChangeTaskPacket extends ServerPacket {
 	public void init(char[] data) {
 		int offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
-		this.tableGlobalId = Utility.getInt(data, offset += Integer.SIZE);
+		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE);
 		this.time = Utility.getLong(data, offset += Integer.SIZE);
 		this.userId = Utility.getInt(data, offset += Long.SIZE);
 		Short nameLength = Utility.getShort(data, offset += Integer.SIZE);

@@ -1,6 +1,7 @@
 package storage.database;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,8 +23,8 @@ public class Database {
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase database;
 
-	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
 	public Database(Context context) {
 		this.dbHelper = new DatabaseHelper(context);
