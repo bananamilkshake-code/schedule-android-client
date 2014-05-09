@@ -9,7 +9,7 @@ public class Utility {
 		int size = Short.SIZE / 8;
 		Short result = new Short((short) 0);
 		for (int i = 0; i < size; i++) 
-			result = Integer.valueOf(result | Integer.valueOf(buffer[i] << (8 * i)).shortValue()).shortValue();
+			result = (short) ((result << 8) | buffer[offset + i]);
 		return result;
 	}
 
