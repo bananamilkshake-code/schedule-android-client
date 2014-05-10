@@ -1,8 +1,5 @@
 package io.packet.server;
 
-import java.util.Date;
-
-import android.text.format.Time;
 import utility.Utility;
 import io.packet.ServerPacket;
 
@@ -26,13 +23,13 @@ public class ChangeTaskPacket extends ServerPacket {
 	public void init(char[] data) {
 		int offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
-		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE);
-		this.time = Utility.getLong(data, offset += Integer.SIZE);
-		this.userId = Utility.getInt(data, offset += Long.SIZE);
-		Short nameLength = Utility.getShort(data, offset += Integer.SIZE);
-		this.name = new String(data, offset += Short.SIZE, nameLength);
+		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE / 8);
+		this.time = Utility.getLong(data, offset += Integer.SIZE / 8);
+		this.userId = Utility.getInt(data, offset += Long.SIZE / 8);
+		Short nameLength = Utility.getShort(data, offset += Integer.SIZE / 8);
+		this.name = new String(data, offset += Short.SIZE / 8, nameLength);
 		Short descriptionLength = Utility.getShort(data, offset += nameLength);
-		this.description = new String(data, offset += Short.SIZE, descriptionLength);
+		this.description = new String(data, offset += Short.SIZE / 8, descriptionLength);
 		this.startDate = new String(data, offset += descriptionLength, 8);
 		this.endDate = new String(data, offset += 8, 8);
 		this.startTime = new String(data, offset += 8, 4);

@@ -16,7 +16,7 @@ public class GlobalTaskIdPacket extends ServerPacket {
 	public void init(char[] data) {
 		int offset = 0;
 		this.taskId = Utility.getInt(data, offset);
-		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE);
-		this.tableGlobalId = Utility.getInt(data, offset += Integer.SIZE);
+		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE / 8);
+		this.tableGlobalId = Utility.getInt(data, offset += Integer.SIZE / 8);
 	}
 }

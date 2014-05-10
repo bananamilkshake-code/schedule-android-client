@@ -19,10 +19,10 @@ public class CommentaryPacket extends ServerPacket {
 	public void init(char[] data) {
 		int offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
-		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE);
-		this.time = Utility.getLong(data, offset += Integer.SIZE);
-		this.userId = Utility.getInt(data, offset += Long.SIZE);
-		Short commentLength = Utility.getShort(data, offset += Long.SIZE);
-		this.comment = new String(data, offset += Short.SIZE, commentLength);
+		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE / 8);
+		this.time = Utility.getLong(data, offset += Integer.SIZE / 8);
+		this.userId = Utility.getInt(data, offset += Long.SIZE / 8);
+		Short commentLength = Utility.getShort(data, offset += Long.SIZE / 8);
+		this.comment = new String(data, offset += Short.SIZE / 8, commentLength);
 	}
 }

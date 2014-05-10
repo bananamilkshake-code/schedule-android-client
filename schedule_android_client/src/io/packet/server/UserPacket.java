@@ -15,7 +15,7 @@ public class UserPacket extends ServerPacket {
 	public void init(char[] data) {
 		Integer offset = 0;
 		this.userId = Utility.getInt(data, offset);
-		Short nameLength = Utility.getShort(data, offset += Integer.SIZE);
-		this.name = new String(data, offset += Short.SIZE, nameLength);
+		Short nameLength = Utility.getShort(data, offset += Integer.SIZE / 8);
+		this.name = new String(data, offset += Short.SIZE / 8, nameLength);
 	}
 }

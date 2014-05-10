@@ -1,7 +1,6 @@
 package io.packet.server;
 
 import io.packet.ServerPacket;
-import io.packet.ServerPacket.Type;
 import utility.Utility;
 
 public class ChangeTablePacket extends ServerPacket {
@@ -19,11 +18,11 @@ public class ChangeTablePacket extends ServerPacket {
 	public void init(char[] data) {
 		int offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
-		this.time = Utility.getLong(data, offset += Integer.SIZE);
-		this.userId = Utility.getInt(data, offset += Long.SIZE);
-		Short nameLength = Utility.getShort(data, offset += Integer.SIZE);
-		this.name = new String(data, offset += Short.SIZE, nameLength);
+		this.time = Utility.getLong(data, offset += Integer.SIZE / 8);
+		this.userId = Utility.getInt(data, offset += Long.SIZE / 8);
+		Short nameLength = Utility.getShort(data, offset += Integer.SIZE / 8);
+		this.name = new String(data, offset += Short.SIZE / 8, nameLength);
 		Short descriptionLength = Utility.getShort(data, offset += nameLength);
-		this.description = new String(data, offset += Short.SIZE, descriptionLength);
+		this.description = new String(data, offset += Short.SIZE / 8, descriptionLength);
 	}
 }
