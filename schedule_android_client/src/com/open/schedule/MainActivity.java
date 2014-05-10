@@ -9,7 +9,6 @@ import storage.tables.Table.TableInfo;
 import utility.Utility;
 import io.Client;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.content.Context;
 import android.content.Intent;
@@ -60,10 +59,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			}
 		});
 
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
-		}
-
 		new Thread() {
 			@Override
 			public void run() {
@@ -94,7 +89,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.login) {
+			openLoginActivity();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -120,9 +116,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch(view.getId()) {
-		case R.id.btLogin:
-			openLoginActivity();
-			return;
 		case R.id.bt_create_new_table:
 			openNewTableActivity();
 			return;
@@ -207,22 +200,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			for (Integer tableId : tables.keySet()) {
 				idsByPos.add(tableId);
 			}
-		}
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-			rootView.findViewById(R.id.btLogin).setOnClickListener((MainActivity)getActivity());
-
-			return rootView;
 		}
 	}
 }
