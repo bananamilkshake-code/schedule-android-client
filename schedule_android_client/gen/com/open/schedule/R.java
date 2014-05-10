@@ -1004,7 +1004,7 @@ containing a value of this type.
         public static final int btCreateTable=0x7f050052;
         public static final int btCreateTask=0x7f05004a;
         public static final int btLogin=0x7f05005d;
-        public static final int btNewTable=0x7f05005e;
+        public static final int bt_create_new_table=0x7f050069;
         public static final int button_add_comment=0x7f05004d;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
@@ -1029,17 +1029,17 @@ containing a value of this type.
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
-        public static final int item_comment_author=0x7f05005f;
-        public static final int item_comment_text=0x7f050060;
-        public static final int item_comment_time=0x7f050061;
-        public static final int item_table_description=0x7f050062;
-        public static final int item_table_name=0x7f050063;
-        public static final int item_task_date_end=0x7f050067;
-        public static final int item_task_date_start=0x7f050066;
-        public static final int item_task_description=0x7f050065;
-        public static final int item_task_name=0x7f050064;
-        public static final int item_task_time_end=0x7f050068;
-        public static final int item_task_time_start=0x7f050069;
+        public static final int item_comment_author=0x7f05005e;
+        public static final int item_comment_text=0x7f05005f;
+        public static final int item_comment_time=0x7f050060;
+        public static final int item_table_description=0x7f050061;
+        public static final int item_table_name=0x7f050062;
+        public static final int item_task_date_end=0x7f050066;
+        public static final int item_task_date_start=0x7f050065;
+        public static final int item_task_description=0x7f050064;
+        public static final int item_task_name=0x7f050063;
+        public static final int item_task_time_end=0x7f050067;
+        public static final int item_task_time_start=0x7f050068;
         public static final int left_drawer=0x7f050045;
         public static final int listMode=0x7f050001;
         public static final int list_comments=0x7f05004c;
@@ -1157,7 +1157,8 @@ containing a value of this type.
         public static final int item_comment=0x7f030023;
         public static final int item_table=0x7f030024;
         public static final int item_task=0x7f030025;
-        public static final int support_simple_spinner_dropdown_item=0x7f030026;
+        public static final int list_tables_footer=0x7f030026;
+        public static final int support_simple_spinner_dropdown_item=0x7f030027;
     }
     public static final class menu {
         public static final int crearte_comment=0x7f0c0000;

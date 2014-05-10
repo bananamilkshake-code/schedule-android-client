@@ -47,6 +47,11 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 
+		View footer = getLayoutInflater().inflate(R.layout.list_tables_footer, null);
+		drawerList.addFooterView(footer);
+		
+		footer.findViewById(R.id.bt_create_new_table).setOnClickListener(this);
+		
 		drawerList.setAdapter(new TablesAdapter(Client.getInstance().getTables()));
 		drawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -118,7 +123,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		case R.id.btLogin:
 			openLoginActivity();
 			return;
-		case R.id.btNewTable:
+		case R.id.bt_create_new_table:
 			openNewTableActivity();
 			return;
 		default:
@@ -216,7 +221,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 			rootView.findViewById(R.id.btLogin).setOnClickListener((MainActivity)getActivity());
-			rootView.findViewById(R.id.btNewTable).setOnClickListener((MainActivity)getActivity());
 
 			return rootView;
 		}
