@@ -2,7 +2,8 @@ package events.objects;
 
 public class Event {
 	public enum Type {
-		LOGIN
+		LOGIN,
+		REGISTER
 	}
 	
 	protected final Object owner;
