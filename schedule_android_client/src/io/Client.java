@@ -21,6 +21,7 @@ import storage.tables.Task;
 import storage.tables.Task.TaskChange;
 import config.Config;
 import events.objects.Event;
+import io.packet.ClientPacket;
 import io.packet.ServerPacket;
 
 public class Client extends TCPClient {	
@@ -68,6 +69,15 @@ public class Client extends TCPClient {
 		logged = false;
 	}
 
+	@Override
+	public void send(ClientPacket packet) {
+		if (!logged && 
+				(packet.getType() != ClientPacket.Type.LOGIN && 
+				packet.getType() != ClientPacket.Type.REGISTER))
+			return;
+		super.send(packet);
+	}
+	
 	@Override
 	public void recv(ServerPacket packet) {
 		switch (packet.getType()) {
