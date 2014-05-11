@@ -9,6 +9,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -195,6 +196,12 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		emailView.requestFocus();
 	}
 	
+	private void returnSuccess() {
+		Intent result = new Intent();
+		setResult(LoginActivity.RESULT_REGISTERED, result);
+		finish();
+	}
+	
 	private class RegisterActivityLister implements EventListener {
 		public RegisterActivityLister() {
 			super();
@@ -209,7 +216,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 				RegisterPacket.Status status = (RegisterPacket.Status) event.getData();
 				switch (status) {
 				case SUCCESS:
-					finish();
+					returnSuccess();
 					break;
 				case FAILURE:
 					setRegistrationFail();

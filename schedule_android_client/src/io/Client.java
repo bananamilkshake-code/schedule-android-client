@@ -233,6 +233,7 @@ public class Client extends TCPClient {
 		switch (packet.status) {
 		case SUCCESS:
 			Log.d("Recv", "Successfully logged in");
+			
 			logged = true;
 			id = packet.id;
 			database.updateUserId(id);

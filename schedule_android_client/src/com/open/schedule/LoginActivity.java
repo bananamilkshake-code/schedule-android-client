@@ -25,6 +25,8 @@ import io.packet.server.LoginPacket;
 public class LoginActivity extends Activity implements OnClickListener {
 	public static final int REGISTER = 1;
 	
+	public static final int RESULT_REGISTERED = RESULT_FIRST_USER + 1;
+	
 	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
@@ -99,7 +101,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (Client.getInstance().isLogged())
+		if (resultCode == RESULT_REGISTERED)
 			finish();
 	}
 
