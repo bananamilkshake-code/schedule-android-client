@@ -1,7 +1,11 @@
 package io;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.NavigableMap;
+import java.util.SortedMap;
+import java.util.Iterator;
+import java.util.TreeMap;
 
 import android.util.Log;
 import storage.tables.Table;
@@ -9,8 +13,8 @@ import storage.tables.Task;
 import storage.tables.Table.Permission;
 
 public class Tables {
-	private HashMap<Integer, Table> tables = new HashMap<Integer, Table>();
-	private HashMap<Integer, Integer> indexId = new HashMap<Integer, Integer>();
+	private NavigableMap<Integer, Table> tables = new TreeMap<Integer, Table>();
+	private NavigableMap<Integer, Integer> indexId = new TreeMap<Integer, Integer>();
 
 	public void createTable(Integer tableId, Table table) {
 		tables.put(tableId, table);
@@ -85,7 +89,117 @@ public class Tables {
 		taskGlobalId = table.getTaskId(taskGlobalId);
 	}
 	
-	public final HashMap<Integer, Table> getTables() {
+	public final SortedMap<Integer, Table> getTables() {
 		return tables;
+	}
+	
+	public ArrayList<Integer> getNewTables() {
+		ArrayList<Integer> tableIds = new ArrayList<Integer>();
+		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
+		while (tableIter.hasNext()) {
+			Integer tableId = tableIter.next();
+			if (tables.get(tableId).getGlobalId() != null)
+				continue;
+			tableIds.add(0, tableId);
+		}
+		return tableIds;
+	}
+	
+	public TreeMap<Integer, ArrayList<Integer>> getNewTasks() {
+		TreeMap<Integer, ArrayList<Integer>> tasks = new TreeMap<Integer, ArrayList<Integer>>();
+		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
+		while (tableIter.hasNext()) {
+			Integer tableId = tableIter.next();
+			Table table = tables.get(tableId);
+			if (table.getGlobalId() == null)
+				continue;
+			
+			Iterator<Integer> taskIter = table.getTasks().descendingKeySet().iterator();
+			while (taskIter.hasNext()) {
+				Integer taskId = taskIter.next();
+				if (table.getTask(taskId).getGlobalId() != null)
+					continue;
+				
+				if (tasks.get(tableId) == null)
+					tasks.put(tableId, new ArrayList<Integer>());
+				tasks.get(tableId).add(taskId);
+			}
+		}
+		return tasks;
+	}
+	
+	TreeMap<Integer, ArrayList<Long>> getNewTableChanges(Long logoutTime) {
+		TreeMap<Integer, ArrayList<Long>> tableChanges = new TreeMap<Integer, ArrayList<Long>>();
+		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
+		while (tableIter.hasNext()) {
+			Integer tableId = tableIter.next();
+			Table table = tables.get(tableId);
+			if (table.getGlobalId() == null)
+				continue;
+			
+			ArrayList<Long> changeTimes = table.getChangesAfter();
+			if (changeTimes.isEmpty())
+				continue;
+			tableChanges.put(tableId, changeTimes);
+		}
+		return tableChanges;
+	}
+
+	public SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> getNewTaskChanges(Long logoutTime) {
+		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> tasksChanges = new TreeMap<Integer, SortedMap<Integer, ArrayList<Long>>>();
+		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
+		while (tableIter.hasNext()) {
+			Integer tableId = tableIter.next();
+			Table table = tables.get(tableId);
+			if (table.getGlobalId() == null)
+				continue;
+			
+			Iterator<Integer> taskIter = table.getTasks().descendingKeySet().iterator();
+			while (taskIter.hasNext()) {
+				Integer taskId = taskIter.next();
+				Task task = table.getTask(taskId);
+				if (task.getGlobalId() == null)
+					continue;
+				
+				ArrayList<Long> changeTimes = task.getChangesAfter();
+				if (changeTimes.isEmpty())
+					continue;
+				
+				if (tasksChanges.get(tableId) == null)
+					tasksChanges.put(tableId, new TreeMap<Integer, ArrayList<Long>>());
+				if (tasksChanges.get(tableId).get(taskId) == null)
+					tasksChanges.get(tableId).put(taskId, changeTimes);
+			}
+		}
+		return tasksChanges;
+	}
+	
+	public SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> getNewComments(Long logoutTime) {
+		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> comments = new TreeMap<Integer, SortedMap<Integer, ArrayList<Long>>>();
+		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
+		while (tableIter.hasNext()) {
+			Integer tableId = tableIter.next();
+			Table table = tables.get(tableId);
+			if (table.getGlobalId() == null)
+				continue;
+			
+			Iterator<Integer> taskIter = table.getTasks().descendingKeySet().iterator();
+			while (taskIter.hasNext()) {
+				Integer taskId = taskIter.next();
+				Task task = table.getTask(taskId);
+				if (task.getGlobalId() == null)
+					continue;
+				
+				ArrayList<Long> commentTimes = task.getNewComments(logoutTime);
+				if (commentTimes.isEmpty())
+					continue;
+					
+				if (comments.get(tableId) == null)
+					comments.put(tableId, new TreeMap<Integer, ArrayList<Long>>());
+				if (comments.get(tableId).get(taskId) == null)
+					comments.get(tableId).put(taskId, commentTimes);
+			}
+		}
+		return comments;
 	}
 }

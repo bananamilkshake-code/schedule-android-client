@@ -1,8 +1,9 @@
 package storage.tables;
 
-import java.util.HashMap;
-
-import utility.Utility;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class Table extends ChangableData {
 	public enum Permission {
@@ -11,9 +12,9 @@ public class Table extends ChangableData {
 		WRITE
 	};
 
-	private HashMap<Integer, Permission> readers = new HashMap<Integer, Permission>();
-	private HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
-	private HashMap<Integer, Integer> indexId = new HashMap<Integer, Integer>();
+	private Map<Integer, Permission> readers = new TreeMap<Integer, Permission>();
+	private NavigableMap<Integer, Task> tasks = new TreeMap<Integer, Task>();
+	private SortedMap<Integer, Integer> indexId = new TreeMap<Integer, Integer>();
 
 	public Table() {}
 	
@@ -79,11 +80,11 @@ public class Table extends ChangableData {
 		}
 	}
 	
-	public final HashMap<Integer, Permission> getReaders() {
+	public final Map<Integer, Permission> getReaders() {
 		return readers;
 	}
 	
-	public final HashMap<Integer, Task> getTasks() {
+	public final NavigableMap<Integer, Task> getTasks() {
 		return tasks;
 	}
 }

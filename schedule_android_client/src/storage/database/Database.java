@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import java.util.SortedMap;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,7 +35,7 @@ public class Database {
 		dbHelper.close();
 	}
 
-	public void loadTables(HashMap<Integer, Table> tables) {
+	public void loadTables(SortedMap<Integer, Table> tables) {
 		String[] columns = {DatabaseHelper.INNER_ID};
 		Cursor cursorTables = database.query(DatabaseHelper.TABLE_TABLES, columns, null, null, null, null, null);
 
@@ -79,7 +79,7 @@ public class Database {
 		loadTasks(tables);
 	}
 
-	private void loadTasks(HashMap<Integer, Table> tables) {
+	private void loadTasks(SortedMap<Integer, Table> tables) {
 		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, 
 				DatabaseHelper.CHANGE_NAME, DatabaseHelper.CHANGE_DESCRIPTION, 
 				DatabaseHelper.CHANGE_TASK_START_DATE, DatabaseHelper.CHANGE_TASK_END_DATE, 
@@ -143,7 +143,7 @@ public class Database {
 		loadComments(tables);
 	}
 
-	public void loadComments(HashMap<Integer, Table> tables) {
+	public void loadComments(SortedMap<Integer, Table> tables) {
 		String[] columns = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, DatabaseHelper.COMMENTS_TEXT};
 		Cursor cursor = database.query(DatabaseHelper.TABLE_COMMENTS, columns, null, null, null, null, DatabaseHelper.TABLE_ID + ", " + DatabaseHelper.TASK_ID + ", " + DatabaseHelper.COMMENTS_TEXT);
 

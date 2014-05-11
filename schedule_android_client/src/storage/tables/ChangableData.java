@@ -1,5 +1,8 @@
 package storage.tables;
 
+import io.Client;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NavigableMap;
@@ -20,7 +23,6 @@ public class ChangableData {
 
 	public void change(Long time, Change change) {
 		changes.put(time, change);
-		update();
 	}
 	
 	public void updateglobalId(Integer globalId) {
@@ -48,9 +50,23 @@ public class ChangableData {
 	public Integer getGlobalId() {
 		return this.globalId;
 	}
+	
+	public ArrayList<Long> getChangesAfter() {
+		ArrayList<Long> changes = new ArrayList<Long>();
+		Iterator<Long> changeIter = this.changes.descendingKeySet().iterator();
+		while (changeIter.hasNext()) {
+			Long time = changeIter.next();
+			if (time <= lastUpdate)
+				break;
+			if (this.changes.get(time).creatorId != Client.getInstance().getId())
+				continue;
+			changes.add(time);
+		}
+		return changes;
+	}
 
-	protected void update() {
-		lastUpdate = Utility.getUnixTime();
+	public void update(Long time) {
+		lastUpdate = time;
 	}
 
 	public abstract class Change {

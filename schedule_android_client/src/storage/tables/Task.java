@@ -1,19 +1,16 @@
 package storage.tables;
 
+import io.Client;
+
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.TreeSet;
-import java.util.Comparator;
+import java.util.Iterator;
+import java.util.TreeMap;
 
 public class Task extends ChangableData {
-	TreeSet<Comment> comments;
-	
-	public Task() {
-		this.comments = new TreeSet<Comment>(new Comparator<Comment>() {
-			public int compare(Comment c1, Comment c2) {
-				return (int) (c1.time - c2.time);
-			}
-		});
-	}
+	private TreeMap<Long, Comment> comments = new TreeMap<Long, Comment>();
+
+	public Task() {}
 	
 	public Task(Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		this();
@@ -21,21 +18,33 @@ public class Task extends ChangableData {
 	}
 
 	public void addComment(Integer commentatorId, Long time, String text) {
-		comments.add(new Comment(commentatorId, time, text));
+		comments.put(time, new Comment(commentatorId, text));
 	}
 	
-	public TreeSet<Comment> getComments() {
+	public TreeMap<Long, Comment> getComments() {
 		return comments;
 	}
 
+	public ArrayList<Long> getNewComments(Long logoutTime) {
+		ArrayList<Long> commentTimes = new ArrayList<Long>();
+		Iterator<Long> commentIter = comments.descendingKeySet().iterator();
+		while (commentIter.hasNext()) {
+			Long time = commentIter.next();
+			if (time >= logoutTime)
+				return commentTimes;
+			if (comments.get(time).commentatorId != Client.getInstance().getId())
+				continue;
+			commentTimes.add(time);
+		}
+		return commentTimes;
+	}
+	
 	public class Comment {
 		public Integer commentatorId;
-		public Long time;
 		public String text;
 
-		public Comment(Integer commentatorId, Long time, String text) {
+		public Comment(Integer commentatorId, String text) {
 			this.commentatorId = commentatorId;
-			this.time = time;
 			this.text = text;
 		}
 	}

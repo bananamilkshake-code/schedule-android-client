@@ -3,10 +3,13 @@ package io;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.SortedMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import android.util.Log;
 import storage.database.Database;
@@ -25,6 +28,7 @@ public class Client extends TCPClient {
 
 	private  boolean logged = false;
 	private Integer id = 0;
+	private Long logoutTime = (long) 0;
 
 	private Tables tables  = new Tables();
 	private Users users = new Users();
@@ -55,7 +59,7 @@ public class Client extends TCPClient {
 		return logged;
 	}
 
-	public final HashMap<Integer, Table> getTables() {
+	public final SortedMap<Integer, Table> getTables() {
 		return tables.getTables();
 	}
 
@@ -122,6 +126,92 @@ public class Client extends TCPClient {
 		//this.login(username, password);
 	}
 	
+	private void do_login(Integer id) {
+		logged = true;
+		this.id = id;
+		database.updateUserId(id);
+		
+		sync();
+	}
+	
+	private void sync() {
+		syncTables();
+		syncTasks();
+		syncTableChanges();
+		syncTaskChanges();
+		syncComments();
+	}
+	
+	private void syncTables() {
+		ArrayList<Integer> tableList = tables.getNewTables();
+		for (Integer tableId : tableList)
+			syncTable(tableId);
+	}
+	
+	private void syncTasks() {
+		SortedMap<Integer, ArrayList<Integer>> tasks = tables.getNewTasks();
+		Iterator<Entry<Integer, ArrayList<Integer>>> taskIter = tasks.entrySet().iterator();
+		while (taskIter.hasNext()) {
+			Entry<Integer, ArrayList<Integer>> task = taskIter.next();
+			Integer tableId = task.getKey();
+			for (Integer taskId : task.getValue())
+				syncTask(tableId, taskId);
+		}
+	}
+	
+	private void syncTableChanges() {
+		TreeMap<Integer, ArrayList<Long>> unsyncedTablesChanges = tables.getNewTableChanges(this.logoutTime);
+		Iterator<Entry<Integer, ArrayList<Long>>> tableIter = unsyncedTablesChanges.entrySet().iterator();
+		while (tableIter.hasNext()) {
+			Entry<Integer, ArrayList<Long>> table = tableIter.next();
+			Integer tableId = table.getKey();
+			ArrayList<Long> times = table.getValue();
+			for (Long time : times) {
+				syncChangeTable(tableId, time);
+				tables.getTables().get(tableId).update(time);
+			}
+		}
+	}
+	
+	private void syncTaskChanges() {
+		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> unsyncedTaskChanges = tables.getNewTaskChanges(this.logoutTime);
+		Iterator<Entry<Integer, SortedMap<Integer, ArrayList<Long>>>> tableIter = unsyncedTaskChanges.entrySet().iterator();
+		while (tableIter.hasNext()) {
+			Entry<Integer, SortedMap<Integer, ArrayList<Long>>> table = tableIter.next();
+			Integer tableId = table.getKey();
+			
+			Iterator<Entry<Integer, ArrayList<Long>>> taskIter = table.getValue().entrySet().iterator();
+			while (taskIter.hasNext()) {
+				Entry<Integer, ArrayList<Long>> task = taskIter.next();
+				Integer taskId = task.getKey();
+				
+				ArrayList<Long> changesTimes = task.getValue();
+				for (Long time : changesTimes) {
+					syncChangeTask(tableId, taskId, time);
+					tables.getTables().get(tableId).getTasks().get(taskId).update(time);
+				}
+			}
+		}
+	}
+	
+	private void syncComments() {
+		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> comments = tables.getNewComments(this.logoutTime);
+		Iterator<Entry<Integer, SortedMap<Integer, ArrayList<Long>>>> tableIter = comments.entrySet().iterator();
+		while (tableIter.hasNext()) {
+			Entry<Integer, SortedMap<Integer, ArrayList<Long>>> table = tableIter.next();
+			Integer tableId = table.getKey();
+
+			Iterator<Entry<Integer, ArrayList<Long>>> taskIter = table.getValue().entrySet().iterator();
+			while (taskIter.hasNext()) {
+				Entry<Integer, ArrayList<Long>> task = taskIter.next();
+				Integer taskId = task.getKey();
+				ArrayList<Long> times = task.getValue();
+				for (Long time : times)
+					syncComment(tableId, taskId, time);
+			}
+		}
+	}
+	
 	public void login(String username, String password) {
 		try {
 			send(new io.packet.client.LoginPacket(username, password));
@@ -172,7 +262,7 @@ public class Client extends TCPClient {
 		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
 
 		if (local) 
-			syncComment(tableId, taskId, time, comment);
+			syncComment(tableId, taskId, time);
 	}
 
 	public void changeTable(Boolean local, Integer tableId, Long time, Integer userId, String name, String description) {
@@ -233,10 +323,7 @@ public class Client extends TCPClient {
 		switch (packet.status) {
 		case SUCCESS:
 			Log.d("Recv", "Successfully logged in");
-			
-			logged = true;
-			id = packet.id;
-			database.updateUserId(id);
+			do_login(packet.id);
 			break;
 		case FAILURE:
 			Log.w("Recv", "Wrong username or password");
@@ -275,11 +362,17 @@ public class Client extends TCPClient {
 	private void updateGlobalTableId(io.packet.server.GlobalTableIdPacket packet) {
 		tables.updateTableGlobalId(packet.tableId, packet.tableGlobalId);
 		database.updateTableGlobalId(packet.tableId, packet.tableGlobalId);
+
+		syncTasks();
+		syncTableChanges();
 	}
 	
 	private void updateGlobalTaskId(io.packet.server.GlobalTaskIdPacket packet) {
 		tables.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
 		database.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
+		
+		syncComments();
+		syncTaskChanges();
 	}
 
 	private void changePermission(io.packet.server.PermissionPacket packet) {
@@ -325,7 +418,8 @@ public class Client extends TCPClient {
 		}
 	}
 	
-	private void syncComment(Integer tableId, Integer taskId, Long time, String comment) {
+	private void syncComment(Integer tableId, Integer taskId, Long time) {
+		String comment = tables.getTables().get(tableId).getTasks().get(taskId).getComments().get(taskId).text;
 		Integer tableGlobalId = tables.findInnerTable(tableId);
 		Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
 		if (tableGlobalId == null || taskGlobalId == null)

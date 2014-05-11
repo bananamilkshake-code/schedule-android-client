@@ -1,7 +1,7 @@
 package com.open.schedule;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.SortedMap;
 
 import storage.database.Database;
 import storage.tables.Table;
@@ -151,10 +151,10 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	}
 
 	public class TablesAdapter extends BaseAdapter {
-		HashMap<Integer, Table> tables;
+		SortedMap<Integer, Table> tables;
 		ArrayList<Integer> idsByPos = new ArrayList<Integer>();
 		
-		public TablesAdapter(HashMap<Integer, Table> tables) {
+		public TablesAdapter(SortedMap<Integer, Table> tables) {
 			this.tables = tables;
 			updateTablesIds();
 		}

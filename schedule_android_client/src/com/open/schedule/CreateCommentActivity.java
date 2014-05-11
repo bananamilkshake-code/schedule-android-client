@@ -2,7 +2,8 @@ package com.open.schedule;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.TreeSet;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import storage.tables.Table;
 import storage.tables.Task;
@@ -95,9 +96,9 @@ public class CreateCommentActivity extends ActionBarActivity {
 	}
 
 	public class CommentsAdapter extends BaseAdapter {
-		TreeSet<Comment> comments;
+		TreeMap<Long, Comment> comments;
 
-		public CommentsAdapter(TreeSet<Comment> comments) {
+		public CommentsAdapter(TreeMap<Long, Comment> comments) {
 			this.comments = comments;
 		}
 
@@ -112,8 +113,8 @@ public class CreateCommentActivity extends ActionBarActivity {
 		}
 
 		@Override
-		public Comment getItem(int position) {
-			return (Comment) comments.toArray()[position];
+		public Entry<Long, Comment> getItem(int position) {
+			return (Entry<Long, Comment>) comments.entrySet().toArray()[position];
 		}
 
 		@Override
@@ -134,11 +135,11 @@ public class CreateCommentActivity extends ActionBarActivity {
 			TextView commentTime = (TextView)rowView.findViewById(R.id.item_comment_time);
 			TextView commentAuthor = (TextView)rowView.findViewById(R.id.item_comment_author);
 
-			Comment comment = getItem(position);
+			Entry<Long, Comment> comment = getItem(position);
 
-			commentText.setText((CharSequence)(comment.text));
-			commentTime.setText((CharSequence)(dateFormatter.format(comment.time)));
-			commentAuthor.setText((CharSequence)(comment.commentatorId.toString()));
+			commentText.setText((CharSequence)(comment.getValue().text));
+			commentTime.setText((CharSequence)(dateFormatter.format(comment.getKey())));
+			commentAuthor.setText((CharSequence)(comment.getValue().commentatorId.toString()));
 
 			return rowView;
 		}

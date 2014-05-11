@@ -3,7 +3,7 @@ package com.open.schedule;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.SortedMap;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
@@ -148,10 +148,10 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 	}
 
 	public class TasksAdapter extends BaseAdapter {
-		private HashMap<Integer, Task> tasks;
+		private SortedMap<Integer, Task> tasks;
 		private ArrayList<Integer> idsByPos = new ArrayList<Integer>();
 
-		public TasksAdapter(HashMap<Integer, Task> tasks) {
+		public TasksAdapter(SortedMap<Integer, Task> tasks) {
 			this.tasks = tasks;
 		}
 
