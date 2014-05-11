@@ -117,9 +117,9 @@ public class Client extends TCPClient {
 	}
 
 	public void loadAuthParams() {
-		String username = "l@m.c";
-		String password = "qqqq";
-		this.login(username, password);
+		//String username = "l@m.c";
+		//String password = "qqqq";
+		//this.login(username, password);
 	}
 	
 	public void login(String username, String password) {
@@ -127,6 +127,14 @@ public class Client extends TCPClient {
 			send(new io.packet.client.LoginPacket(username, password));
 		} catch (IOException e) {
 			Log.w("Client", "Authorization error", e);
+		}
+	}
+
+	public void register(String email, String password, String name) {
+		try {
+			send(new io.packet.client.RegisterPacket(email, password));
+		} catch (IOException e) {
+			Log.w("Client", "Registration error", e);
 		}
 	}
 
@@ -213,11 +221,12 @@ public class Client extends TCPClient {
 		switch (packet.status) {
 		case SUCCESS:
 			Log.d("Recv", "Successfully registered in");
-			return;	
+			break;	
 		case FAILURE:
 			Log.w("Recv", "Username has already being used");
-			return;
+			break;
 		}
+		new Event(this, Event.Type.REGISTER, (Object) packet.status);
 	}
 	
 	private void login(io.packet.server.LoginPacket packet) {
@@ -232,7 +241,7 @@ public class Client extends TCPClient {
 			Log.w("Recv", "Wrong username or password");
 			break;
 		}
-		new Event(this, Event.Type.LOGIN, (Object)packet.status);
+		new Event(this, Event.Type.LOGIN, (Object) packet.status);
 	}
 
 	private void changeTable(io.packet.server.ChangeTablePacket packet) {

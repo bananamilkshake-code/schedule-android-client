@@ -1,6 +1,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.open.schedule.LoginActivity" >
+    tools:context="com.open.schedule.RegisterActivity" >
 
     <!-- Login progress -->
 
@@ -53,6 +53,7 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:hint="@string/prompt_password"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
@@ -60,29 +61,37 @@
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:singleLine="true" />
-			<LinearLayout
-			    android:orientation="horizontal"
-			    android:layout_width="fill_parent"
-			    android:layout_height="fill_parent">
-	
-	            <Button
-	                android:id="@+id/button_register"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="@string/string_register" />
 
-	            <Button
-	                android:id="@+id/button_sign_in"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_gravity="right"
-	                android:layout_marginTop="16dp"
-	                android:paddingLeft="32dp"
-	                android:paddingRight="32dp"
-	                android:text="@string/action_sign_in_register" />
+            <EditText
+                android:id="@+id/password_verification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:ems="10"
+                android:hint="@string/string_verify_password"
+                android:inputType="textPassword" >
 
-   			 </LinearLayout>
+                <requestFocus />
+            </EditText>
 
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:ems="10"
+                android:hint="@string/register_name"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/register_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/string_register" />
         </LinearLayout>
     </ScrollView>
 

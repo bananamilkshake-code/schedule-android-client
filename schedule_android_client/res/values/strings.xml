@@ -24,5 +24,8 @@
     <string name="title_activity_crearte_comment">CrearteCommentActivity</string>
     <string name="button_comment_add">Add</string>
     <string name="hint_add_comment">New comment</string>
+    <string name="string_register">New account...</string>
+    <string name="string_verify_password">Verify password</string>
+    <string name="register_name">Name</string>
 
 </resources>
