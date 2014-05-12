@@ -23,8 +23,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
-	private LinearLayout drawer;
+	private RelativeLayout drawer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
-		drawer = (LinearLayout) findViewById(R.id.drawer);
+		drawer = (RelativeLayout) findViewById(R.id.drawer);
 		
 		findViewById(R.id.bt_create_new_table).setOnClickListener(this);
 		
