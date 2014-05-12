@@ -16,10 +16,11 @@ public class Table extends ChangableData {
 	private NavigableMap<Integer, Task> tasks = new TreeMap<Integer, Task>();
 	private SortedMap<Integer, Integer> indexId = new TreeMap<Integer, Integer>();
 
-	public Table() {}
+	public Table(Long updatedTime) {
+		super(updatedTime);
+	}
 	
 	public Table(Integer creatorId, Long creationTime, String name, String description) {
-		this();
 		this.change(creationTime, new TableInfo(creatorId, creationTime, name, description));
 	}
 

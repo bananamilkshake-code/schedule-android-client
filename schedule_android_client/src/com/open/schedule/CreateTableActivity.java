@@ -46,6 +46,12 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 	}
 	
 	@Override
+	public void onClick(View view) {
+		if (view.getId() == R.id.btCreateTable)
+			finish();
+	}
+	
+	@Override
 	public void finish() {
 		Intent result = new Intent();
 		
@@ -59,13 +65,9 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 		super.finish();
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
 	public static class PlaceholderFragment extends Fragment {
 
-		public PlaceholderFragment() {
-		}
+		public PlaceholderFragment() {}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,11 +75,5 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 			rootView.findViewById(R.id.btCreateTable).setOnClickListener((CreateTableActivity)getActivity());
 			return rootView;
 		}
-	}
-	
-	@Override
-	public void onClick(View view) {
-		if (view.getId() == R.id.btCreateTable)
-			finish();
 	}
 }

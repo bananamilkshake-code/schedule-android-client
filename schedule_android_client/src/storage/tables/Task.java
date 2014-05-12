@@ -12,6 +12,10 @@ public class Task extends ChangableData {
 
 	public Task() {}
 	
+	public Task(Long updateTime) {
+		super(updateTime);
+	}
+	
 	public Task(Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		this();
 		this.change(time, new TaskChange(creatorId, time, name, description, startDate, endDate, startTime, endTime));

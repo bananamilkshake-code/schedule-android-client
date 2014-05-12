@@ -40,7 +40,7 @@ public class Client extends TCPClient {
 		super(Config.host, Config.port);
 		this.database = database;
 
-		database.loadTables(this.tables.getTables());
+		database.loadTables(this.tables);
 	}
 
 	public static void createInstance(Database database) {
@@ -178,7 +178,8 @@ public class Client extends TCPClient {
 			ArrayList<Long> times = table.getValue();
 			for (Long time : times) {
 				syncChangeTable(tableId, time);
-				tables.getTables().get(tableId).update(time);
+				tables.updateTable(tableId, time);
+				database.updateTable(tableId, time);
 			}
 		}
 	}
@@ -198,7 +199,8 @@ public class Client extends TCPClient {
 				ArrayList<Long> changesTimes = task.getValue();
 				for (Long time : changesTimes) {
 					syncChangeTask(tableId, taskId, time);
-					tables.getTables().get(tableId).getTasks().get(taskId).update(time);
+					tables.updateTask(tableId, taskId, time);
+					database.updateTask(tableId, taskId, time);
 				}
 			}
 		}

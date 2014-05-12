@@ -1,11 +1,12 @@
 package storage.database;
 
+import io.Tables;
+
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.SortedMap;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,15 +36,19 @@ public class Database {
 		dbHelper.close();
 	}
 
-	public void loadTables(SortedMap<Integer, Table> tables) {
-		String[] columns = {DatabaseHelper.INNER_ID};
+	public void loadTables(Tables tables) {
+		String[] columns = {DatabaseHelper.INNER_ID, DatabaseHelper.GLOBAL_ID, DatabaseHelper.UPDATE_TIME};
 		Cursor cursorTables = database.query(DatabaseHelper.TABLE_TABLES, columns, null, null, null, null, null);
 
 		if (cursorTables.moveToFirst()) {
 			int id = cursorTables.getColumnIndex(DatabaseHelper.INNER_ID);
+			int globalId = cursorTables.getColumnIndex(DatabaseHelper.GLOBAL_ID);
+			int updateTime = cursorTables.getColumnIndex(DatabaseHelper.UPDATE_TIME);
 			while(!cursorTables.isAfterLast()) {
 				Integer idVal = cursorTables.getInt(id);
-				tables.put(idVal, new Table());
+				Integer globalIdVal = cursorTables.getInt(globalId);
+				Long updateTimeVal = cursorTables.getLong(updateTime);
+				tables.createTable(idVal, globalIdVal, updateTimeVal);
 				cursorTables.moveToNext();
 			}
 		}
@@ -62,15 +67,11 @@ public class Database {
 
 			while(!cursorChanges.isAfterLast()) {
 				Integer tableIdVal = cursorChanges.getInt(tableId);
-				
-				Table table = tables.get(tableIdVal);
-				if (table != null) {
-					Integer userIdVal = cursorChanges.getInt(userId);
-					Long timeVal = cursorChanges.getLong(time);
-					String nameVal = cursorChanges.getString(name);
-					String descriptionVal = cursorChanges.getString(description);
-					table.change(timeVal, table.new TableInfo(userIdVal, timeVal, nameVal, descriptionVal));
-				}
+				Integer userIdVal = cursorChanges.getInt(userId);
+				Long timeVal = cursorChanges.getLong(time);
+				String nameVal = cursorChanges.getString(name);
+				String descriptionVal = cursorChanges.getString(description);
+				tables.changeTable(tableIdVal, userIdVal, timeVal, nameVal, descriptionVal);
 				cursorChanges.moveToNext();
 			}
 		}
@@ -79,7 +80,26 @@ public class Database {
 		loadTasks(tables);
 	}
 
-	private void loadTasks(SortedMap<Integer, Table> tables) {
+	private void loadTasks(Tables tables) {
+		String[] columns = {DatabaseHelper.INNER_ID, DatabaseHelper.GLOBAL_ID, DatabaseHelper.UPDATE_TIME};
+		Cursor cursorTasks = database.query(DatabaseHelper.TABLE_TASKS, columns, null, null, null, null, null);
+		if (cursorTasks.moveToFirst()) {
+			int tableId = cursorTasks.getColumnIndex(DatabaseHelper.TABLE_ID);
+			int id = cursorTasks.getColumnIndex(DatabaseHelper.INNER_ID);
+			int globalId = cursorTasks.getColumnIndex(DatabaseHelper.GLOBAL_ID);
+			int updateTime = cursorTasks.getColumnIndex(DatabaseHelper.UPDATE_TIME);
+			while(!cursorTasks.isAfterLast()) {
+				Integer idVal = cursorTasks.getInt(id);
+				Integer tableIdVal = cursorTasks.getInt(tableId);
+				Integer globalIdVal = cursorTasks.getInt(globalId);
+				Long updateTimeVal = cursorTasks.getLong(updateTime);
+				tables.createTask(tableIdVal, idVal, globalIdVal, updateTimeVal);
+				cursorTasks.moveToNext();
+			}
+		}
+		cursorTasks.close();
+
+		
 		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, 
 				DatabaseHelper.CHANGE_NAME, DatabaseHelper.CHANGE_DESCRIPTION, 
 				DatabaseHelper.CHANGE_TASK_START_DATE, DatabaseHelper.CHANGE_TASK_END_DATE, 
@@ -101,9 +121,6 @@ public class Database {
 			while(!cursorChanges.isAfterLast()) {
 				Integer tableIdVal = cursorChanges.getInt(tableId);
 				Integer taskIdVal = cursorChanges.getInt(taskId);
-				Task task = tables.get(tableIdVal).getTask(taskIdVal);
-				if (task == null)
-					task = tables.get(tableIdVal).addTask(taskIdVal, new Task());
 
 				Integer userIdVal = cursorChanges.getInt(userId);
 				Long timeVal = cursorChanges.getLong(time);
@@ -134,7 +151,7 @@ public class Database {
 					Log.w(Database.class.getName(), "Date task changes parsing", e);
 				}
 
-				task.change(timeVal, task.new TaskChange(userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, startTimeVal, endTimeVal));
+				tables.changeTask(tableIdVal, taskIdVal, userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, startTimeVal, endTimeVal);
 				cursorChanges.moveToNext();
 			}
 		}
@@ -143,7 +160,7 @@ public class Database {
 		loadComments(tables);
 	}
 
-	public void loadComments(SortedMap<Integer, Table> tables) {
+	public void loadComments(Tables tables) {
 		String[] columns = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, DatabaseHelper.COMMENTS_TEXT};
 		Cursor cursor = database.query(DatabaseHelper.TABLE_COMMENTS, columns, null, null, null, null, DatabaseHelper.TABLE_ID + ", " + DatabaseHelper.TASK_ID + ", " + DatabaseHelper.COMMENTS_TEXT);
 
@@ -157,13 +174,10 @@ public class Database {
 			while(!cursor.isAfterLast()) {
 				Integer tableIdVal = cursor.getInt(tableId);
 				Integer taskIdVal = cursor.getInt(taskId);
-				Task task = tables.get(tableIdVal).getTask(taskIdVal);
-				if (task != null) {
-					Integer commentatorVal = cursor.getInt(userId);
-					Long timeVal = cursor.getLong(time);
-					String textVal = cursor.getString(textId);
-					task.addComment(commentatorVal, timeVal, textVal);
-				}
+				Integer commentatorVal = cursor.getInt(userId);
+				Long timeVal = cursor.getLong(time);
+				String textVal = cursor.getString(textId);
+				tables.createComment(tableIdVal, taskIdVal, commentatorVal, timeVal, textVal);
 				cursor.moveToNext();
 			}
 		}
@@ -172,7 +186,7 @@ public class Database {
 
 	public Integer createTable(Integer userId, Table table) {
 		ContentValues values = new ContentValues();
-		values.put("last_update", Utility.getUnixTime());
+		values.put(DatabaseHelper.UPDATE_TIME, Utility.getUnixTime());
 		Integer tableId = (int) database.insert(DatabaseHelper.TABLE_TABLES, null, values);
 
 		Entry<Long, Change> firstChange = table.getInitial();
@@ -186,6 +200,7 @@ public class Database {
 	public Integer createTask(Integer userId, Integer tableId, Task task) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.TABLE_ID, tableId);
+		values.put(DatabaseHelper.UPDATE_TIME, Utility.getUnixTime());
 		Integer taskId = (int) database.insert(DatabaseHelper.TABLE_TASKS, null, values);
 
 		Entry<Long, Change> firstChange = task.getInitial();
@@ -261,6 +276,18 @@ public class Database {
 
 		values = new ContentValues();
 		values.put(DatabaseHelper.GLOBAL_ID, taskGlobalId);
+		database.update(DatabaseHelper.TABLE_TASKS, values, DatabaseHelper.TABLE_ID + " =? AND " + DatabaseHelper.INNER_ID + " = ?", new String[] {tableId.toString(), taskId.toString()});
+	}
+	
+	public void updateTable(Integer tableId, Long time) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.UPDATE_TIME, time);
+		database.update(DatabaseHelper.TABLE_TABLES, values, DatabaseHelper.INNER_ID + " = ?", new String[] {tableId.toString()});
+	}
+
+	public void updateTask(Integer tableId, Integer taskId, Long time) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.UPDATE_TIME, time);
 		database.update(DatabaseHelper.TABLE_TASKS, values, DatabaseHelper.TABLE_ID + " =? AND " + DatabaseHelper.INNER_ID + " = ?", new String[] {tableId.toString(), taskId.toString()});
 	}
 

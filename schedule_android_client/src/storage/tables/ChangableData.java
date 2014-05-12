@@ -9,14 +9,18 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import utility.Utility;
-
 public class ChangableData {
 
 	protected TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
 	private long lastUpdate = 0;
 	private Integer globalId;
 
+	public ChangableData() {}
+	
+	public ChangableData(Long updateTime) {
+		this.lastUpdate = updateTime;
+	}
+	
 	public Entry<Long, Change> getInitial() {
 		return changes.firstEntry();
 	}

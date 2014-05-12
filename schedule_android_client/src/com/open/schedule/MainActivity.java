@@ -6,8 +6,10 @@ import java.util.SortedMap;
 import storage.database.Database;
 import storage.tables.Table;
 import storage.tables.Table.TableInfo;
+
 import utility.Utility;
 import io.Client;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.content.Context;
@@ -45,11 +47,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
-
-		View footer = getLayoutInflater().inflate(R.layout.list_tables_footer, null);
-		drawerList.addFooterView(footer);
 		
-		footer.findViewById(R.id.bt_create_new_table).setOnClickListener(this);
+		findViewById(R.id.bt_create_new_table).setOnClickListener(this);
 		
 		drawerList.setAdapter(new TablesAdapter(Client.getInstance().getTables()));
 		drawerList.setOnItemClickListener(new OnItemClickListener() {
@@ -98,6 +97,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != RESULT_OK)
 			return;
 

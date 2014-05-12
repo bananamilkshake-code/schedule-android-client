@@ -15,13 +15,26 @@ import storage.tables.Table.Permission;
 public class Tables {
 	private NavigableMap<Integer, Table> tables = new TreeMap<Integer, Table>();
 	private NavigableMap<Integer, Integer> indexId = new TreeMap<Integer, Integer>();
-
+	
 	public void createTable(Integer tableId, Table table) {
 		tables.put(tableId, table);
 	}
 
+	public void createTable(Integer tableId, Integer globalId, Long updateTime) {
+		Table table = new Table(updateTime);
+		tables.put(tableId, table);
+		updateTableGlobalId(tableId, globalId);
+	}
+	
 	public void createTask(Integer tableId, Integer taskId, Task task) {
 		tables.get(tableId).addTask(taskId, task);
+	}
+	
+	public void createTask(Integer tableId, Integer taskId, Integer globalId, Long updateTime) {
+		Integer tableGlobalId = this.findInnerTable(tableId);
+		Task task = new Task(updateTime);
+		tables.get(tableId).addTask(taskId, task);
+		updateTaskGlobalId(tableGlobalId, globalId, taskId);
 	}
 	
 	public void createComment(Integer tableId, Integer taskId, Integer userId, Long time, String comment) {
@@ -52,6 +65,14 @@ public class Tables {
 		Integer tableId = indexId.get(tableGlobalId);
 		Table table = tables.get(tableId);
 		table.updateTaskGlobalId(taskId, taskGlobalId);
+	}
+	
+	public void updateTable(Integer tableId, Long time) {
+		tables.get(tableId).update(time);
+	}
+	
+	public void updateTask(Integer tableId, Integer taskId, Long time) {
+		tables.get(tableId).getTask(taskId).update(time);
 	}
 	
 	public Integer findGlobalTable(Integer tableGlobalId) {

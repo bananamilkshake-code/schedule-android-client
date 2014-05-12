@@ -14,6 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String TABLE_TASKS = "tasks";
 	public static final String INNER_ID = "_id";
 	public static final String GLOBAL_ID = "id";
+	public static final String UPDATE_TIME = "update_time";
 	
 	public static final String TABLE_ID = "table_id";
 	public static final String TASK_ID = "task_id";
@@ -47,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 			"CREATE TABLE " + TABLE_TABLES + " (" +
 					INNER_ID + " INTEGER PRIMARY KEY," +
 					GLOBAL_ID + " INT(10)," +
-					"last_update INT(10) NOT NULL DEFAULT 0," +
+					UPDATE_TIME + " INT(10) NOT NULL DEFAULT 0," +
 					"UNIQUE(" + INNER_ID + "," + GLOBAL_ID + ")" +
 				")";
 
@@ -56,6 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					INNER_ID + " INT PRIMARY KEY," +
 					GLOBAL_ID + " INT(10)," +
 					TABLE_ID + " INT(10) NOT NULL," +
+					UPDATE_TIME + " INT(10) NOT NULL DEFAULT 0," +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"UNIQUE(" + INNER_ID + "," + GLOBAL_ID + ")" +
 				")";

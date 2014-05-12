@@ -55,8 +55,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		passwordView = (EditText) findViewById(R.id.password);
 		passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent) {
+					public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
 						if (id == R.id.login || id == EditorInfo.IME_NULL) {
 							register();
 							return true;
