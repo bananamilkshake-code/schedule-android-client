@@ -6,10 +6,8 @@ import java.util.SortedMap;
 import storage.database.Database;
 import storage.tables.Table;
 import storage.tables.Table.TableInfo;
-
 import utility.Utility;
 import io.Client;
-
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.content.Context;
@@ -25,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,6 +36,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
+	private LinearLayout drawer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
+		drawer = (LinearLayout) findViewById(R.id.drawer);
 		
 		findViewById(R.id.bt_create_new_table).setOnClickListener(this);
 		
@@ -147,7 +148,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	private void showTableInfo(int tableId) {
 		drawerList.setItemChecked(tableId, true);
 		openViewTableActivity(tableId);
-		drawerLayout.closeDrawer(drawerList);
+		drawerLayout.closeDrawer(drawer);
 	}
 
 	public class TablesAdapter extends BaseAdapter {
