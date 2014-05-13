@@ -15,8 +15,6 @@ import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -41,29 +39,11 @@ public class CreateCommentActivity extends ActionBarActivity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.crearte_comment, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	private void addComment(String text) {
 		Integer userId = Client.getInstance().getId();
 		Client.getInstance().createComment(true, tableId, taskId, Utility.getUnixTime(), userId, text);
 	}
-	
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
+
 	public static class PlaceholderFragment extends Fragment {
 		public PlaceholderFragment() {}
 

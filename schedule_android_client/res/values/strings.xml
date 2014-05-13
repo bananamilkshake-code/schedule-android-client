@@ -2,17 +2,16 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">Open Schedule</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string android:id="@+id/login_button" name="login_button" android:layout_width="wrap_content" android:layout_height="wrap_content">Login</string>
-    <string name="title_activity_create_table">CreateTableActivity</string>
+    <string name="title_activity_create_table">Creaate table</string>
     <string name="new_table_button">New Table</string>
     <string name="button_new_table_create">Create</string>
     <string name="text_new_table_name">Name</string>
     <string name="text_new_table_description">Description</string>
     <string name="view_tables_button">View tables</string>
-    <string name="title_activity_view_tables">ViewTables</string>
-    <string name="title_activity_view_tasks">ViewTasksActivity</string>
+    <string name="title_activity_view_tables">Tables</string>
+    <string name="title_activity_view_tasks">Tasks</string>
     <string name="add_task">Add task</string>
     <string name="button_add_user">Add user</string>
     <string name="title_activity_create_task">CreateTaskActivity</string>
@@ -24,8 +23,13 @@
     <string name="title_activity_crearte_comment">CrearteCommentActivity</string>
     <string name="button_comment_add">Add</string>
     <string name="hint_add_comment">New comment</string>
-    <string name="string_register">New account...</string>
+    <string name="string_register">New account</string>
     <string name="string_verify_password">Verify password</string>
     <string name="register_name">Name</string>
+    
+    <string name="action_change">Change</string>
+    <string name="action_add_task">Add task</string>
+    <string name="action_add_user">Add user</string>
+    
 
 </resources>

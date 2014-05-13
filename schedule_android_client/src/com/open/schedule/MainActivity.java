@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		drawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				showTableInfo(position);
+				showTableInfo(position, id);
 			}
 		});
 
@@ -138,16 +138,16 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
 	}
 
-	private void openViewTableActivity(Integer position) {
+	private void openViewTableActivity(Long id) {
 		Intent viewTableIntent = new Intent(MainActivity.this, ViewTableActivity.class);
-		Integer tableId = (int) drawerList.getAdapter().getItemId(position);
+		Integer tableId = Long.valueOf(id).intValue();
 		viewTableIntent.putExtra(TABLE_ID, tableId);
 		startActivity(viewTableIntent);
 	}
 
-	private void showTableInfo(int tableId) {
-		drawerList.setItemChecked(tableId, true);
-		openViewTableActivity(tableId);
+	private void showTableInfo(Integer position, long id) {
+		drawerList.setItemChecked(position, true);
+		openViewTableActivity(id);
 		drawerLayout.closeDrawer(drawer);
 	}
 

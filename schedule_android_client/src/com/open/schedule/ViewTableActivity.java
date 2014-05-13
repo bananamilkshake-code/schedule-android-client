@@ -14,12 +14,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import storage.database.Database;
@@ -29,12 +27,16 @@ import storage.tables.Task.TaskChange;
 import utility.Utility;
 import io.Client;
 
-public class ViewTableActivity extends ActionBarActivity implements OnClickListener {
+public class ViewTableActivity extends ActionBarActivity {
 
 	public static final int REQUEST_CREATE_TASK = 1;
+	public static final int REQUEST_CHANGE = 2;
+	public static final int REQUEST_USERS = 3;
 	
 	public static final String TABLE_ID = "tableId";
 	public static final String TASK_ID = "taskId";
+	public static final String TABLE_NAME = "name";
+	public static final String TABLE_DESC = "desc";
 
 	private Integer tableId;
 	private Table table;
@@ -49,9 +51,6 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
 		table = Client.getInstance().getTables().get(tableId);
 
-		Button createTask = (Button) findViewById(R.id.btCreateTask);
-		createTask.setOnClickListener((OnClickListener) ViewTableActivity.this);
-
 		showTable();
 	}
 
@@ -64,7 +63,15 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		switch (id) {
+		case R.id.action_change:
+			showChangeTableActivity();
+			return true;
+		case R.id.action_add_task:
+			showCreateTaskActivity();
+			return true;
+		case R.id.action_add_user:
+			showAddUserActivity();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -131,20 +138,22 @@ public class ViewTableActivity extends ActionBarActivity implements OnClickListe
 		startActivity(intent);
 	}
 
-	public void showCreateTaskActivity() {
+	private void showChangeTableActivity() {
+		Intent intent = new Intent(ViewTableActivity.this, CreateTableActivity.class);
+		intent.putExtra(TABLE_NAME, ((Table.TableInfo)table.getData()).name);
+		intent.putExtra(TABLE_DESC, ((Table.TableInfo)table.getData()).description);
+		startActivityForResult(intent, REQUEST_CHANGE);
+	}
+	
+	private void showCreateTaskActivity() {
 		Intent intent = new Intent(ViewTableActivity.this, CreateTaskActivity.class);
 		startActivityForResult(intent, REQUEST_CREATE_TASK);
 	}
-
-	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.btCreateTask:
-			showCreateTaskActivity();
-			break;
-		default:
-			break;
-		}
+	
+	private void showAddUserActivity() {
+	//	Intent intent = new Intent(ViewTableActivity.this, UsersActivity.class);
+	//	intent.putExtra(TABLE_ID, this.tableId);
+	//	startActivityForResult(intent, REQUEST_USERS);
 	}
 
 	public class TasksAdapter extends BaseAdapter {

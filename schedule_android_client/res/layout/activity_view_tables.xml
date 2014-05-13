@@ -21,43 +21,24 @@
             android:text="Name"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <TextView
-            android:id="@+id/text_table_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/text_table_name"
-            android:layout_below="@+id/text_table_name"
-            android:text="Desription"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
         <ListView
             android:id="@+id/list_tasks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/text_table_description"
-            android:layout_marginTop="30dp" >
-
+            android:layout_marginTop="15dp" >
         </ListView>
 
-        <Button
-            android:id="@+id/btAddUser"
-            style="?android:attr/buttonStyleSmall"
+        <TextView
+            android:id="@+id/text_table_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/text_table_name"
-            android:layout_toLeftOf="@+id/btCreateTask"
-            android:text="@string/button_add_user" />
-
-        <Button
-            android:id="@+id/btCreateTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/text_table_description"
-            android:layout_alignBottom="@+id/text_table_description"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="28dp"
-            android:text="@string/add_task" />
+            android:layout_alignLeft="@+id/text_table_name"
+            android:layout_below="@+id/text_table_name"
+            android:layout_marginTop="17dp"
+            android:text="Desription"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
 
