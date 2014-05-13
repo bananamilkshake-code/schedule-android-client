@@ -48,7 +48,7 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.btCreateTask:
-			finish();
+			returnNewTask();
 			return;
 		case R.id.text_task_date_start:
 		case R.id.text_task_date_end:
@@ -63,8 +63,7 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 		}
 	}
 
-	@Override
-	public void finish() {
+	private void returnNewTask() {
 		Intent result = new Intent();
 
 		String taskName = ((EditText)findViewById(R.id.edit_task_name)).getText().toString();
@@ -82,7 +81,7 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 		result.putExtra(END_TIME, taskTimeEnd);
 
 		setResult(RESULT_OK, result);
-		super.finish();
+		finish();
 	}
 
 	private void showTimePickerDialog(TextView textView) {

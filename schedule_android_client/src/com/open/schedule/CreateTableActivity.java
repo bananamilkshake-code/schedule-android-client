@@ -38,22 +38,23 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 	
 	@Override
 	public void onClick(View view) {
-		if (view.getId() == R.id.btCreateTable)
-			finish();
+		switch (view.getId()) {
+		case R.id.btCreateTable:
+			returnNewTable();
+			return;
+		}
 	}
-	
-	@Override
-	public void finish() {
-		Intent result = new Intent();
-		
-		String tableName = ((EditText)findViewById(R.id.editTableName)).getText().toString();
-		String tableDesc = ((EditText)findViewById(R.id.editTableDescription)).getText().toString();
 
+	private void returnNewTable() {
+		String tableName = nameField.getText().toString();
+		String tableDesc = descField.getText().toString();
+
+		Intent result = new Intent();
 		result.putExtra(EXTRA_NAME, tableName);
 		result.putExtra(EXTRA_DESCRIPTION, tableDesc);
-
 		setResult(RESULT_OK, result);
-		super.finish();
+
+		finish();
 	}
 
 	public static class PlaceholderFragment extends Fragment {
