@@ -189,10 +189,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 				rowView = inflater.inflate(R.layout.item_table, arg2, false);
 			}
 
+			Table table = tables.get(idsByPos.get(position));
 			TextView tableName = (TextView)rowView.findViewById(R.id.item_table_name);
 			TextView tableDescription = (TextView)rowView.findViewById(R.id.item_table_description);
-
-			Table table = tables.get(idsByPos.get(position));
 			tableName.setText((CharSequence)(((TableInfo)table.getData()).name));
 			tableDescription.setText((CharSequence)(((TableInfo)table.getData()).description));
 

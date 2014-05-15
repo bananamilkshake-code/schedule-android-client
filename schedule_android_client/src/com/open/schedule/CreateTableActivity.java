@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class CreateTableActivity extends ActionBarActivity implements OnClickListener {
@@ -21,15 +22,6 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_table);
-
-		nameField = (EditText) findViewById(R.id.editTableName);
-		descField = (EditText)findViewById(R.id.editTableDescription);
-		
-		Intent intent = getIntent();
-		if (intent.hasExtra(ViewTableActivity.TABLE_NAME)) {
-			nameField.setText(intent.getStringExtra(ViewTableActivity.TABLE_NAME));
-			descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
-		}
 		
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
@@ -58,13 +50,24 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 	}
 
 	public static class PlaceholderFragment extends Fragment {
-
 		public PlaceholderFragment() {}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_create_table, container, false);
-			rootView.findViewById(R.id.btCreateTable).setOnClickListener((CreateTableActivity)getActivity());
+			Button acceptButton = (Button) rootView.findViewById(R.id.btCreateTable);
+			acceptButton.setOnClickListener((CreateTableActivity)getActivity());
+
+			((CreateTableActivity)getActivity()).nameField = (EditText) rootView.findViewById(R.id.editTableName);
+			((CreateTableActivity)getActivity()).descField = (EditText) rootView.findViewById(R.id.editTableDescription);
+
+			Intent intent = getActivity().getIntent();
+			if (intent.hasExtra(ViewTableActivity.TABLE_NAME)) {
+				((CreateTableActivity)getActivity()).nameField.setText(intent.getStringExtra(ViewTableActivity.TABLE_NAME));
+				((CreateTableActivity)getActivity()).descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
+				acceptButton.setText(R.string.button_table_change);
+			}
+			
 			return rootView;
 		}
 	}

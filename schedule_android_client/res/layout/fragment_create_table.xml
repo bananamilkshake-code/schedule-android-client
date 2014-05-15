@@ -21,7 +21,8 @@
         android:layout_alignLeft="@+id/textTableName"
         android:layout_below="@+id/textTableName"
         android:layout_marginTop="15dp"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="@string/hint_new_table_name" >
 
         <requestFocus />
     </EditText>
@@ -43,6 +44,7 @@
         android:layout_below="@+id/textTableDescription"
         android:layout_marginTop="14dp"
         android:ems="10"
+        android:hint="@string/new_table_description"
         android:inputType="textMultiLine" />
 
     <Button

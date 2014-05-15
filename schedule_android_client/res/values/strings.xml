@@ -30,6 +30,9 @@
     <string name="action_change">Change</string>
     <string name="action_add_task">Add task</string>
     <string name="action_add_user">Add user</string>
+    <string name="hint_new_table_name">Name</string>
+    <string name="new_table_description">Description</string>
+    <string name="button_table_change">Change</string>
     
 
 </resources>

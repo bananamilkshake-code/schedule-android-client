@@ -50,7 +50,6 @@ public class ViewTableActivity extends ActionBarActivity {
 
 		tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
 		table = Client.getInstance().getTables().get(tableId);
-
 		showTable();
 	}
 
