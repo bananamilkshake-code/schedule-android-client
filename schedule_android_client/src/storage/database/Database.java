@@ -81,11 +81,11 @@ public class Database {
 	}
 
 	private void loadTasks(Tables tables) {
-		String[] columns = {DatabaseHelper.INNER_ID, DatabaseHelper.GLOBAL_ID, DatabaseHelper.UPDATE_TIME};
+		String[] columns = {DatabaseHelper.INNER_ID, DatabaseHelper.TABLE_ID, DatabaseHelper.GLOBAL_ID, DatabaseHelper.UPDATE_TIME};
 		Cursor cursorTasks = database.query(DatabaseHelper.TABLE_TASKS, columns, null, null, null, null, null);
 		if (cursorTasks.moveToFirst()) {
-			int tableId = cursorTasks.getColumnIndex(DatabaseHelper.TABLE_ID);
 			int id = cursorTasks.getColumnIndex(DatabaseHelper.INNER_ID);
+			int tableId = cursorTasks.getColumnIndex(DatabaseHelper.TABLE_ID);
 			int globalId = cursorTasks.getColumnIndex(DatabaseHelper.GLOBAL_ID);
 			int updateTime = cursorTasks.getColumnIndex(DatabaseHelper.UPDATE_TIME);
 			while(!cursorTasks.isAfterLast()) {
