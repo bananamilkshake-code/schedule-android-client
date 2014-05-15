@@ -984,6 +984,7 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020057;
     }
     public static final class id {
+        public static final int action_add=0x7f050048;
         public static final int action_add_task=0x7f050070;
         public static final int action_add_user=0x7f050071;
         public static final int action_bar=0x7f05001c;
@@ -1005,7 +1006,6 @@ containing a value of this type.
         public static final int beginning=0x7f050011;
         public static final int btCreateTable=0x7f050056;
         public static final int btCreateTask=0x7f050061;
-        public static final int bt_create_new_table=0x7f050048;
         public static final int button_add_comment=0x7f050051;
         public static final int button_register=0x7f050043;
         public static final int button_sign_in=0x7f050044;

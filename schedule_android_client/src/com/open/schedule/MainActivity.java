@@ -18,16 +18,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity implements OnClickListener {
+public class MainActivity extends ActionBarActivity {
 	public static final int TIMEOUT_CONNECTION_CHECK = 5000;
 	
 	public static final String TABLE_ID = "TABLE_ID";
@@ -36,7 +36,12 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
+	private ListView actionList;
 	private RelativeLayout drawer;
+	
+	private enum Actions {
+		ADD_TABLE
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +52,30 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
+		actionList = (ListView) findViewById(R.id.action_add);
 		drawer = (RelativeLayout) findViewById(R.id.drawer);
-		
-		findViewById(R.id.bt_create_new_table).setOnClickListener(this);
 		
 		drawerList.setAdapter(new TablesAdapter(Client.getInstance().getTables()));
 		drawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				showTableInfo(position, id);
+			}
+		});
+		
+		String[] actions = new String[]{"Create table"};
+		ArrayAdapter<String> actionsAdapter = new ArrayAdapter<String>(this, 
+				android.R.layout.simple_list_item_1, android.R.id.text1, actions);
+		actionList.setAdapter(actionsAdapter);
+		actionList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (position == Actions.ADD_TABLE.ordinal()) {
+					openNewTableActivity();
+					return;
+				}
+				Log.wtf("MainActivity", "Clicked on nonexistent action in listview");
 			}
 		});
 
@@ -111,17 +131,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
 			Client.getInstance().createTable(true, Client.getInstance().getId(), Utility.getUnixTime(), name, description);
 			((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
-			return;
-		default:
-			return;
-		}
-	}
-
-	@Override
-	public void onClick(View view) {
-		switch(view.getId()) {
-		case R.id.bt_create_new_table:
-			openNewTableActivity();
 			return;
 		default:
 			return;
@@ -194,15 +203,13 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			TextView tableDescription = (TextView)rowView.findViewById(R.id.item_table_description);
 			tableName.setText((CharSequence)(((TableInfo)table.getData()).name));
 			tableDescription.setText((CharSequence)(((TableInfo)table.getData()).description));
-
 			return rowView;
 		}
 		
 		private void updateTablesIds() {
 			idsByPos.clear();
-			for (Integer tableId : tables.keySet()) {
+			for (Integer tableId : tables.keySet())
 				idsByPos.add(tableId);
-			}
 		}
 	}
 }
