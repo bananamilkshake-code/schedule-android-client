@@ -26,13 +26,13 @@
     <string name="string_register">New account</string>
     <string name="string_verify_password">Verify password</string>
     <string name="register_name">Name</string>
-    
     <string name="action_change">Change</string>
     <string name="action_add_task">Add task</string>
     <string name="action_add_user">Add user</string>
     <string name="hint_new_table_name">Name</string>
     <string name="new_table_description">Description</string>
     <string name="button_table_change">Change</string>
-    
+    <string name="title_activity_find_user">FindUserActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

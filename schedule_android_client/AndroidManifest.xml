@@ -50,6 +50,10 @@
             android:label="@string/title_activity_register"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
+        <activity
+            android:name="com.open.schedule.UsersActivity"
+            android:label="@string/title_activity_find_user" >
+        </activity>
     </application>
 
 </manifest>

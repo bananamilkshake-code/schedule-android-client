@@ -7,5 +7,9 @@
         android:id="@+id/login"
         android:orderInCategory="100"
         android:title="Login"/>
+    <item 
+        android:id="@+id/users"
+        android:orderInCategory="100"
+        android:title="Known users"/>
 
 </menu>

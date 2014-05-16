@@ -19,6 +19,7 @@ import storage.tables.Table.Permission;
 import storage.tables.Table.TableInfo;
 import storage.tables.Task;
 import storage.tables.Task.TaskChange;
+import storage.tables.Users;
 import config.Config;
 import events.objects.Event;
 import io.packet.ClientPacket;
@@ -64,6 +65,10 @@ public class Client extends TCPClient {
 		return tables.getTables();
 	}
 
+	public final Users getUsers() {
+		return this.users;
+	}
+	
 	@Override
 	protected void clear() {
 		logged = false;
@@ -392,7 +397,7 @@ public class Client extends TCPClient {
 	}
 	
 	private void addUser(io.packet.server.UserPacket packet) {
-		users.add(packet.userId, packet.name);
+		//users.add(packet.userId, packet.name);
 		database.addUser(packet.userId, packet.name);
 	}
 	

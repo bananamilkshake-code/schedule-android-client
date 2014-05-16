@@ -108,9 +108,12 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.login) {
+		switch (item.getItemId()) {
+		case R.id.login:
 			openLoginActivity();
+			return true;
+		case R.id.users:
+			openUsersActivity();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -124,17 +127,20 @@ public class MainActivity extends ActionBarActivity {
 
 		switch (requestCode) {
 		case REQUEST_NEW_TABLE:
-			if (!data.hasExtra(CreateTableActivity.EXTRA_NAME))
-				return;
-
-			String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
-			String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
-			Client.getInstance().createTable(true, Client.getInstance().getId(), Utility.getUnixTime(), name, description);
-			((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+			createNewTable(data);
 			return;
 		default:
 			return;
 		}
+	}
+	
+	private void createNewTable(Intent data) {
+		if (!data.hasExtra(CreateTableActivity.EXTRA_NAME))
+			return;
+		String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
+		String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
+		Client.getInstance().createTable(true, Client.getInstance().getId(), Utility.getUnixTime(), name, description);
+		((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
 	}
 
 	private void openLoginActivity() {
@@ -142,6 +148,11 @@ public class MainActivity extends ActionBarActivity {
 		startActivity(loginIntent);
 	}
 
+	private void openUsersActivity() {
+		Intent usersIntent = new Intent(MainActivity.this, UsersActivity.class);
+		startActivity(usersIntent);
+	}
+	
 	private void openNewTableActivity() {
 		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
 		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);

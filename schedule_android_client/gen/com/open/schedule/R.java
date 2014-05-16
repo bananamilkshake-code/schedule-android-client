@@ -985,8 +985,8 @@ containing a value of this type.
     }
     public static final class id {
         public static final int action_add=0x7f050048;
-        public static final int action_add_task=0x7f050070;
-        public static final int action_add_user=0x7f050071;
+        public static final int action_add_task=0x7f050077;
+        public static final int action_add_user=0x7f050078;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -994,13 +994,13 @@ containing a value of this type.
         public static final int action_bar_root=0x7f05001a;
         public static final int action_bar_subtitle=0x7f050023;
         public static final int action_bar_title=0x7f050022;
-        public static final int action_change=0x7f05006f;
+        public static final int action_change=0x7f050076;
         public static final int action_context_bar=0x7f05001d;
-        public static final int action_forgot_password=0x7f05006e;
+        public static final int action_forgot_password=0x7f050074;
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05006d;
+        public static final int action_settings=0x7f050073;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1008,6 +1008,8 @@ containing a value of this type.
         public static final int btCreateTask=0x7f050061;
         public static final int button_add_comment=0x7f050051;
         public static final int button_register=0x7f050043;
+        public static final int button_search=0x7f050063;
+        public static final int button_search_user=0x7f050064;
         public static final int button_sign_in=0x7f050044;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
@@ -1021,6 +1023,7 @@ containing a value of this type.
         public static final int editTableDescription=0x7f050055;
         public static final int editTableName=0x7f050053;
         public static final int edit_comment=0x7f05004f;
+        public static final int edit_email=0x7f050062;
         public static final int edit_query=0x7f050030;
         public static final int edit_task_description=0x7f05005a;
         public static final int edit_task_name=0x7f050057;
@@ -1033,22 +1036,23 @@ containing a value of this type.
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
-        public static final int item_comment_author=0x7f050062;
-        public static final int item_comment_text=0x7f050063;
-        public static final int item_comment_time=0x7f050064;
-        public static final int item_table_description=0x7f050065;
-        public static final int item_table_name=0x7f050066;
-        public static final int item_task_date_end=0x7f05006a;
-        public static final int item_task_date_start=0x7f050069;
-        public static final int item_task_description=0x7f050068;
-        public static final int item_task_name=0x7f050067;
-        public static final int item_task_time_end=0x7f05006b;
-        public static final int item_task_time_start=0x7f05006c;
+        public static final int item_comment_author=0x7f050066;
+        public static final int item_comment_text=0x7f050067;
+        public static final int item_comment_time=0x7f050068;
+        public static final int item_table_description=0x7f050069;
+        public static final int item_table_name=0x7f05006a;
+        public static final int item_task_date_end=0x7f05006e;
+        public static final int item_task_date_start=0x7f05006d;
+        public static final int item_task_description=0x7f05006c;
+        public static final int item_task_name=0x7f05006b;
+        public static final int item_task_time_end=0x7f05006f;
+        public static final int item_task_time_start=0x7f050070;
         public static final int left_drawer=0x7f050047;
         public static final int listMode=0x7f050001;
         public static final int list_comments=0x7f050050;
         public static final int list_item=0x7f050029;
         public static final int list_tasks=0x7f05004d;
+        public static final int list_users=0x7f050065;
         public static final int login=0x7f050042;
         public static final int login_form=0x7f05003f;
         public static final int login_status=0x7f05003d;
@@ -1083,6 +1087,8 @@ containing a value of this type.
         public static final int tabMode=0x7f050002;
         public static final int textTableDescription=0x7f050054;
         public static final int textTableName=0x7f050052;
+        public static final int text_email=0x7f050072;
+        public static final int text_name=0x7f050071;
         public static final int text_table_description=0x7f05004e;
         public static final int text_table_name=0x7f05004c;
         public static final int text_task_date_end=0x7f050060;
@@ -1097,6 +1103,7 @@ containing a value of this type.
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
         public static final int useLogo=0x7f050003;
+        public static final int users=0x7f050075;
         public static final int withText=0x7f05000c;
     }
     public static final class integer {
@@ -1151,29 +1158,33 @@ containing a value of this type.
         public static final int activity_crearte_comment=0x7f030017;
         public static final int activity_create_table=0x7f030018;
         public static final int activity_create_task=0x7f030019;
-        public static final int activity_login=0x7f03001a;
-        public static final int activity_main=0x7f03001b;
-        public static final int activity_register=0x7f03001c;
-        public static final int activity_view_tables=0x7f03001d;
-        public static final int activity_view_tasks=0x7f03001e;
-        public static final int fragment_crearte_comment=0x7f03001f;
-        public static final int fragment_create_table=0x7f030020;
-        public static final int fragment_create_task=0x7f030021;
-        public static final int fragment_view_tasks=0x7f030022;
-        public static final int item_comment=0x7f030023;
-        public static final int item_table=0x7f030024;
-        public static final int item_task=0x7f030025;
-        public static final int support_simple_spinner_dropdown_item=0x7f030026;
+        public static final int activity_find_user=0x7f03001a;
+        public static final int activity_login=0x7f03001b;
+        public static final int activity_main=0x7f03001c;
+        public static final int activity_register=0x7f03001d;
+        public static final int activity_view_tables=0x7f03001e;
+        public static final int activity_view_tasks=0x7f03001f;
+        public static final int fragment_crearte_comment=0x7f030020;
+        public static final int fragment_create_table=0x7f030021;
+        public static final int fragment_create_task=0x7f030022;
+        public static final int fragment_find_user=0x7f030023;
+        public static final int fragment_view_tasks=0x7f030024;
+        public static final int item_comment=0x7f030025;
+        public static final int item_table=0x7f030026;
+        public static final int item_task=0x7f030027;
+        public static final int item_user=0x7f030028;
+        public static final int support_simple_spinner_dropdown_item=0x7f030029;
     }
     public static final class menu {
         public static final int crearte_comment=0x7f0c0000;
         public static final int create_table=0x7f0c0001;
         public static final int create_task=0x7f0c0002;
-        public static final int login=0x7f0c0003;
-        public static final int main=0x7f0c0004;
-        public static final int register=0x7f0c0005;
-        public static final int view_tables=0x7f0c0006;
-        public static final int view_tasks=0x7f0c0007;
+        public static final int find_user=0x7f0c0003;
+        public static final int login=0x7f0c0004;
+        public static final int main=0x7f0c0005;
+        public static final int register=0x7f0c0006;
+        public static final int view_tables=0x7f0c0007;
+        public static final int view_tasks=0x7f0c0008;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1219,11 +1230,11 @@ containing a value of this type.
         public static final int action_add_task=0x7f0a0027;
         public static final int action_add_user=0x7f0a0028;
         public static final int action_change=0x7f0a0026;
-        public static final int action_forgot_password=0x7f0a0031;
-        public static final int action_register=0x7f0a0037;
+        public static final int action_forgot_password=0x7f0a0033;
+        public static final int action_register=0x7f0a0039;
         public static final int action_settings=0x7f0a000e;
-        public static final int action_sign_in_register=0x7f0a002f;
-        public static final int action_sign_in_short=0x7f0a0030;
+        public static final int action_sign_in_register=0x7f0a0031;
+        public static final int action_sign_in_short=0x7f0a0032;
         public static final int add_task=0x7f0a0018;
         public static final int app_name=0x7f0a000d;
         public static final int button_add_user=0x7f0a0019;
@@ -1231,24 +1242,25 @@ containing a value of this type.
         public static final int button_create_task=0x7f0a001f;
         public static final int button_new_table_create=0x7f0a0012;
         public static final int button_table_change=0x7f0a002b;
-        public static final int error_false_password=0x7f0a003a;
-        public static final int error_field_required=0x7f0a0036;
-        public static final int error_incorrect_password=0x7f0a0035;
-        public static final int error_invalid_auth=0x7f0a0038;
-        public static final int error_invalid_email=0x7f0a0033;
-        public static final int error_invalid_password=0x7f0a0034;
-        public static final int error_no_verification=0x7f0a003b;
+        public static final int error_false_password=0x7f0a003c;
+        public static final int error_field_required=0x7f0a0038;
+        public static final int error_incorrect_password=0x7f0a0037;
+        public static final int error_invalid_auth=0x7f0a003a;
+        public static final int error_invalid_email=0x7f0a0035;
+        public static final int error_invalid_password=0x7f0a0036;
+        public static final int error_no_verification=0x7f0a003d;
+        public static final int hello_world=0x7f0a002d;
         public static final int hint_add_comment=0x7f0a0022;
         public static final int hint_new_table_name=0x7f0a0029;
         public static final int login_button=0x7f0a000f;
-        public static final int login_progress_signing_in=0x7f0a0032;
+        public static final int login_progress_signing_in=0x7f0a0034;
         public static final int new_table_button=0x7f0a0011;
         public static final int new_table_description=0x7f0a002a;
         /**  Strings related to login 
  Strings related to login 
          */
-        public static final int prompt_email=0x7f0a002d;
-        public static final int prompt_password=0x7f0a002e;
+        public static final int prompt_email=0x7f0a002f;
+        public static final int prompt_password=0x7f0a0030;
         public static final int register_name=0x7f0a0025;
         public static final int string_register=0x7f0a0023;
         public static final int string_verify_password=0x7f0a0024;
@@ -1261,8 +1273,9 @@ containing a value of this type.
         public static final int title_activity_crearte_comment=0x7f0a0020;
         public static final int title_activity_create_table=0x7f0a0010;
         public static final int title_activity_create_task=0x7f0a001a;
-        public static final int title_activity_login=0x7f0a002c;
-        public static final int title_activity_register=0x7f0a0039;
+        public static final int title_activity_find_user=0x7f0a002c;
+        public static final int title_activity_login=0x7f0a002e;
+        public static final int title_activity_register=0x7f0a003b;
         public static final int title_activity_view_tables=0x7f0a0016;
         public static final int title_activity_view_tasks=0x7f0a0017;
         public static final int view_tables_button=0x7f0a0015;
