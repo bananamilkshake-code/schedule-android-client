@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Menu items text -->
+	<string name="menu_login">Войти</string>
+	<string name="menu_users_list">Знакомые</string>
+	<string name="action_settings">Настройки</string>
+</resources>

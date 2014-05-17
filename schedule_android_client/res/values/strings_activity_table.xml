@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="table_name">Название</string>
+	<string name="table_description">Описание</string>
+
+	<!-- Items settings -->
+	<string name="action_change">Изменить</string>
+	<string name="action_add_task">Добавить задание</string>
+	<string name="action_add_user">Добавить читателя</string>
+</resources>

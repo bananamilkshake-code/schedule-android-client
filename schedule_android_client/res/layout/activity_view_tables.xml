@@ -12,9 +12,9 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="10dp"
-		android:text="@string/text_new_table_name"
+		android:text="@string/table_name"
 		android:textAppearance="?android:attr/textAppearanceLarge" />
-  
+
 	<TextView
 		android:id="@+id/text_table_description"
 		android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
 		android:paddingTop="5dp"
 		android:paddingBottom="5dp"
 		android:paddingLeft="10dp"
-		android:text="@string/text_new_table_description"
+		android:text="@string/table_description"
 		android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	<ListView

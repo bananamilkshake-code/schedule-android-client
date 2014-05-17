@@ -1,43 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	
 	<string name="app_name">Open Schedule</string>
-	<string name="action_settings">Настройки</string>
-	<string android:id="@+id/login_button" name="login_button" android:layout_width="wrap_content" android:layout_height="wrap_content">Войти</string>
-	<string name="title_activity_create_table">Создать расписание</string>
-	<string name="new_table_button">Новое расписание</string>
-	<string name="button_new_table_create">Создать</string>
-	<string name="text_new_table_name">Название</string>
-	<string name="text_new_table_description">Описание</string>
-	<string name="view_tables_button">Просмотреть расписания</string>
-	<string name="title_activity_view_tables">Расписания</string>
-	<string name="title_activity_view_tasks">Задания</string>
-	<string name="add_task">Добавить задание</string>
-	<string name="button_add_user">Добавить читателя</string>
-	<string name="title_activity_create_task">Создание задания</string>
-	<string name="text_task_name">Название</string>
-	<string name="text_task_description">Описание</string>
-	<string name="text_task_dates">Дата</string>
-	<string name="text_task_time">Время</string>
-	<string name="button_create_task">Создать</string>
-	<string name="title_activity_crearte_comment">Задание</string>
-	<string name="button_comment_add">Добавить</string>
-	<string name="hint_add_comment">Новый комментарий</string>
-	<string name="string_register">Новый аккаунт</string>
-	<string name="string_verify_password">Подтверждение пароля</string>
-	<string name="register_name">Имя</string>
-	<string name="action_change">Изменить</string>
-	<string name="action_add_task">Добавить задание</string>
-	<string name="action_add_user">Добавить читателя</string>
-	<string name="hint_new_table_name">Название</string>
-	<string name="new_table_description">Описание</string>
-	<string name="button_table_change">Изменить</string>
-	<string name="title_activity_find_user">Знакомые</string>
-	<string name="text_desc_task_name">Название нового задания</string>
-	<string name="desc_text_task_desc">Описание для нового задания</string>
-	<string name="new_password_hint">Пароль для аккаунта (не менее 4 символов)</string>
-	<string name="menu_login">Войти</string>
-	<string name="menu_users_list">Знакомые</string>
-	<string name="button_users_find">Найти</string>
 
+	<!-- Titles -->
+	<string name="title_activity_view_tables">Расписания</string>
+	<string name="title_activity_create_task">Создание задания</string>
+	<string name="title_activity_view_tasks">Задания</string>
+	<string name="title_activity_create_comment">Задание</string>
+	<string name="title_activity_find_user">Знакомые</string>
 </resources>

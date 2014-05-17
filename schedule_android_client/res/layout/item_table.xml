@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent" >
-
-	<TextView
-	    android:id="@+id/item_table_description"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignLeft="@+id/item_table_name"
-	    android:layout_below="@+id/item_table_name"
-	    android:text="Table description"
-	    android:textSize="16sp" />
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
 
 	<TextView
 	    android:id="@+id/item_table_name"
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_alignParentTop="true"
-	    android:layout_marginLeft="21dp"
-	    android:text="Table name"
+	    android:text="@string/table_name"
+	    android:padding="5dp"
 	    android:textSize="20sp" />
 
-</RelativeLayout>
+	<TextView
+	    android:id="@+id/item_table_description"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/table_description"
+	    android:paddingLeft="5dp"
+	    android:paddingTop="2dp"
+	    android:paddingBottom="2dp"
+	    android:textSize="16sp" />
+
+</LinearLayout>

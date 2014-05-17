@@ -61,7 +61,8 @@ public class MainActivity extends ActionBarActivity {
 				showTableInfo(position, id);
 			}
 		});
-		String[] actions = new String[]{"Create table"};
+
+		String[] actions = getResources().getStringArray(R.array.drawer_elements_bottom);
 		ArrayAdapter<String> actionsAdapter = new ArrayAdapter<String>(this, 
 				android.R.layout.simple_list_item_1, android.R.id.text1, actions);
 		actionList.setAdapter(actionsAdapter);
@@ -154,6 +155,7 @@ public class MainActivity extends ActionBarActivity {
 	private void openNewTableActivity() {
 		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
 		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
+		drawerLayout.closeDrawer(drawer);
 	}
 
 	private void openViewTableActivity(Long id) {

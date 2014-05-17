@@ -43,7 +43,7 @@
         </activity>
         <activity
             android:name="com.open.schedule.ViewTaskActivity"
-            android:label="@string/title_activity_crearte_comment" >
+            android:label="@string/title_activity_create_comment" >
         </activity>
         <activity
             android:name="com.open.schedule.RegisterActivity"
