@@ -26,6 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 	public static final int TIMEOUT_CONNECTION_CHECK = 5000;
@@ -143,8 +144,13 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void openLoginActivity() {
-		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-		startActivity(loginIntent);
+		if (Client.getInstance().isConnected()) {
+			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+			startActivity(loginIntent);
+		}
+		else {
+			Toast.makeText(this.getBaseContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void openUsersActivity() {

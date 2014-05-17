@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="title_activity_create_table">Создать расписание</string>
 	<string name="button_new_table_create">Создать</string>
 	<string name="button_table_change">Изменить</string>
 	<string name="hint_new_table_name">Название</string>

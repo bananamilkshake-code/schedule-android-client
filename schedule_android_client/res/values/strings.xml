@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<string name="app_name">Open Schedule</string>
+	<string name="no_connection">Нет подключения</string>
 
 	<!-- Titles -->
 	<string name="title_activity_view_tables">Расписания</string>
+	<string name="title_activity_create_table">Создание расписания</string>
+	<string name="title_activity_change_table">Изменение расписания</string>
 	<string name="title_activity_create_task">Создание задания</string>
+	<string name="title_activity_change_task">Изменение задания</string>
 	<string name="title_activity_view_tasks">Задания</string>
 	<string name="title_activity_create_comment">Задание</string>
 	<string name="title_activity_find_user">Знакомые</string>

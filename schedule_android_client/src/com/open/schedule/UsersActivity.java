@@ -1,5 +1,7 @@
 package com.open.schedule;
 
+import io.Client;
+
 import java.util.ArrayList;
 
 import storage.tables.Users;
@@ -20,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class UsersActivity extends ActionBarActivity implements OnClickListener {
 	public EditText emailText;
@@ -39,11 +42,20 @@ public class UsersActivity extends ActionBarActivity implements OnClickListener 
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.button_search_user:
-			DialogFragment users = new UserFragment();
-			users.show(getSupportFragmentManager(), "Users");
+			searchUser();
 			return;
 		}
 		
+	}
+	
+	private void searchUser() {
+		if (Client.getInstance().isConnected()) {
+			DialogFragment users = new UserFragment();
+			users.show(getSupportFragmentManager(), getResources().getString(R.string.dialog_title_users));
+		}
+		else {
+			Toast.makeText(this.getBaseContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	public static class UserFragment extends DialogFragment {
