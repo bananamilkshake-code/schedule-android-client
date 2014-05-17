@@ -22,14 +22,14 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class CreateCommentActivity extends ActionBarActivity {
+public class ViewTaskActivity extends ActionBarActivity {
 	private Integer tableId;
 	private Integer taskId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_crearte_comment);
+		setContentView(R.layout.view_task_comment);
 
 		this.tableId = getIntent().getExtras().getInt(ViewTableActivity.TABLE_ID);
 		this.taskId = getIntent().getExtras().getInt(ViewTableActivity.TASK_ID);
@@ -49,9 +49,9 @@ public class CreateCommentActivity extends ActionBarActivity {
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_crearte_comment, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_view_task, container, false);
 
-			CreateCommentActivity activity = (CreateCommentActivity)getActivity();
+			ViewTaskActivity activity = (ViewTaskActivity)getActivity();
 			final ListView listComments =(ListView) rootView.findViewById(R.id.list_comments);
 			Integer tableId = activity.tableId;
 			Integer taskId = activity.taskId;
@@ -65,7 +65,7 @@ public class CreateCommentActivity extends ActionBarActivity {
 					TextView commentText = (TextView) (((View) v.getParent()).findViewById(R.id.edit_comment));
 					String text = commentText.getText().toString();
 					if (text.length() > 0) {
-						((CreateCommentActivity)(getActivity())).addComment(text);
+						((ViewTaskActivity)(getActivity())).addComment(text);
 						commentText.setText("");
 						((BaseAdapter) listComments.getAdapter()).notifyDataSetChanged();
 					}
@@ -107,7 +107,7 @@ public class CreateCommentActivity extends ActionBarActivity {
 		@Override
 		public View getView(int position, View rowView, ViewGroup arg2) {
 			if (rowView == null) {
-				LayoutInflater inflater = (LayoutInflater) CreateCommentActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater inflater = (LayoutInflater) ViewTaskActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				rowView = inflater.inflate(R.layout.item_comment, arg2, false);
 			}
 

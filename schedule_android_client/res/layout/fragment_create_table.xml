@@ -8,52 +8,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.open.schedule.CreateTableActivity$PlaceholderFragment" >
 
-    <TextView
-        android:id="@+id/textTableName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_new_table_name" />
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+		
+	<EditText
+		android:id="@+id/editTableName"
+		android:layout_marginBottom="20dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/hint_new_table_name" >
+		<requestFocus />
+	</EditText>
 
-    <EditText
-        android:id="@+id/editTableName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textTableName"
-        android:layout_below="@+id/textTableName"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/hint_new_table_name" >
+	<EditText
+		android:id="@+id/editTableDescription"
+		android:layout_marginBottom="20dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/new_table_description"
+		android:inputType="textMultiLine" />
 
-        <requestFocus />
-    </EditText>
-
-    <TextView
-        android:id="@+id/textTableDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editTableName"
-        android:layout_below="@+id/editTableName"
-        android:layout_marginTop="26dp"
-        android:text="@string/text_new_table_description" />
-
-    <EditText
-        android:id="@+id/editTableDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textTableDescription"
-        android:layout_below="@+id/textTableDescription"
-        android:layout_marginTop="14dp"
-        android:ems="10"
-        android:hint="@string/new_table_description"
-        android:inputType="textMultiLine" />
-
-    <Button
-        android:id="@+id/btCreateTable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="34dp"
-        android:text="@string/button_new_table_create" />
+	<Button
+		android:id="@+id/btCreateTable"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/button_new_table_create" />
+		
+	</LinearLayout>
 
 </RelativeLayout>

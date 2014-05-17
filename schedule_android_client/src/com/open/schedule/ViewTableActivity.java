@@ -131,7 +131,7 @@ public class ViewTableActivity extends ActionBarActivity {
 	}
 
 	private void showComments(Integer taskId) {
-		Intent intent = new Intent(ViewTableActivity.this, CreateCommentActivity.class);
+		Intent intent = new Intent(ViewTableActivity.this, ViewTaskActivity.class);
 		intent.putExtra(TABLE_ID, this.tableId);
 		intent.putExtra(TASK_ID, taskId);
 		startActivity(intent);

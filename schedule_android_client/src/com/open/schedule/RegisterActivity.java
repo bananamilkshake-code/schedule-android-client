@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -80,13 +79,6 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	protected void onStop() {
 		registerListener.shutdown();
 		super.onStop();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.register, menu);
-		return true;
 	}
 
 	@Override

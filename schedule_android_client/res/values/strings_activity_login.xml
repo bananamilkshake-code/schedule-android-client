@@ -3,17 +3,17 @@
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in_register"><b>Sign in</b> or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="action_forgot_password">Recover lost password</string>
-    <string name="login_progress_signing_in">Signing in&#8230;</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="action_sign_in_register">Войти</string>
+    <string name="action_sign_in_short">Войти</string>
+    <string name="action_forgot_password">Восстановить пароль</string>
+    <string name="login_progress_signing_in">Авторизация&#8230;</string>
+    <string name="error_invalid_email">Неверный e-mail</string>
+    <string name="error_invalid_password">Слишком короткий пароль</string>
+    <string name="error_incorrect_password">Неправильный пароль</string>
+    <string name="error_field_required">Это поле необходимо заполнить</string>
     <string android:id="@+id/action_register" android:layout_width="wrap_content" android:layout_height="wrap_content" name="action_register">Register</string>
-    <string android:id="@+id/error_invalid_password" android:layout_height="wrap_content" android:layout_width="wrap_content" name="error_invalid_auth">Wrong login or password</string>
+    <string android:id="@+id/error_invalid_password" android:layout_height="wrap_content" android:layout_width="wrap_content" name="error_invalid_auth">Неправильный логин или пароль</string>
 
 </resources>

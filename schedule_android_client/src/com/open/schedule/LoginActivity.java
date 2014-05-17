@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -78,13 +77,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onStop() {
 		loginListener.shutdown();
 		super.onStop();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
 	}
 
 	@Override

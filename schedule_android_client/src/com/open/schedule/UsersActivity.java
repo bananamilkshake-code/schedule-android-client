@@ -1,7 +1,5 @@
 package com.open.schedule;
 
-import io.Client;
-
 import java.util.ArrayList;
 
 import storage.tables.Users;
