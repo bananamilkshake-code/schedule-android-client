@@ -2,7 +2,7 @@
 <resources>
 
 	<string-array name="drawer_elements_bottom">
-		<item>Создать таблицу</item>
+		<item>Создать расписание</item>
 	</string-array>
 	
 </resources>
