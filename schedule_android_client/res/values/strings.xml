@@ -34,5 +34,7 @@
     <string name="button_table_change">Change</string>
     <string name="title_activity_find_user">FindUserActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="text_desc_task_name">Name of the task</string>
+    <string name="desc_text_task_desc">Description of the task</string>
 
 </resources>

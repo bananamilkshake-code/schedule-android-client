@@ -25,28 +25,6 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/item_task_date_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/item_task_name"
-        android:layout_centerHorizontal="true"
-        android:text="06.05.2014"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/item_task_date_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/item_task_date_start"
-        android:layout_alignBottom="@+id/item_task_date_start"
-        android:layout_marginLeft="17dp"
-        android:layout_toRightOf="@+id/item_task_date_start"
-        android:text="07.05.2014"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp" />
-
-    <TextView
         android:id="@+id/item_task_time_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,6 +33,7 @@
         android:layout_alignLeft="@+id/item_task_date_end"
         android:text="13:40"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#222222"
         android:textSize="13sp" />
 
     <TextView
@@ -65,6 +44,30 @@
         android:layout_below="@+id/item_task_date_start"
         android:text="11:00"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#222222"
         android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/item_task_date_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/item_task_description"
+        android:layout_below="@+id/item_task_description"
+        android:layout_marginTop="15dp"
+        android:text="06.05.2014"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#222222"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/item_task_date_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/item_task_time_end"
+        android:layout_toRightOf="@+id/item_task_description"
+        android:text="07.05.2014"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#222222"
+        android:textSize="12sp" />
 
 </RelativeLayout>

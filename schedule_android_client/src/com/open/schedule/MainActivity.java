@@ -54,7 +54,6 @@ public class MainActivity extends ActionBarActivity {
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 		actionList = (ListView) findViewById(R.id.action_add);
 		drawer = (RelativeLayout) findViewById(R.id.drawer);
-		
 		drawerList.setAdapter(new TablesAdapter(Client.getInstance().getTables()));
 		drawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -62,7 +61,6 @@ public class MainActivity extends ActionBarActivity {
 				showTableInfo(position, id);
 			}
 		});
-		
 		String[] actions = new String[]{"Create table"};
 		ArrayAdapter<String> actionsAdapter = new ArrayAdapter<String>(this, 
 				android.R.layout.simple_list_item_1, android.R.id.text1, actions);
