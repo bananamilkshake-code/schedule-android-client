@@ -13,8 +13,11 @@ import io.Client;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -23,22 +26,56 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ViewTaskActivity extends ActionBarActivity {
+	public static final int REQUEST_CHANGE = 1;
+	
 	private Integer tableId;
 	private Integer taskId;
-	
+
+	Task task;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.view_task_comment);
+		setContentView(R.layout.activity_view_task);
 
 		this.tableId = getIntent().getExtras().getInt(ViewTableActivity.TABLE_ID);
 		this.taskId = getIntent().getExtras().getInt(ViewTableActivity.TASK_ID);
+		this.task = Client.getInstance().getTables().get(tableId).getTask(taskId);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.view_task, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.action_change_task:
+			openChangeTaskActivity();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void openChangeTaskActivity() {
+		Intent intent = new Intent(ViewTaskActivity.this, CreateTaskActivity.class);
+		Task.TaskChange data = (Task.TaskChange)task.getData();
+		intent.putExtra(CreateTaskActivity.NAME, data.name);
+		intent.putExtra(CreateTaskActivity.DESCRIPTION, data.description);
+		intent.putExtra(CreateTaskActivity.START_DATE, CreateTaskActivity.dateFormatter.format(data.startDate));
+		intent.putExtra(CreateTaskActivity.END_DATE, CreateTaskActivity.dateFormatter.format(data.endDate));
+		intent.putExtra(CreateTaskActivity.START_TIME, CreateTaskActivity.timeFormatter.format(data.startTime));
+		intent.putExtra(CreateTaskActivity.END_TIME, CreateTaskActivity.timeFormatter.format(data.endTime));
+		startActivityForResult(intent, REQUEST_CHANGE);
+	}
+	
 	private void addComment(String text) {
 		Integer userId = Client.getInstance().getId();
 		Client.getInstance().createComment(true, tableId, taskId, Utility.getUnixTime(), userId, text);
@@ -52,6 +89,15 @@ public class ViewTaskActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(R.layout.fragment_view_task, container, false);
 
 			ViewTaskActivity activity = (ViewTaskActivity)getActivity();
+			Task.TaskChange data = (Task.TaskChange) activity.task.getData();
+			
+			((TextView) rootView.findViewById(R.id.text_task_name)).setText(data.name);
+			((TextView) rootView.findViewById(R.id.text_task_desc)).setText(data.description);
+			((TextView) rootView.findViewById(R.id.text_task_date_start)).setText(CreateTaskActivity.dateFormatter.format(data.startDate));
+			((TextView) rootView.findViewById(R.id.text_task_date_end)).setText(CreateTaskActivity.dateFormatter.format(data.endDate));
+			((TextView) rootView.findViewById(R.id.text_task_time_start)).setText(CreateTaskActivity.dateFormatter.format(data.startTime));
+			((TextView) rootView.findViewById(R.id.text_task_time_end)).setText(CreateTaskActivity.dateFormatter.format(data.endTime));
+			
 			final ListView listComments =(ListView) rootView.findViewById(R.id.list_comments);
 			Integer tableId = activity.tableId;
 			Integer taskId = activity.taskId;

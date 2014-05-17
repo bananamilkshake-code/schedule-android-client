@@ -434,7 +434,7 @@ public class Client extends TCPClient {
 			Log.w("Client", "New task creation error", e);
 		}
 	}
-	
+
 	private void syncComment(Integer tableId, Integer taskId, Long time) {
 		String comment = tables.getTables().get(tableId).getTasks().get(taskId).getComments().get(taskId).text;
 		Integer tableGlobalId = tables.findInnerTable(tableId);

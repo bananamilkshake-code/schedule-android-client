@@ -4,9 +4,9 @@
     tools:context="com.open.schedule.CrearteCommentActivity" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_change_task"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        android:title="@string/action_change_task"
+        app:showAsAction="never" />
 
 </menu>

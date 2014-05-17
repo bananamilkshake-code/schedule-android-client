@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,6 +35,13 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 	public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 	public static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
 
+	private EditText name;
+	private EditText desc;
+	private TextView startDate;
+	private TextView endDate;
+	private TextView startTime;
+	private TextView endTime;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,12 +74,12 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 	private void returnNewTask() {
 		Intent result = new Intent();
 
-		String taskName = ((EditText)findViewById(R.id.edit_task_name)).getText().toString();
-		String taskDescription = ((EditText)findViewById(R.id.edit_task_description)).getText().toString();
-		String taskDateStart = ((TextView)findViewById(R.id.text_task_date_start)).getText().toString();
-		String taskDateEnd = ((TextView)findViewById(R.id.text_task_date_end)).getText().toString();
-		String taskTimeStart = ((TextView)findViewById(R.id.text_task_time_start)).getText().toString();
-		String taskTimeEnd = ((TextView)findViewById(R.id.text_task_time_end)).getText().toString();
+		String taskName = name.getText().toString();
+		String taskDescription = desc.getText().toString();
+		String taskDateStart = startDate.getText().toString();
+		String taskDateEnd = endDate.getText().toString();
+		String taskTimeStart = startTime.getText().toString();
+		String taskTimeEnd = endTime.getText().toString();
 
 		result.putExtra(NAME, taskName);
 		result.putExtra(DESCRIPTION, taskDescription);
@@ -144,11 +152,32 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_create_task, container, false);
-			rootView.findViewById(R.id.btCreateTask).setOnClickListener((CreateTaskActivity)getActivity());
+			Button acceptButton = (Button) rootView.findViewById(R.id.btCreateTask);
+			acceptButton.setOnClickListener((CreateTaskActivity)getActivity());
 			rootView.findViewById(R.id.text_task_date_start).setOnClickListener((CreateTaskActivity)getActivity());
 			rootView.findViewById(R.id.text_task_date_end).setOnClickListener((CreateTaskActivity)getActivity());
 			rootView.findViewById(R.id.text_task_time_start).setOnClickListener((CreateTaskActivity)getActivity());
 			rootView.findViewById(R.id.text_task_time_end).setOnClickListener((CreateTaskActivity)getActivity());
+
+			CreateTaskActivity activity = (CreateTaskActivity) getActivity();
+			activity.name = (EditText)rootView.findViewById(R.id.edit_task_name);
+			activity.desc = (EditText)rootView.findViewById(R.id.edit_task_description);
+			activity.startDate = (TextView)rootView.findViewById(R.id.text_task_date_start);
+			activity.endDate = (TextView)rootView.findViewById(R.id.text_task_date_end);
+			activity.startTime = (TextView) rootView.findViewById(R.id.text_task_time_start);
+			activity.endTime = (TextView) rootView.findViewById(R.id.text_task_time_end);
+
+			Intent intent = getActivity().getIntent();
+			if (intent.hasExtra(CreateTaskActivity.NAME)) {
+				activity.name.setText(intent.getStringExtra(CreateTaskActivity.NAME));
+				activity.desc.setText(intent.getStringExtra(CreateTaskActivity.DESCRIPTION));
+				activity.startDate.setText(intent.getStringExtra(CreateTaskActivity.START_DATE));
+				activity.endDate.setText(intent.getStringExtra(CreateTaskActivity.END_DATE));
+				activity.startTime.setText(intent.getStringExtra(CreateTaskActivity.START_TIME));
+				activity.endTime.setText(intent.getStringExtra(CreateTaskActivity.END_TIME));
+				acceptButton.setText(R.string.button_task_change);
+			}
+			
 			return rootView;
 		}
 	}

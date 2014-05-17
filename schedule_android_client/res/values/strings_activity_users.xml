@@ -2,4 +2,5 @@
 <resources>
 	<string name="button_comment_add">Добавить</string>
 	<string name="button_users_find">Найти</string>
+	<string name="dialog_title_users">Найденные пользователи</string>
 </resources>

@@ -9,4 +9,5 @@
 	<string name="new_task_time_start">Время начала</string>
 	<string name="new_task_time_end">Время конца</string>
 	<string name="button_create_task">Создать</string>
+	<string name="button_task_change">Изменить</string>
 </resources>

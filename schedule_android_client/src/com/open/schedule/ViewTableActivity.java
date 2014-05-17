@@ -28,11 +28,10 @@ import utility.Utility;
 import io.Client;
 
 public class ViewTableActivity extends ActionBarActivity {
-
 	public static final int REQUEST_CREATE_TASK = 1;
 	public static final int REQUEST_CHANGE = 2;
 	public static final int REQUEST_USERS = 3;
-	
+
 	public static final String TABLE_ID = "tableId";
 	public static final String TASK_ID = "taskId";
 	public static final String TABLE_NAME = "name";
@@ -75,7 +74,6 @@ public class ViewTableActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

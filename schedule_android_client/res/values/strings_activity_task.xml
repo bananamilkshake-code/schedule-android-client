@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hint_add_comment">Новый комментарий</string>
+	<string name="hint_add_comment">Комментарий</string>
+	
+	<!-- Menu items -->
+	<string name="action_change_task">Изменить</string>
 </resources>
