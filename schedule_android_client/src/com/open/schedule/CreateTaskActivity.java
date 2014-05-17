@@ -132,7 +132,7 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 			super(context, new OnDateSetListener() {
 				@Override
 				public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-					textView.setText(String.format("%02d", day) + "." + String.format("%02d", month) + "." + year);
+					textView.setText(String.format("%02d", day) + "." + String.format("%02d", month + 1) + "." + year);
 				}
 			}, year, monthOfYear, dayOfMonth);
 		}
