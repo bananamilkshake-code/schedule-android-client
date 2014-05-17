@@ -1050,7 +1050,7 @@ containing a value of this type.
         public static final int listMode=0x7f050001;
         public static final int list_comments=0x7f05005f;
         public static final int list_item=0x7f050029;
-        public static final int list_tasks=0x7f05004d;
+        public static final int list_tasks=0x7f05004e;
         public static final int list_users=0x7f05005d;
         public static final int login=0x7f050042;
         public static final int login_form=0x7f05003f;
@@ -1086,7 +1086,7 @@ containing a value of this type.
         public static final int tabMode=0x7f050002;
         public static final int text_email=0x7f05006d;
         public static final int text_name=0x7f05006c;
-        public static final int text_table_description=0x7f05004e;
+        public static final int text_table_description=0x7f05004d;
         public static final int text_table_name=0x7f05004c;
         public static final int text_task_date_end=0x7f050056;
         public static final int text_task_date_start=0x7f050055;
