@@ -1,9 +1,12 @@
 package com.open.schedule;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
@@ -21,8 +24,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import storage.database.Database;
+import storage.tables.ChangableData.Change;
 import storage.tables.Table;
 import storage.tables.Task;
+import storage.tables.Table.TableInfo;
 import storage.tables.Task.TaskChange;
 import utility.Utility;
 import io.Client;
@@ -39,16 +44,27 @@ public class ViewTableActivity extends ActionBarActivity {
 
 	private Integer tableId;
 	private Table table;
-	
-	private ListView tasksList;
 
+	private ListView tasksList;
+	private ListView changes;
+	
+	private TextView tableName;
+	private TextView tableDesc;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_table);
 
-		tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
-		table = Client.getInstance().getTables().get(tableId);
+		this.tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
+		this.table = Client.getInstance().getTables().get(tableId);
+
+		this.changes = (ListView) findViewById(R.id.list_changes_task);
+		this.changes.setAdapter(new ChangesAdapted((LayoutInflater) ViewTableActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE), table));
+
+		this.tableName = (TextView) findViewById(R.id.text_table_name);
+		this.tableDesc = ((TextView) findViewById(R.id.text_table_description));
+	
 		showTable();
 	}
 
@@ -115,8 +131,8 @@ public class ViewTableActivity extends ActionBarActivity {
 		String name = ((Table.TableInfo)table.getData()).name;
 		String description = ((Table.TableInfo)table.getData()).description;
 
-		((TextView) findViewById(R.id.text_table_name)).setText(name);
-		((TextView) findViewById(R.id.text_table_description)).setText(description);
+		this.tableName.setText(name);
+		this.tableDesc.setText(description);
 
 		tasksList = (ListView) findViewById(R.id.list_tasks);
 		tasksList.setAdapter(new TasksAdapter(table.getTasks()));
@@ -193,15 +209,61 @@ public class ViewTableActivity extends ActionBarActivity {
 				rowView = inflater.inflate(R.layout.item_task, arg2, false);
 			}
 
+			Task task = tasks.get(idsByPos.get(position));
 			TextView taskName = (TextView) rowView.findViewById(R.id.item_task_name);
 			TextView taskDescription = (TextView) rowView.findViewById(R.id.item_task_description);
-
-			Task task = tasks.get(idsByPos.get(position));
-
 			taskName.setText((CharSequence)(((TaskChange)task.getData()).name));
 			taskDescription.setText((CharSequence)(((TaskChange)task.getData()).description));
 
 			return rowView;
 		}
+	}
+	
+	public class ChangesAdapted extends BaseAdapter {
+		TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
+		LayoutInflater inflater;
+
+		private final SimpleDateFormat timeFormat = new SimpleDateFormat("dd MMMM, yyyy HH:mm");
+
+		public ChangesAdapted(LayoutInflater inflater, Table table) {
+			this.inflater = inflater;
+			this.changes = table.changes;
+		}
+		
+		@Override
+		public int getCount() {
+			return changes.size();
+		}
+
+		@Override
+		public Change getItem(int position) {
+			return (Change) changes.entrySet().toArray(new Entry[this.changes.size()])[position].getValue();
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View rowView, ViewGroup rootView) {
+			if (rowView == null) {
+				rowView = this.inflater.inflate(R.layout.item_change_table, rootView, false);
+			}
+			
+			TableInfo change = (Table.TableInfo) getItem(position);
+			TextView author = (TextView) rowView.findViewById(R.id.text_change_table_author);
+			TextView time = (TextView) rowView.findViewById(R.id.text_change_table_time);
+			TextView name = (TextView) rowView.findViewById(R.id.item_change_table_name);
+			TextView desc = (TextView) rowView.findViewById(R.id.item_change_table_desc);
+			
+			author.setText(Client.getInstance().getUserName(change.creatorId));
+			time.setText(timeFormat.format(new Date(change.time)));
+			name.setText(change.name);
+			desc.setText(change.description);
+			
+			return rowView;
+		}
+		
 	}
 }

@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 
 public class ChangableData {
 
-	protected TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
+	public TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
 	private long lastUpdate = 0;
 	private Integer id;
 	private Integer globalId;
@@ -82,12 +82,12 @@ public class ChangableData {
 	}
 
 	public abstract class Change {
-		protected Integer creatorId;
-		protected long creationTime;
+		public final Integer creatorId;
+		public final long time;
 
 		public Change(Integer creator_id, Long creationTime) {
 			this.creatorId = creator_id;
-			this.creationTime = creationTime;
+			this.time = creationTime;
 		}
 
 		public abstract Boolean hasNulls();

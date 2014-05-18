@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+	    <TextView
+	        android:id="@+id/text_change_table_author"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_toLeftOf="@+id/text_change_table_time"
+	        android:padding="5dp"
+	        android:text="Автор"
+	        android:textSize="11sp" />
+
+	    <TextView
+	        android:id="@+id/text_change_table_time"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:padding="2dp"
+			android:textSize="9sp"
+	        android:text="Время" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/item_change_table_name_label"
+	        android:layout_width="75dp"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="5dp"
+	        android:paddingRight="10dp"
+	        android:layout_alignParentLeft="true"
+			android:layout_alignRight="@+id/item_change_table_desc_label"
+			android:textSize="9sp"
+	        android:text="@string/hint_new_table_name" />
+
+        <TextView
+	        android:id="@+id/item_change_table_name"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/item_change_table_name_label"
+			android:textSize="9sp"
+	        android:text="Тест название" />
+
+        <TextView
+            android:id="@+id/item_change_table_desc_label"
+	        android:layout_width="75dp"
+	        android:layout_height="wrap_content"
+			android:layout_below="@+id/item_change_table_name_label"
+	        android:paddingLeft="5dp"
+	        android:paddingRight="10dp"
+			android:textSize="9sp"
+	        android:text="@string/new_table_description" />
+
+        <TextView
+	        android:id="@+id/item_change_table_desc"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+			android:layout_below="@+id/item_change_table_name"
+	        android:layout_toRightOf="@+id/item_change_table_desc_label"
+			android:textSize="9sp"
+	        android:text="Тест описание" />
+
+   	</RelativeLayout>
+
+</LinearLayout>

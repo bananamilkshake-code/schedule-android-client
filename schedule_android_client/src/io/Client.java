@@ -502,4 +502,8 @@ public class Client extends TCPClient {
 			Log.w("Client", "Changin permission error", e);
 		}
 	}
+
+	public String getUserName(Integer creatorId) {
+		return creatorId.toString();
+	}
 }
