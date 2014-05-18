@@ -296,6 +296,7 @@ public class Client extends TCPClient {
 		}
 
 		tables.changeTable(tableId, userId, time, name, description);
+		database.changeTable(this.id, tableId, time, name, description);
 		Log.d("Client", "Table " + tableId + " changed");
 
 		if (local) 

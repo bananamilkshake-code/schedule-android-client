@@ -98,35 +98,51 @@ public class ViewTableActivity extends ActionBarActivity {
 
 		switch (requestCode) {
 		case REQUEST_CREATE_TASK:
-			String name = data.getExtras().getString(CreateTaskActivity.NAME);
-			String description = data.getExtras().getString(CreateTaskActivity.DESCRIPTION);
-			String startDate = data.getExtras().getString(CreateTaskActivity.START_DATE);
-			String endDate = data.getExtras().getString(CreateTaskActivity.END_DATE);
-			String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
-			String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
-
-			Date startDateVal = null;
-			Date endDateVal = null;
-			Date startTimeVal = null;
-			Date endTimeVal = null;
-
-			try {
-				startDateVal = CreateTaskActivity.dateFormatter.parse(startDate);
-				endDateVal = CreateTaskActivity.dateFormatter.parse(endDate);
-				startTimeVal = CreateTaskActivity.timeFormatter.parse(startTime);
-				endTimeVal = CreateTaskActivity.timeFormatter.parse(endTime);
-			} catch (ParseException e) {
-				Log.w(Database.class.getName(), "Date task changes parsing", e);
-			}
-
-			Client.getInstance().createTask(true, tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
-			((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();
+			newTask(data);
+			return;
+		case REQUEST_CHANGE:
+			newChange(data);
 			return;
 		default:
 			return;
 		}
 	}
 
+	private void newTask(Intent data) {
+		String name = data.getExtras().getString(CreateTaskActivity.NAME);
+		String description = data.getExtras().getString(CreateTaskActivity.DESCRIPTION);
+		String startDate = data.getExtras().getString(CreateTaskActivity.START_DATE);
+		String endDate = data.getExtras().getString(CreateTaskActivity.END_DATE);
+		String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
+		String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
+
+		Date startDateVal = null;
+		Date endDateVal = null;
+		Date startTimeVal = null;
+		Date endTimeVal = null;
+
+		try {
+			startDateVal = CreateTaskActivity.dateFormatter.parse(startDate);
+			endDateVal = CreateTaskActivity.dateFormatter.parse(endDate);
+			startTimeVal = CreateTaskActivity.timeFormatter.parse(startTime);
+			endTimeVal = CreateTaskActivity.timeFormatter.parse(endTime);
+		} catch (ParseException e) {
+			Log.w(Database.class.getName(), "Date task changes parsing", e);
+		}
+
+		Client.getInstance().createTask(true, tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
+		((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();		
+	}
+
+	private void newChange(Intent data) {
+		String name = data.getStringExtra(CreateTableActivity.EXTRA_NAME);
+		String description = data.getStringExtra(CreateTableActivity.EXTRA_DESCRIPTION);
+		Client.getInstance().changeTable(true, this.tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description);
+		((BaseAdapter)(this.changes.getAdapter())).notifyDataSetChanged();
+		this.tableName.setText(name);
+		this.tableDesc.setText(description);
+	}
+	
 	private void showTable() {
 		String name = ((Table.TableInfo)table.getData()).name;
 		String description = ((Table.TableInfo)table.getData()).description;
@@ -258,7 +274,7 @@ public class ViewTableActivity extends ActionBarActivity {
 			TextView desc = (TextView) rowView.findViewById(R.id.item_change_table_desc);
 			
 			author.setText(Client.getInstance().getUserName(change.creatorId));
-			time.setText(timeFormat.format(new Date(change.time)));
+			time.setText(timeFormat.format(new Date(change.time * 1000)));
 			name.setText(change.name);
 			desc.setText(change.description);
 			
