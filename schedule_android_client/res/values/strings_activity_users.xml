@@ -3,4 +3,14 @@
 	<string name="button_comment_add">Добавить</string>
 	<string name="button_users_find">Найти</string>
 	<string name="dialog_title_users">Найденные пользователи</string>
+
+	<string name="title_found_users">Найденные пользователи</string>
+	<string name="title_permissions">Тип доступа</string>
+	<string name="button_permission">Готово</string>
+
+	<string-array name="permissions">
+	    <item>Нет доступа</item>
+	    <item>Чтение</item>
+	    <item>Редактирование</item>
+	</string-array>
 </resources>

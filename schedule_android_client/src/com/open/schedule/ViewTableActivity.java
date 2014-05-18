@@ -60,7 +60,7 @@ public class ViewTableActivity extends ActionBarActivity {
 
 		this.tableName = (TextView) findViewById(R.id.text_table_name);
 		this.tableDesc = ((TextView) findViewById(R.id.text_table_description));
-	
+
 		showTable();
 	}
 
@@ -80,8 +80,8 @@ public class ViewTableActivity extends ActionBarActivity {
 		case R.id.action_add_task:
 			showCreateTaskActivity();
 			return true;
-		case R.id.action_add_user:
-			showAddUserActivity();
+		case R.id.action_users:
+			showReadersActivity();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -175,10 +175,10 @@ public class ViewTableActivity extends ActionBarActivity {
 		startActivityForResult(intent, REQUEST_CREATE_TASK);
 	}
 	
-	private void showAddUserActivity() {
-	//	Intent intent = new Intent(ViewTableActivity.this, UsersActivity.class);
-	//	intent.putExtra(TABLE_ID, this.tableId);
-	//	startActivityForResult(intent, REQUEST_USERS);
+	private void showReadersActivity() {
+		Intent intent = new Intent(ViewTableActivity.this, ReadersActivity.class);
+		intent.putExtra(TABLE_ID, this.tableId);
+		startActivityForResult(intent, REQUEST_USERS);
 	}
 
 	public class TasksAdapter extends BaseAdapter {

@@ -27,11 +27,11 @@ import android.widget.Toast;
 public class UsersActivity extends ActionBarActivity implements OnClickListener {
 	public EditText emailText;
 	public ListView usersList;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_find_user);
+		setContentView(R.layout.activity_users);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
@@ -45,7 +45,6 @@ public class UsersActivity extends ActionBarActivity implements OnClickListener 
 			searchUser();
 			return;
 		}
-		
 	}
 	
 	private void searchUser() {
@@ -65,7 +64,7 @@ public class UsersActivity extends ActionBarActivity implements OnClickListener 
 			final String[] foundUsers = { activity.emailText.getText().toString() };
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-			builder.setTitle("Found users").setItems(foundUsers, new DialogInterface.OnClickListener() {
+			builder.setTitle(getResources().getString(R.string.title_found_users)).setItems(foundUsers, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 				}
@@ -80,7 +79,7 @@ public class UsersActivity extends ActionBarActivity implements OnClickListener 
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_find_user, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_users, container, false);
 			UsersActivity activity = (UsersActivity) getActivity();
 			activity.emailText = (EditText) rootView.findViewById(R.id.edit_email);
 			activity.usersList = (ListView) rootView.findViewById(R.id.list_users);

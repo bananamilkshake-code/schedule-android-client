@@ -54,6 +54,10 @@
             android:name="com.open.schedule.UsersActivity"
             android:label="@string/title_activity_find_user" >
         </activity>
+        <activity
+            android:name="com.open.schedule.ReadersActivity"
+            android:label="@string/title_activity_readers" >
+        </activity>
     </application>
 
 </manifest>

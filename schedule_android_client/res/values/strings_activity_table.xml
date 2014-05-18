@@ -6,5 +6,5 @@
 	<!-- Items settings -->
 	<string name="action_change">Изменить</string>
 	<string name="action_add_task">Добавить задание</string>
-	<string name="action_add_user">Добавить читателя</string>
+	<string name="action_users">Список пользователей</string>
 </resources>

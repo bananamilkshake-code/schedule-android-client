@@ -17,7 +17,7 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 
 	private EditText nameField;
 	private EditText descField;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,7 +67,7 @@ public class CreateTableActivity extends ActionBarActivity implements OnClickLis
 				((CreateTableActivity)getActivity()).descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
 				acceptButton.setText(R.string.button_table_change);
 			}
-			
+
 			return rootView;
 		}
 	}
