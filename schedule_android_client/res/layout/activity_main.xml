@@ -45,9 +45,9 @@
 	        android:layout_gravity="start"
 	        android:choiceMode="singleChoice"
 	        android:divider="@android:color/transparent"
+			android:dividerHeight="0px"
 	        android:background="#111"
 			android:textColor="#ffffff"
-			android:dividerHeight="0px"
 			android:footerDividersEnabled="true" />
 		
 		<ListView android:id="@+id/action_add"

@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
 			return;
 		}
 	}
-	
+
 	private void getActivityElements() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer = (RelativeLayout) findViewById(R.id.drawer);

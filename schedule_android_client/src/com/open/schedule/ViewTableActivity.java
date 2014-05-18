@@ -45,7 +45,7 @@ public class ViewTableActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_view_tables);
+		setContentView(R.layout.activity_view_table);
 
 		tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
 		table = Client.getInstance().getTables().get(tableId);
