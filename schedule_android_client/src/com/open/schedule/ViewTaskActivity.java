@@ -1,13 +1,17 @@
 package com.open.schedule;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import storage.database.Database;
 import storage.tables.Table;
 import storage.tables.Task;
 import storage.tables.Task.Comment;
+import storage.tables.Task.TaskChange;
 import utility.Utility;
 import io.Client;
 import android.support.v7.app.ActionBarActivity;
@@ -15,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +36,16 @@ public class ViewTaskActivity extends ActionBarActivity {
 	private Integer tableId;
 	private Integer taskId;
 
-	Task task;
+	private Task task;
+
+	private ListView changes;
+
+	private TextView taskName;
+	private TextView taskDesc;
+	private TextView taskStartDate;
+	private TextView taskEndDate;
+	private TextView taskStartTime;
+	private TextView taskEndTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +55,9 @@ public class ViewTaskActivity extends ActionBarActivity {
 		this.tableId = getIntent().getExtras().getInt(ViewTableActivity.TABLE_ID);
 		this.taskId = getIntent().getExtras().getInt(ViewTableActivity.TASK_ID);
 		this.task = Client.getInstance().getTables().get(tableId).getTask(taskId);
+
+		this.changes = (ListView) findViewById(R.id.list_changes_task);
+		this.changes.setAdapter(new TaskChangesAdapted((LayoutInflater) ViewTaskActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE), task));
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
@@ -62,6 +79,52 @@ public class ViewTaskActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK)
+			return;
+
+		switch (requestCode) {
+		case REQUEST_CHANGE:
+			newChange(data);
+			return;
+		default:
+			return;
+		}
+	}
+
+	private void newChange(Intent data) {
+		String name = data.getExtras().getString(CreateTaskActivity.NAME);
+		String description = data.getExtras().getString(CreateTaskActivity.DESCRIPTION);
+		String startDate = data.getExtras().getString(CreateTaskActivity.START_DATE);
+		String endDate = data.getExtras().getString(CreateTaskActivity.END_DATE);
+		String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
+		String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
+	
+		Date startDateVal = null;
+		Date endDateVal = null;
+		Date startTimeVal = null;
+		Date endTimeVal = null;
+	
+		try {
+			startDateVal = CreateTaskActivity.dateFormatter.parse(startDate);
+			endDateVal = CreateTaskActivity.dateFormatter.parse(endDate);
+			startTimeVal = CreateTaskActivity.timeFormatter.parse(startTime);
+			endTimeVal = CreateTaskActivity.timeFormatter.parse(endTime);
+		} catch (ParseException e) {
+			Log.w(Database.class.getName(), "Date task changes parsing", e);
+		}
+		
+		Client.getInstance().changeTask(true, this.tableId, this.taskId, Utility.getUnixTime(), Client.getInstance().getId(), 
+				name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
+		
+		taskName.setText(name);
+		taskDesc.setText(description);
+		taskStartDate.setText(startDate);
+		taskEndDate.setText(endDate);
+		taskStartTime.setText(startTime);
+		taskEndTime.setText(endTime);
 	}
 
 	private void openChangeTaskActivity() {
@@ -90,13 +153,20 @@ public class ViewTaskActivity extends ActionBarActivity {
 
 			ViewTaskActivity activity = (ViewTaskActivity)getActivity();
 			Task.TaskChange data = (Task.TaskChange) activity.task.getData();
-			
-			((TextView) rootView.findViewById(R.id.text_task_name)).setText(data.name);
-			((TextView) rootView.findViewById(R.id.text_task_desc)).setText(data.description);
-			((TextView) rootView.findViewById(R.id.text_task_date_start)).setText(CreateTaskActivity.dateFormatter.format(data.startDate));
-			((TextView) rootView.findViewById(R.id.text_task_date_end)).setText(CreateTaskActivity.dateFormatter.format(data.endDate));
-			((TextView) rootView.findViewById(R.id.text_task_time_start)).setText(CreateTaskActivity.dateFormatter.format(data.startTime));
-			((TextView) rootView.findViewById(R.id.text_task_time_end)).setText(CreateTaskActivity.dateFormatter.format(data.endTime));
+
+			activity.taskName = (TextView) rootView.findViewById(R.id.text_task_name);
+			activity.taskDesc = (TextView) rootView.findViewById(R.id.text_task_desc);
+			activity.taskStartDate = (TextView) rootView.findViewById(R.id.text_task_date_start);
+			activity.taskEndDate = (TextView) rootView.findViewById(R.id.text_task_date_end);
+			activity.taskStartTime = (TextView) rootView.findViewById(R.id.text_task_time_start);
+			activity.taskEndTime = (TextView) rootView.findViewById(R.id.text_task_time_end);
+
+			activity.taskName.setText(data.name);
+			activity.taskDesc.setText(data.description);
+			activity.taskStartDate.setText(CreateTaskActivity.dateFormatter.format(data.startDate));
+			activity.taskEndDate.setText(CreateTaskActivity.dateFormatter.format(data.endDate));
+			activity.taskStartTime.setText(CreateTaskActivity.dateFormatter.format(data.startTime));
+			activity.taskEndTime.setText(CreateTaskActivity.dateFormatter.format(data.endTime));
 			
 			final ListView listComments =(ListView) rootView.findViewById(R.id.list_comments);
 			Integer tableId = activity.tableId;
@@ -157,16 +227,50 @@ public class ViewTaskActivity extends ActionBarActivity {
 				rowView = inflater.inflate(R.layout.item_comment, arg2, false);
 			}
 
-			TextView commentText = (TextView)rowView.findViewById(R.id.item_comment_text);
-			TextView commentTime = (TextView)rowView.findViewById(R.id.item_comment_time);
-			TextView commentAuthor = (TextView)rowView.findViewById(R.id.item_comment_author);
+			TextView commentText = (TextView) rowView.findViewById(R.id.item_comment_text);
+			TextView commentTime = (TextView) rowView.findViewById(R.id.item_comment_time);
+			TextView commentAuthor = (TextView) rowView.findViewById(R.id.item_comment_author);
 
 			Entry<Long, Comment> comment = getItem(position);
 
 			commentText.setText((CharSequence)(comment.getValue().text));
-			commentTime.setText((CharSequence)(dateFormatter.format(comment.getKey())));
+			commentTime.setText((CharSequence)(dateFormatter.format(new Date(comment.getKey() * 1000))));
 			commentAuthor.setText((CharSequence)(comment.getValue().commentatorId.toString()));
 
+			return rowView;
+		}
+	}
+	
+	public class TaskChangesAdapted extends ChangesAdapter {
+		public TaskChangesAdapted(LayoutInflater inflater, Task task) {
+			super(inflater, task.changes);
+		}
+
+		@Override
+		public View getView(int position, View rowView, ViewGroup rootView) {
+			if (rowView == null) {
+				rowView = this.inflater.inflate(R.layout.item_change_task, rootView, false);
+			}
+			
+			TaskChange change = (Task.TaskChange) getItem(position);
+			TextView author = (TextView) rowView.findViewById(R.id.text_change_table_author);
+			TextView time = (TextView) rowView.findViewById(R.id.text_change_table_time);
+			TextView name = (TextView) rowView.findViewById(R.id.item_change_table_name);
+			TextView desc = (TextView) rowView.findViewById(R.id.item_change_table_desc);
+			TextView startDate = (TextView) rowView.findViewById(R.id.item_change_table_start_date);
+			TextView endDate = (TextView) rowView.findViewById(R.id.item_change_table_end_date);
+			TextView startTime = (TextView) rowView.findViewById(R.id.item_change_table_start_time);
+			TextView endTime = (TextView) rowView.findViewById(R.id.item_change_table_end_time);
+			
+			author.setText(Client.getInstance().getUserName(change.creatorId));
+			time.setText(timeFormat.format(new Date(change.time * 1000)));
+			name.setText(change.name);
+			desc.setText(change.description);
+			startDate.setText(CreateTaskActivity.dateFormatter.format(change.startDate));
+			endDate.setText(CreateTaskActivity.dateFormatter.format(change.endDate));
+			startTime.setText(CreateTaskActivity.timeFormatter.format(change.startTime));
+			endTime.setText(CreateTaskActivity.timeFormatter.format(change.endTime));
+			
 			return rowView;
 		}
 	}

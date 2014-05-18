@@ -16,7 +16,7 @@
 	<ListView 
 	    android:id="@+id/list_changes_task"
 		android:layout_height="match_parent"
-	    android:layout_width="240dp"
+	    android:layout_width="180dp"
 	    android:layout_gravity="right"
 	    android:background="#111"
         android:divider="@android:color/transparent"

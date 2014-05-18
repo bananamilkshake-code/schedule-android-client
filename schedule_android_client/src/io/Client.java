@@ -314,6 +314,7 @@ public class Client extends TCPClient {
 		}
 
 		tables.changeTask(tableId, taskId, userId, time, name, description, startDate, endDate, startTime, endTime);
+		database.changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime);
 		Log.d("Client", "Task " + taskId + " for table " + tableId + " changed");
 
 		if (local) 
@@ -440,7 +441,7 @@ public class Client extends TCPClient {
 	}
 
 	private void syncComment(Integer tableId, Integer taskId, Long time) {
-		String comment = tables.getTables().get(tableId).getTasks().get(taskId).getComments().get(taskId).text;
+		String comment = tables.getTables().get(tableId).getTask(taskId).getComments().get(time).text;
 		Integer tableGlobalId = tables.findInnerTable(tableId);
 		Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
 		if (tableGlobalId == null || taskGlobalId == null) {

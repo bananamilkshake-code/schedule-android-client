@@ -1,12 +1,9 @@
 package com.open.schedule;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map.Entry;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
@@ -24,10 +21,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import storage.database.Database;
-import storage.tables.ChangableData.Change;
 import storage.tables.Table;
-import storage.tables.Task;
 import storage.tables.Table.TableInfo;
+import storage.tables.Task;
 import storage.tables.Task.TaskChange;
 import utility.Utility;
 import io.Client;
@@ -47,7 +43,7 @@ public class ViewTableActivity extends ActionBarActivity {
 
 	private ListView tasksList;
 	private ListView changes;
-	
+
 	private TextView tableName;
 	private TextView tableDesc;
 	
@@ -60,7 +56,7 @@ public class ViewTableActivity extends ActionBarActivity {
 		this.table = Client.getInstance().getTables().get(tableId);
 
 		this.changes = (ListView) findViewById(R.id.list_changes_task);
-		this.changes.setAdapter(new ChangesAdapted((LayoutInflater) ViewTableActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE), table));
+		this.changes.setAdapter(new TableChangesAdapted((LayoutInflater) ViewTableActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE), table));
 
 		this.tableName = (TextView) findViewById(R.id.text_table_name);
 		this.tableDesc = ((TextView) findViewById(R.id.text_table_description));
@@ -235,30 +231,9 @@ public class ViewTableActivity extends ActionBarActivity {
 		}
 	}
 	
-	public class ChangesAdapted extends BaseAdapter {
-		TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
-		LayoutInflater inflater;
-
-		private final SimpleDateFormat timeFormat = new SimpleDateFormat("dd MMMM, yyyy HH:mm");
-
-		public ChangesAdapted(LayoutInflater inflater, Table table) {
-			this.inflater = inflater;
-			this.changes = table.changes;
-		}
-		
-		@Override
-		public int getCount() {
-			return changes.size();
-		}
-
-		@Override
-		public Change getItem(int position) {
-			return (Change) changes.entrySet().toArray(new Entry[this.changes.size()])[position].getValue();
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
+	public class TableChangesAdapted extends ChangesAdapter {
+		public TableChangesAdapted(LayoutInflater inflater, Table table) {
+			super(inflater, table.changes);
 		}
 
 		@Override
@@ -267,7 +242,7 @@ public class ViewTableActivity extends ActionBarActivity {
 				rowView = this.inflater.inflate(R.layout.item_change_table, rootView, false);
 			}
 			
-			TableInfo change = (Table.TableInfo) getItem(position);
+			TableInfo change = (TableInfo) getItem(position);
 			TextView author = (TextView) rowView.findViewById(R.id.text_change_table_author);
 			TextView time = (TextView) rowView.findViewById(R.id.text_change_table_time);
 			TextView name = (TextView) rowView.findViewById(R.id.item_change_table_name);
@@ -280,6 +255,5 @@ public class ViewTableActivity extends ActionBarActivity {
 			
 			return rowView;
 		}
-		
 	}
 }
