@@ -73,6 +73,7 @@ public class Database {
 		}
 		cursorChanges.close();
 
+		loadPermissions(tables);
 		loadTasks(tables);
 	}
 
@@ -156,17 +157,37 @@ public class Database {
 		loadComments(tables);
 	}
 
+	public void loadPermissions(Tables tables) {
+		String[] columns = {DatabaseHelper.TABLE_ID, DatabaseHelper.USER_ID, DatabaseHelper.READERS_PERMISSION};
+		Cursor cursor = database.query(DatabaseHelper.TABLE_READERS, columns, null, null, null, null, null);
+		
+		if (cursor.moveToFirst()) {
+			int tableId = cursor.getColumnIndex(DatabaseHelper.TABLE_ID);
+			int userId = cursor.getColumnIndex(DatabaseHelper.USER_ID);
+			int permissionId = cursor.getColumnIndex(DatabaseHelper.READERS_PERMISSION);
+			
+			while (!cursor.isAfterLast()) {
+				Integer tableIdVal = cursor.getInt(tableId);
+				Integer userIdVal = cursor.getInt(userId);
+				Integer permission = cursor.getInt(permissionId);
+				tables.changePermission(tableIdVal, userIdVal, Permission.values()[permission]);
+				cursor.moveToNext();
+			}
+		}
+		cursor.close();
+	}
+
 	public void loadComments(Tables tables) {
 		String[] columns = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, DatabaseHelper.COMMENTS_TEXT};
 		Cursor cursor = database.query(DatabaseHelper.TABLE_COMMENTS, columns, null, null, null, null, DatabaseHelper.TABLE_ID + ", " + DatabaseHelper.TASK_ID + ", " + DatabaseHelper.COMMENTS_TEXT);
 
-		int tableId = cursor.getColumnIndex(DatabaseHelper.TABLE_ID);
-		int taskId = cursor.getColumnIndex(DatabaseHelper.TASK_ID);
-		int time = cursor.getColumnIndex(DatabaseHelper.TIME);
-		int userId = cursor.getColumnIndex(DatabaseHelper.USER_ID);
-		int textId = cursor.getColumnIndex(DatabaseHelper.COMMENTS_TEXT);
-
 		if (cursor.moveToFirst()) {
+			int tableId = cursor.getColumnIndex(DatabaseHelper.TABLE_ID);
+			int taskId = cursor.getColumnIndex(DatabaseHelper.TASK_ID);
+			int time = cursor.getColumnIndex(DatabaseHelper.TIME);
+			int userId = cursor.getColumnIndex(DatabaseHelper.USER_ID);
+			int textId = cursor.getColumnIndex(DatabaseHelper.COMMENTS_TEXT);
+
 			while(!cursor.isAfterLast()) {
 				Integer tableIdVal = cursor.getInt(tableId);
 				Integer taskIdVal = cursor.getInt(taskId);
@@ -286,7 +307,8 @@ public class Database {
 			values.put(DatabaseHelper.TABLE_ID, table_id);
 			values.put(DatabaseHelper.USER_ID, user_id);
 			values.put(DatabaseHelper.READERS_PERMISSION, permission.ordinal());
-			database.replace(DatabaseHelper.TABLE_READERS, null, values);
+			long res = database.insert(DatabaseHelper.TABLE_READERS, null, values);
+			Log.d("Database", Long.valueOf(res).toString());
 		}
 	}
 
