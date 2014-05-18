@@ -71,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					CHANGE_DESCRIPTION + " TEXT," +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"FOREIGN KEY (" + USER_ID + ") REFERENCES users(" + GLOBAL_ID + ")," +
-					"UNIQUE(" + TABLE_ID + "," + TIME + ")" +
+					"UNIQUE(" + TABLE_ID + "," + USER_ID + "," + TIME + ")" +
 				")";
 
 	private static final String CREATE_TASKS_CHANGES = 
@@ -88,7 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					CHANGE_TASK_END_TIME + " TIME, " +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"FOREIGN KEY (" + TASK_ID + ") REFERENCES tasks(" + INNER_ID + ")," +
-					"UNIQUE(" + TABLE_ID + ", " + TASK_ID + ")" +
+					"UNIQUE(" + TABLE_ID + ", " + TASK_ID + "," + USER_ID + "," + TIME + ")" +
 				")";
 
 	private static final String CREATE_COMMENTS = 
