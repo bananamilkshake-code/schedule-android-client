@@ -4,7 +4,6 @@ import io.Tables;
 
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map.Entry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -14,10 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import storage.tables.*;
-import storage.tables.ChangableData.Change;
 import storage.tables.Table.Permission;
-import storage.tables.Table.TableInfo;
-import storage.tables.Task.TaskChange;
 import utility.Utility;
 
 public class Database {
@@ -184,31 +180,21 @@ public class Database {
 		cursor.close();
 	}
 
-	public Integer createTable(Integer userId, Table table) {
+	public Integer createTable(Integer userId, Long time, String name, String description) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.UPDATE_TIME, Utility.getUnixTime());
 		Integer tableId = (int) database.insert(DatabaseHelper.TABLE_TABLES, null, values);
-
-		Entry<Long, Change> firstChange = table.getInitial();
-		Long time = (Long) firstChange.getKey();
-		Table.TableInfo change = (TableInfo) firstChange.getValue();
-		changeTable(userId, tableId, change, time);
+		changeTable(userId, tableId, time, name, description);
 
 		return tableId;
 	}
 
-	public Integer createTask(Integer userId, Integer tableId, Task task) {
+	public Integer createTask(Integer userId, Integer tableId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.TABLE_ID, tableId);
 		values.put(DatabaseHelper.UPDATE_TIME, Utility.getUnixTime());
 		Integer taskId = (int) database.insert(DatabaseHelper.TABLE_TASKS, null, values);
-
-		Entry<Long, Change> firstChange = task.getInitial();
-		Long time = (Long) firstChange.getKey();
-		Task.TaskChange change = (TaskChange) firstChange.getValue();
-
-		changeTask(userId, tableId, taskId, change, time);
-
+		changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime);
 		return taskId;
 	}
 
@@ -223,29 +209,29 @@ public class Database {
 		Log.d("Comment creation", res.toString());
 	}
 	
-	public void changeTable(Integer userId, Integer tableId, Table.TableInfo change, Long time) {
+	public void changeTable(Integer userId, Integer tableId, Long time, String name, String description) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.USER_ID, userId);
 		values.put(DatabaseHelper.TABLE_ID, tableId);
 		values.put(DatabaseHelper.TIME, time);
-		values.put(DatabaseHelper.CHANGE_NAME, change.name);
-		values.put(DatabaseHelper.CHANGE_DESCRIPTION, change.description);
+		values.put(DatabaseHelper.CHANGE_NAME, name);
+		values.put(DatabaseHelper.CHANGE_DESCRIPTION, description);
 		Long res = database.insert(DatabaseHelper.TABLE_TABLE_CHANGES, null, values);
 		Log.d("ChangeTable", res.toString());
 	}
 
-	public void changeTask(Integer userId, Integer tableId, Integer taskId, Task.TaskChange change,Long time) {
+	public void changeTask(Integer userId, Integer tableId, Integer taskId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.USER_ID, userId);
 		values.put(DatabaseHelper.TABLE_ID, tableId);
 		values.put(DatabaseHelper.TASK_ID, taskId);
 		values.put(DatabaseHelper.TIME, time);
-		values.put(DatabaseHelper.CHANGE_NAME, change.name);
-		values.put(DatabaseHelper.CHANGE_DESCRIPTION, change.description);
-		values.put(DatabaseHelper.CHANGE_TASK_START_DATE, dateFormatter.format(change.startDate));
-		values.put(DatabaseHelper.CHANGE_TASK_END_DATE, dateFormatter.format(change.endDate));
-		values.put(DatabaseHelper.CHANGE_TASK_START_TIME, timeFormatter.format(change.startTime));
-		values.put(DatabaseHelper.CHANGE_TASK_END_TIME, timeFormatter.format(change.endTime));
+		values.put(DatabaseHelper.CHANGE_NAME, name);
+		values.put(DatabaseHelper.CHANGE_DESCRIPTION, description);
+		values.put(DatabaseHelper.CHANGE_TASK_START_DATE, dateFormatter.format(startDate));
+		values.put(DatabaseHelper.CHANGE_TASK_END_DATE, dateFormatter.format(endDate));
+		values.put(DatabaseHelper.CHANGE_TASK_START_TIME, timeFormatter.format(startTime));
+		values.put(DatabaseHelper.CHANGE_TASK_END_TIME, timeFormatter.format(endTime));
 		Long res = database.insert(DatabaseHelper.TABLE_TASK_CHANGES, null, values);
 		Log.d("ChangeTask", res.toString());
 	}

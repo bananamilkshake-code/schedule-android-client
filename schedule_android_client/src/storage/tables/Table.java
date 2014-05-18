@@ -16,16 +16,18 @@ public class Table extends ChangableData {
 	private NavigableMap<Integer, Task> tasks = new TreeMap<Integer, Task>();
 	private SortedMap<Integer, Integer> indexId = new TreeMap<Integer, Integer>();
 
-	public Table(Long updatedTime) {
-		super(updatedTime);
+	public Table(Integer id, Long updatedTime) {
+		super(id, updatedTime);
 	}
 	
-	public Table(Integer creatorId, Long creationTime, String name, String description) {
+	public Table(Integer id, Integer creatorId, Long creationTime, String name, String description) {
+		super(id);
 		this.change(creationTime, new TableInfo(creatorId, creationTime, name, description));
 	}
 
-	public Table(Long time, Integer creatorId, String name, String description) {
-		change(time, (Change)(new TableInfo(creatorId, time, name, description)));
+	public Table(Integer id, Long time, Integer creatorId, String name, String description) {
+		super(id);
+		this.change(time, (Change)(new TableInfo(creatorId, time, name, description)));
 	}
 
 	public void setPermission(int user_id, Permission permission) {

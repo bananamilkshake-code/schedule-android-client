@@ -193,8 +193,8 @@ public class ViewTableActivity extends ActionBarActivity {
 				rowView = inflater.inflate(R.layout.item_task, arg2, false);
 			}
 
-			TextView taskName = (TextView)rowView.findViewById(R.id.item_task_name);
-			TextView taskDescription = (TextView)rowView.findViewById(R.id.item_task_description);
+			TextView taskName = (TextView) rowView.findViewById(R.id.item_task_name);
+			TextView taskDescription = (TextView) rowView.findViewById(R.id.item_task_description);
 
 			Task task = tasks.get(idsByPos.get(position));
 

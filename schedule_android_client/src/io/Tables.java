@@ -21,7 +21,7 @@ public class Tables {
 	}
 
 	public void createTable(Integer tableId, Integer globalId, Long updateTime) {
-		Table table = new Table(updateTime);
+		Table table = new Table(tableId, updateTime);
 		tables.put(tableId, table);
 		updateTableGlobalId(tableId, globalId);
 	}
@@ -31,7 +31,7 @@ public class Tables {
 	}
 	
 	public void createTask(Integer tableId, Integer taskId, Integer globalId, Long updateTime) {
-		Task task = new Task(updateTime);
+		Task task = new Task(taskId, updateTime);
 		tables.get(tableId).addTask(taskId, task);
 		Integer tableGlobalId = this.findInnerTable(tableId);
 		updateTaskGlobalId(tableGlobalId, globalId, taskId);

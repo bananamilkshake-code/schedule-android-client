@@ -10,14 +10,16 @@ import java.util.TreeMap;
 public class Task extends ChangableData {
 	private TreeMap<Long, Comment> comments = new TreeMap<Long, Comment>();
 
-	public Task() {}
-	
-	public Task(Long updateTime) {
-		super(updateTime);
+	public Task(Integer id) {
+		super(id);
 	}
 	
-	public Task(Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
-		this();
+	public Task(Integer id, Long updateTime) {
+		super(id, updateTime);
+	}
+	
+	public Task(Integer id, Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+		this(id);
 		this.change(time, new TaskChange(creatorId, time, name, description, startDate, endDate, startTime, endTime));
 	}
 

@@ -13,12 +13,20 @@ public class ChangableData {
 
 	protected TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
 	private long lastUpdate = 0;
+	private Integer id;
 	private Integer globalId;
 
-	public ChangableData() {}
+	public ChangableData(Integer id) {
+		this.id = id;
+	}
 	
-	public ChangableData(Long updateTime) {
+	public ChangableData(Integer id, Long updateTime) {
+		this(id);
 		this.lastUpdate = updateTime;
+	}
+	
+	public final Integer getId() {
+		return this.id;
 	}
 	
 	public Entry<Long, Change> getInitial() {

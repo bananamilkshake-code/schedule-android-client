@@ -64,6 +64,10 @@ public class Client extends TCPClient {
 	public final SortedMap<Integer, Table> getTables() {
 		return tables.getTables();
 	}
+	
+	public final Tables tables() {
+		return tables;
+	}
 
 	public final Users getUsers() {
 		return this.users;
@@ -246,8 +250,8 @@ public class Client extends TCPClient {
 	}
 
 	public Integer createTable(Boolean local, Integer userId, Long time, String name, String description) {
-		Table table = new Table(this.id, time, name, description);
-		Integer tableId = database.createTable(userId, table);
+		Integer tableId = database.createTable(userId, time, name, description);
+		Table table = new Table(tableId, this.id, time, name, description);
 		tables.createTable(tableId, table);
 		changePermision(false, tableId, getId(), Permission.WRITE);
 		Log.d("Client", "New table created " + tableId);
@@ -262,8 +266,8 @@ public class Client extends TCPClient {
 	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm", Locale.US);
 
 	public Integer createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
-		Task task = new Task(userId, time, name, description, startDate, endDate, startTime, endTime);
-		Integer taskId = database.createTask(userId, tableId, task);
+		Integer taskId = database.createTask(userId, tableId, time, name, description, startDate, endDate, startTime, endTime);
+		Task task = new Task(taskId, userId, time, name, description, startDate, endDate, startTime, endTime);
 		tables.createTask(tableId, taskId, task);
 		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");
 
@@ -379,7 +383,6 @@ public class Client extends TCPClient {
 	private void updateGlobalTableId(io.packet.server.GlobalTableIdPacket packet) {
 		tables.updateTableGlobalId(packet.tableId, packet.tableGlobalId);
 		database.updateTableGlobalId(packet.tableId, packet.tableGlobalId);
-
 		syncTasks();
 		syncTableChanges();
 	}
@@ -387,7 +390,6 @@ public class Client extends TCPClient {
 	private void updateGlobalTaskId(io.packet.server.GlobalTaskIdPacket packet) {
 		tables.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
 		database.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
-		
 		syncComments();
 		syncTaskChanges();
 	}
@@ -416,9 +418,10 @@ public class Client extends TCPClient {
 	
 	private void syncTask(Integer tableId, Integer taskId) {
 		Integer tableGlobalId = tables.findInnerTable(tableId);
-		if (tableGlobalId == null)
+		if (tableGlobalId == null) {
 			return;
-		
+		}
+
 		Entry<Long, Change> entry = tables.getTables().get(tableId).getTask(taskId).getInitial();
 		Long time = entry.getKey();
 		TaskChange task = (TaskChange) entry.getValue();
@@ -439,8 +442,9 @@ public class Client extends TCPClient {
 		String comment = tables.getTables().get(tableId).getTasks().get(taskId).getComments().get(taskId).text;
 		Integer tableGlobalId = tables.findInnerTable(tableId);
 		Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
-		if (tableGlobalId == null || taskGlobalId == null)
+		if (tableGlobalId == null || taskGlobalId == null) {
 			return;
+		}
 
 		try {
 			send(new io.packet.client.CreateComment(tableGlobalId, taskGlobalId, time, comment));
@@ -448,14 +452,14 @@ public class Client extends TCPClient {
 			Log.w("Client", "New comment creation error", e);
 		}
 	}
-	
+
 	private void syncChangeTable(Integer tableId, Long time) {
 		Integer tableGlobalId = tables.findInnerTable(tableId);
-		if (tableGlobalId == null)
+		if (tableGlobalId == null) {
 			return;
+		}
 		
 		TableInfo tableInfo = (TableInfo) tables.getTables().get(tableId).getChange(time);
-
 		String name = tableInfo.name;
 		String description = tableInfo.description;
 
@@ -469,11 +473,11 @@ public class Client extends TCPClient {
 	private void syncChangeTask(Integer tableId, Integer taskId, Long time) {
 		Integer tableGlobalId = tables.findInnerTable(tableId);
 		Integer taskGlobalId = tables.findInnerTask(tableId, taskId);
-		if (tableGlobalId == null || taskGlobalId == null)
+		if (tableGlobalId == null || taskGlobalId == null) {
 			return;
+		}
 		
 		TaskChange task = (TaskChange) tables.getTables().get(tableId).getTask(taskId).getChange(time);
-
 		String startDateVal = dateFormatter.format(task.startDate);
 		String endDateVal = dateFormatter.format(task.endDate);
 		String startTimeVal = timeFormatter.format(task.startTime);
@@ -488,9 +492,10 @@ public class Client extends TCPClient {
 	
 	private void syncPermission(Integer userId, Integer tableId, Permission permission) {
 		Integer tableGlobalId = tables.findInnerTable(tableId);
-		if (tableGlobalId == null)
+		if (tableGlobalId == null) {
 			return;
-	
+		}
+
 		try {
 			send(new io.packet.client.PermissionPacket(tableGlobalId, userId, (byte)(permission.ordinal())));
 		} catch (IOException e) {
