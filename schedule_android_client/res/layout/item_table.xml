@@ -9,7 +9,10 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/table_name"
-	    android:padding="5dp"
+	    android:paddingLeft="10dp"
+	    android:paddingTop="2dp"
+	    android:paddingBottom="2dp"
+		android:textColor="#ffffff"
 	    android:textSize="20sp" />
 
 	<TextView
@@ -17,9 +20,10 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/table_description"
-	    android:paddingLeft="5dp"
+	    android:paddingLeft="10dp"
 	    android:paddingTop="2dp"
 	    android:paddingBottom="2dp"
+		android:textColor="#ffffff"
 	    android:textSize="16sp" />
 
 </LinearLayout>

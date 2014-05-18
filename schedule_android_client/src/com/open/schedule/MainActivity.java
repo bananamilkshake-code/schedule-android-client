@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -152,8 +153,15 @@ public class MainActivity extends ActionBarActivity {
 
 	private void initActions() {		
 		String[] actions = getResources().getStringArray(R.array.drawer_elements_bottom);
-		ArrayAdapter<String> actionsAdapter = new ArrayAdapter<String>(this, 
-				android.R.layout.simple_list_item_1, android.R.id.text1, actions);
+		ArrayAdapter<String> actionsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, actions) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				View view = super.getView(position, convertView, parent);
+				TextView text = (TextView) view.findViewById(android.R.id.text1);
+				text.setTextColor(Color.WHITE);
+			    return view;
+			}
+		};
 		actionList.setAdapter(actionsAdapter);
 		actionList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
