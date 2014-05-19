@@ -17,7 +17,8 @@
 	    android:ems="10"
 	    android:hint="@string/text_task_name"
 	    android:inputType="text" />
-
+	    <requestFocus />
+	
 	<EditText
 	    android:id="@+id/edit_task_description"
 	    android:layout_width="match_parent"
@@ -77,6 +78,22 @@
 		    android:text="@string/new_task_time_end" />
 
 	</LinearLayout>
+
+	<Spinner
+	    android:id="@+id/spinner_period"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:entries="@array/periods"
+	    android:prompt="@string/periods_choose" />
+
+	<EditText
+	    android:id="@+id/edit_period"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:hint="@string/hint_task_period"
+	    android:ems="10"
+	    android:inputType="number" >
+	</EditText>
 
 	<Button
 		android:id="@+id/btCreateTask"

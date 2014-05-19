@@ -46,6 +46,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 	private TextView taskEndDate;
 	private TextView taskStartTime;
 	private TextView taskEndTime;
+	private TextView taskPeriod;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 		String endDate = data.getExtras().getString(CreateTaskActivity.END_DATE);
 		String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
 		String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
+		Integer period = Integer.parseInt(data.getExtras().getString(CreateTaskActivity.PERIOD));
 	
 		Date startDateVal = null;
 		Date endDateVal = null;
@@ -117,7 +119,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 		}
 		
 		Client.getInstance().changeTask(true, this.tableId, this.taskId, Utility.getUnixTime(), Client.getInstance().getId(), 
-				name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
+				name, description, startDateVal, endDateVal, startTimeVal, endTimeVal, period);
 		
 		taskName.setText(name);
 		taskDesc.setText(description);
@@ -125,6 +127,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 		taskEndDate.setText(endDate);
 		taskStartTime.setText(startTime);
 		taskEndTime.setText(endTime);
+		taskPeriod.setText(period.toString());
 	}
 
 	private void openChangeTaskActivity() {
@@ -136,6 +139,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 		intent.putExtra(CreateTaskActivity.END_DATE, CreateTaskActivity.dateFormatter.format(data.endDate));
 		intent.putExtra(CreateTaskActivity.START_TIME, CreateTaskActivity.timeFormatter.format(data.startTime));
 		intent.putExtra(CreateTaskActivity.END_TIME, CreateTaskActivity.timeFormatter.format(data.endTime));
+		intent.putExtra(CreateTaskActivity.PERIOD, data.period);
 		startActivityForResult(intent, REQUEST_CHANGE);
 	}
 	
@@ -160,6 +164,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 			activity.taskEndDate = (TextView) rootView.findViewById(R.id.text_task_date_end);
 			activity.taskStartTime = (TextView) rootView.findViewById(R.id.text_task_time_start);
 			activity.taskEndTime = (TextView) rootView.findViewById(R.id.text_task_time_end);
+			activity.taskPeriod = (TextView) rootView.findViewById(R.id.text_task_period);
 
 			activity.taskName.setText(data.name);
 			activity.taskDesc.setText(data.description);
@@ -167,6 +172,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 			activity.taskEndDate.setText(CreateTaskActivity.dateFormatter.format(data.endDate));
 			activity.taskStartTime.setText(CreateTaskActivity.dateFormatter.format(data.startTime));
 			activity.taskEndTime.setText(CreateTaskActivity.dateFormatter.format(data.endTime));
+			activity.taskPeriod.setText(data.period.toString());
 			
 			final ListView listComments =(ListView) rootView.findViewById(R.id.list_comments);
 			Integer tableId = activity.tableId;
@@ -261,6 +267,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 			TextView endDate = (TextView) rowView.findViewById(R.id.item_change_table_end_date);
 			TextView startTime = (TextView) rowView.findViewById(R.id.item_change_table_start_time);
 			TextView endTime = (TextView) rowView.findViewById(R.id.item_change_table_end_time);
+			TextView period = (TextView) rowView.findViewById(R.id.item_change_task_period);
 			
 			author.setText(Client.getInstance().getUserName(change.creatorId));
 			time.setText(timeFormat.format(new Date(change.time * 1000)));
@@ -270,6 +277,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 			endDate.setText(CreateTaskActivity.dateFormatter.format(change.endDate));
 			startTime.setText(CreateTaskActivity.timeFormatter.format(change.startTime));
 			endTime.setText(CreateTaskActivity.timeFormatter.format(change.endTime));
+			period.setText(change.period.toString());
 			
 			return rowView;
 		}

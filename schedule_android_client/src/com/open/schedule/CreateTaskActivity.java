@@ -1,12 +1,5 @@
 package com.open.schedule;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.app.DatePickerDialog;
@@ -18,10 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map.Entry;
 import android.widget.TimePicker;
 
 public class CreateTaskActivity extends ActionBarActivity implements OnClickListener {
@@ -31,6 +37,7 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 	public static final String END_DATE = "task_end_date";
 	public static final String START_TIME = "task_start_time";
 	public static final String END_TIME = "task_end_time";
+	public static final String PERIOD = "task_period";
 
 	public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 	public static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
@@ -41,7 +48,25 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 	private TextView endDate;
 	private TextView startTime;
 	private TextView endTime;
-	
+	private Spinner spinnerPeriod;
+	private TextView period;
+
+	private enum Periods {
+		ONE_TIME,
+		WEEK,
+		THO_WEEKS,
+		MONTH,
+		OTHER
+	};
+
+	private static HashMap<Periods, Integer> periodDays = new HashMap<Periods, Integer>();
+	static {
+		periodDays.put(Periods.ONE_TIME, 1);
+		periodDays.put(Periods.WEEK, 7);
+		periodDays.put(Periods.THO_WEEKS, 14);
+		periodDays.put(Periods.MONTH, 30);
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,6 +105,13 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 		String taskDateEnd = endDate.getText().toString();
 		String taskTimeStart = startTime.getText().toString();
 		String taskTimeEnd = endTime.getText().toString();
+		
+		String periodValue;
+		if (period.getVisibility() == View.VISIBLE) {
+			periodValue = period.getText().toString();
+		} else {
+			periodValue = periodDays.get(Periods.values()[spinnerPeriod.getSelectedItemPosition()]).toString();
+		}
 
 		result.putExtra(NAME, taskName);
 		result.putExtra(DESCRIPTION, taskDescription);
@@ -87,6 +119,7 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 		result.putExtra(END_DATE, taskDateEnd);
 		result.putExtra(START_TIME, taskTimeStart);
 		result.putExtra(END_TIME, taskTimeEnd);
+		result.putExtra(PERIOD, Integer.parseInt(periodValue));
 
 		setResult(RESULT_OK, result);
 		finish();
@@ -159,13 +192,30 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 			rootView.findViewById(R.id.text_task_time_start).setOnClickListener((CreateTaskActivity)getActivity());
 			rootView.findViewById(R.id.text_task_time_end).setOnClickListener((CreateTaskActivity)getActivity());
 
-			CreateTaskActivity activity = (CreateTaskActivity) getActivity();
+			final CreateTaskActivity activity = (CreateTaskActivity) getActivity();
 			activity.name = (EditText)rootView.findViewById(R.id.edit_task_name);
 			activity.desc = (EditText)rootView.findViewById(R.id.edit_task_description);
 			activity.startDate = (TextView)rootView.findViewById(R.id.text_task_date_start);
 			activity.endDate = (TextView)rootView.findViewById(R.id.text_task_date_end);
 			activity.startTime = (TextView) rootView.findViewById(R.id.text_task_time_start);
 			activity.endTime = (TextView) rootView.findViewById(R.id.text_task_time_end);
+			activity.spinnerPeriod = (Spinner) rootView.findViewById(R.id.spinner_period);
+			activity.period = (TextView) rootView.findViewById(R.id.edit_period);
+
+			activity.spinnerPeriod.setOnItemSelectedListener(new OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> parentView, View selectedView, int position, long id) {
+					if (position == CreateTaskActivity.Periods.OTHER.ordinal()) {
+						activity.period.setVisibility(View.VISIBLE);
+					} else {
+						activity.period.setVisibility(View.INVISIBLE);						
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> parentView) {
+				}				
+			});
 
 			Intent intent = getActivity().getIntent();
 			if (intent.hasExtra(CreateTaskActivity.NAME)) {
@@ -175,9 +225,24 @@ public class CreateTaskActivity extends ActionBarActivity implements OnClickList
 				activity.endDate.setText(intent.getStringExtra(CreateTaskActivity.END_DATE));
 				activity.startTime.setText(intent.getStringExtra(CreateTaskActivity.START_TIME));
 				activity.endTime.setText(intent.getStringExtra(CreateTaskActivity.END_TIME));
+
+				Integer period = intent.getIntExtra(CreateTaskActivity.PERIOD, 1);
+				Iterator<Entry<Periods, Integer>> iter = periodDays.entrySet().iterator();
+				Boolean found = false;
+				while (iter.hasNext()) {
+					Entry<Periods, Integer> entry = iter.next();
+					if (entry.getValue() != period)
+						continue;
+					activity.spinnerPeriod.setSelection(entry.getKey().ordinal());
+					found = true;
+					break;
+				}
+				if (!found) {
+					activity.period.setVisibility(View.VISIBLE);
+					activity.period.setText(period);
+				}
 				acceptButton.setText(R.string.button_task_change);
 			}
-			
 			return rootView;
 		}
 	}

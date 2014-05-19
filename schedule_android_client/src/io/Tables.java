@@ -46,10 +46,10 @@ public class Tables {
 		table.change(time, table.new TableInfo(userId, time, name, description));
 	}
 	
-	public void changeTask(Integer tableId, Integer taskId, Integer userId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+	public void changeTask(Integer tableId, Integer taskId, Integer userId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 		Table table = tables.get(tableId);
 		Task task = table.getTask(taskId);
-		task.change(time, task.new TaskChange(userId, time, name, description, startDate, endDate, startTime, endTime));
+		task.change(time, task.new TaskChange(userId, time, name, description, startDate, endDate, startTime, endTime, period));
 	}
 	
 	public void changePermission(Integer tableId, Integer userId, Permission permission) {

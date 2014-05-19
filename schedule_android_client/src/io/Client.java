@@ -265,9 +265,9 @@ public class Client extends TCPClient {
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy", Locale.US);
 	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm", Locale.US);
 
-	public Integer createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
-		Integer taskId = database.createTask(userId, tableId, time, name, description, startDate, endDate, startTime, endTime);
-		Task task = new Task(taskId, userId, time, name, description, startDate, endDate, startTime, endTime);
+	public Integer createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
+		Integer taskId = database.createTask(userId, tableId, time, name, description, startDate, endDate, startTime, endTime, period);
+		Task task = new Task(taskId, userId, time, name, description, startDate, endDate, startTime, endTime, period);
 		tables.createTask(tableId, taskId, task);
 		Log.d("Client", "New task " + taskId + " for table " + tableId + " created");
 
@@ -303,18 +303,18 @@ public class Client extends TCPClient {
 			syncChangeTable(tableId, time);
 	}
 
-	public void changeTask(Boolean local, Integer tableId, Integer taskId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+	public void changeTask(Boolean local, Integer tableId, Integer taskId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 		if (!local) {
 			Integer tableGlobalId = Integer.valueOf(tableId);
 			tables.changeTableId(tableId);
 			Integer taskGlobalId = Integer.valueOf(taskId);
 			if (tables.findGlobalTask(tableId, taskId) == null)
-				taskId = this.createTask(local, tableId, time, userId, name, description, startDate, endDate, startTime, endTime);
+				taskId = this.createTask(local, tableId, time, userId, name, description, startDate, endDate, startTime, endTime, period);
 			tables.updateTaskGlobalId(tableGlobalId, taskGlobalId, taskId);
 		}
 
-		tables.changeTask(tableId, taskId, userId, time, name, description, startDate, endDate, startTime, endTime);
-		database.changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime);
+		tables.changeTask(tableId, taskId, userId, time, name, description, startDate, endDate, startTime, endTime, period);
+		database.changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime, period);
 		Log.d("Client", "Task " + taskId + " for table " + tableId + " changed");
 
 		if (local) 
@@ -375,7 +375,7 @@ public class Client extends TCPClient {
 		}
 		
 		this.changeTask(false, packet.tableGlobalId, packet.taskGlobalId, packet.time, packet.userId, packet.name, packet.description, 
-					startDate, endDate, startTime, endTime);
+					startDate, endDate, startTime, endTime, packet.period);
 	}
 
 	private void createCommentary(io.packet.server.CommentaryPacket packet) {

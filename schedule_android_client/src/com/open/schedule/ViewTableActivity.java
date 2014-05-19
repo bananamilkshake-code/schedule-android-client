@@ -111,6 +111,7 @@ public class ViewTableActivity extends ActionBarActivity {
 		String endDate = data.getExtras().getString(CreateTaskActivity.END_DATE);
 		String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
 		String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
+		Integer period = data.getExtras().getInt(CreateTaskActivity.PERIOD);
 
 		Date startDateVal = null;
 		Date endDateVal = null;
@@ -126,7 +127,7 @@ public class ViewTableActivity extends ActionBarActivity {
 			Log.w(Database.class.getName(), "Date task changes parsing", e);
 		}
 
-		Client.getInstance().createTask(true, tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal);
+		Client.getInstance().createTask(true, tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal, period);
 		((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();		
 	}
 
@@ -222,10 +223,22 @@ public class ViewTableActivity extends ActionBarActivity {
 			}
 
 			Task task = tasks.get(idsByPos.get(position));
+			TaskChange data = (TaskChange)task.getData();
 			TextView taskName = (TextView) rowView.findViewById(R.id.item_task_name);
 			TextView taskDescription = (TextView) rowView.findViewById(R.id.item_task_description);
-			taskName.setText((CharSequence)(((TaskChange)task.getData()).name));
-			taskDescription.setText((CharSequence)(((TaskChange)task.getData()).description));
+			TextView taskStartDate = (TextView) rowView.findViewById(R.id.item_task_date_start);
+			TextView taskEndDate = (TextView) rowView.findViewById(R.id.item_task_date_end);
+			TextView taskStartTime = (TextView) rowView.findViewById(R.id.item_task_time_start);
+			TextView taskEndTime = (TextView) rowView.findViewById(R.id.item_task_time_end);
+			TextView taskPeriod = (TextView) rowView.findViewById(R.id.item_task_period);
+
+			taskName.setText((CharSequence)(data.name));
+			taskDescription.setText((CharSequence)(data.description));
+			taskStartDate.setText((CharSequence)(CreateTaskActivity.dateFormatter.format(data.startDate)));
+			taskEndDate.setText((CharSequence)(CreateTaskActivity.dateFormatter.format(data.endDate)));
+			taskStartTime.setText((CharSequence)(CreateTaskActivity.timeFormatter.format(data.startTime)));
+			taskEndTime.setText((CharSequence)(CreateTaskActivity.timeFormatter.format(data.endTime)));
+			taskPeriod.setText((CharSequence)(data.period.toString()));
 
 			return rowView;
 		}

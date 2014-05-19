@@ -18,9 +18,9 @@ public class Task extends ChangableData {
 		super(id, updateTime);
 	}
 	
-	public Task(Integer id, Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+	public Task(Integer id, Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 		this(id);
-		this.change(time, new TaskChange(creatorId, time, name, description, startDate, endDate, startTime, endTime));
+		this.change(time, new TaskChange(creatorId, time, name, description, startDate, endDate, startTime, endTime, period));
 	}
 
 	public void addComment(Integer commentatorId, Long time, String text) {
@@ -62,8 +62,9 @@ public class Task extends ChangableData {
 		public Date endDate = null;
 		public Date startTime = null;
 		public Date endTime = null;
+		public Integer period = null;
 
-		public TaskChange(Integer creatorId, Long creationTime, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+		public TaskChange(Integer creatorId, Long creationTime, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 			super(creatorId, creationTime);
 			this.name = name;
 			this.description = description;
@@ -71,27 +72,30 @@ public class Task extends ChangableData {
 			this.endDate = endDate;
 			this.startTime = startTime;
 			this.endTime = endTime;
+			this.period = period;
 		}
 
 		@Override
 		public Boolean hasNulls() {
-			return (name == null || description == null || startDate == null || endDate == null || startTime == null || endTime == null);
+			return (name == null || description == null || startDate == null || endDate == null || startTime == null || endTime == null || period == null);
 		}
 
 		@Override
 		public void merge(Change prev) {
-			if(this.name == null)
+			if (this.name == null)
 				this.name = ((TaskChange)prev).name;
-			if(this.description == null)
+			if (this.description == null)
 				this.description = ((TaskChange)prev).description;
-			if(this.startDate == null)
+			if (this.startDate == null)
 				this.startDate = ((TaskChange)prev).startDate;
-			if(this.endDate == null)
+			if (this.endDate == null)
 				this.endDate = ((TaskChange)prev).endDate;
-			if(this.startTime == null)
+			if (this.startTime == null)
 				this.startTime = ((TaskChange)prev).startTime;
-			if(this.endTime == null)
+			if (this.endTime == null)
 				this.endTime = ((TaskChange)prev).endTime;
+			if (this.period == null)
+				this.period = ((TaskChange)prev).period;
 		}
 	}
 }

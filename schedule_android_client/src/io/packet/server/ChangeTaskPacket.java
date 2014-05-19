@@ -14,6 +14,7 @@ public class ChangeTaskPacket extends ServerPacket {
 	public String endDate;
 	public String startTime;
 	public String endTime;
+	public Integer period;
 
 	public ChangeTaskPacket() {
 		super(ServerPacket.Type.CHANGE_TASK);
@@ -34,5 +35,6 @@ public class ChangeTaskPacket extends ServerPacket {
 		this.endDate = new String(data, offset += 8, 8);
 		this.startTime = new String(data, offset += 8, 4);
 		this.endDate = new String(data, offset += 4, 4);
+		this.period = Integer.parseInt(new String(data, offset += 4, Integer.SIZE));
 	}
 }

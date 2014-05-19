@@ -28,7 +28,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String CHANGE_TASK_START_DATE = "start_date";
 	public static final String CHANGE_TASK_END_DATE = "end_date";
 	public static final String CHANGE_TASK_START_TIME = "start_time";
-	public static final String CHANGE_TASK_END_TIME = "end_time";	
+	public static final String CHANGE_TASK_END_TIME = "end_time";
+	public static final String CHANGE_TASK_PERIOD = "period";
 	
 	public static final String TABLE_COMMENTS = "comments";
 	public static final String COMMENTS_TEXT = "commentary";
@@ -86,6 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					CHANGE_TASK_END_DATE + " DATE, " +
 					CHANGE_TASK_START_TIME + " TIME, " +
 					CHANGE_TASK_END_TIME + " TIME, " +
+					CHANGE_TASK_PERIOD + " INT, " + 
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"FOREIGN KEY (" + TASK_ID + ") REFERENCES tasks(" + INNER_ID + ")," +
 					"UNIQUE(" + TABLE_ID + ", " + TASK_ID + "," + USER_ID + "," + TIME + ")" +

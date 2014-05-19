@@ -98,7 +98,7 @@ public class Database {
 
 		
 		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, 
-				DatabaseHelper.CHANGE_NAME, DatabaseHelper.CHANGE_DESCRIPTION, 
+				DatabaseHelper.CHANGE_NAME, DatabaseHelper.CHANGE_DESCRIPTION, DatabaseHelper.CHANGE_TASK_PERIOD,
 				DatabaseHelper.CHANGE_TASK_START_DATE, DatabaseHelper.CHANGE_TASK_END_DATE, 
 				DatabaseHelper.CHANGE_TASK_START_TIME, DatabaseHelper.CHANGE_TASK_END_TIME};
 		Cursor cursorChanges = database.query(DatabaseHelper.TABLE_TASK_CHANGES, columnsChanges, null, null, null, null, null);
@@ -114,6 +114,7 @@ public class Database {
 			int endDate = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_TASK_END_DATE);
 			int startTime = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_TASK_START_TIME);
 			int endTime = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_TASK_END_TIME);
+			int period = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_TASK_PERIOD);
 
 			while(!cursorChanges.isAfterLast()) {
 				Integer tableIdVal = cursorChanges.getInt(tableId);
@@ -123,6 +124,7 @@ public class Database {
 				Long timeVal = cursorChanges.getLong(time);
 				String nameVal = cursorChanges.getString(name);
 				String descVal = cursorChanges.getString(description);
+				Integer periodVal = cursorChanges.getInt(period);
 				Date startDateVal = null;
 				Date endDateVal = null;
 				Date startTimeVal = null;
@@ -148,7 +150,7 @@ public class Database {
 					Log.w(Database.class.getName(), "Date task changes parsing", e);
 				}
 
-				tables.changeTask(tableIdVal, taskIdVal, userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, startTimeVal, endTimeVal);
+				tables.changeTask(tableIdVal, taskIdVal, userIdVal, timeVal, nameVal, descVal, startDateVal, endDateVal, startTimeVal, endTimeVal, periodVal);
 				cursorChanges.moveToNext();
 			}
 		}
@@ -210,12 +212,12 @@ public class Database {
 		return tableId;
 	}
 
-	public Integer createTask(Integer userId, Integer tableId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+	public Integer createTask(Integer userId, Integer tableId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.TABLE_ID, tableId);
 		values.put(DatabaseHelper.UPDATE_TIME, Utility.getUnixTime());
 		Integer taskId = (int) database.insert(DatabaseHelper.TABLE_TASKS, null, values);
-		changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime);
+		changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime, period);
 		return taskId;
 	}
 
@@ -241,7 +243,7 @@ public class Database {
 		Log.d("ChangeTable", res.toString());
 	}
 
-	public void changeTask(Integer userId, Integer tableId, Integer taskId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime) {
+	public void changeTask(Integer userId, Integer tableId, Integer taskId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.USER_ID, userId);
 		values.put(DatabaseHelper.TABLE_ID, tableId);
@@ -253,6 +255,7 @@ public class Database {
 		values.put(DatabaseHelper.CHANGE_TASK_END_DATE, dateFormatter.format(endDate));
 		values.put(DatabaseHelper.CHANGE_TASK_START_TIME, timeFormatter.format(startTime));
 		values.put(DatabaseHelper.CHANGE_TASK_END_TIME, timeFormatter.format(endTime));
+		values.put(DatabaseHelper.CHANGE_TASK_PERIOD, period);
 		Long res = database.insert(DatabaseHelper.TABLE_TASK_CHANGES, null, values);
 		Log.d("ChangeTask", res.toString());
 	}

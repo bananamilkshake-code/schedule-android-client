@@ -96,7 +96,40 @@
 			android:textSize="9sp"
 	        android:text="12 May 2014" />
 
+     <!-- Period -->
+
+        <TextView
+            android:id="@+id/item_change_task_period_before"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="3dp"
+            android:layout_alignParentLeft="true"
+	        android:paddingLeft="5dp"
+			android:textSize="9sp"
+			android:layout_below="@+id/item_change_table_start_date"
+            android:text="@string/task_period_label_before" />
+
+        <TextView
+            android:id="@+id/item_change_task_period"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:textSize="9sp"
+            android:layout_toRightOf="@+id/text_task_period_before"
+			android:layout_below="@+id/item_change_table_start_date"
+            android:text="5" />
+
+        <TextView
+            android:id="@+id/item_change_task_period_after"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:textSize="9sp"
+			android:layout_below="@+id/item_change_table_start_date"
+            android:layout_toRightOf="@+id/text_task_period"
+            android:paddingLeft="3dp"
+            android:text="@string/task_period_label_end" />
+
         <!-- Time -->
+        
         <TextView
             android:id="@+id/item_change_table_end_time"
 	        android:layout_width="wrap_content"
