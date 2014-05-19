@@ -55,7 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	private static final String CREATE_TASKS = 
 			"CREATE TABLE " + TABLE_TASKS + " (" +
-					INNER_ID + " INT PRIMARY KEY," +
+					INNER_ID + " INTEGER PRIMARY KEY," +
 					GLOBAL_ID + " INT(10)," +
 					TABLE_ID + " INT(10) NOT NULL," +
 					UPDATE_TIME + " INT(10) NOT NULL DEFAULT 0," +
