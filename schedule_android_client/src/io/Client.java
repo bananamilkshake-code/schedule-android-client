@@ -258,7 +258,6 @@ public class Client extends TCPClient {
 
 		if (local)
 			syncTable(tableId);
-		
 		return tableId;
 	}
 
@@ -273,7 +272,6 @@ public class Client extends TCPClient {
 
 		if (local)
 			syncTask(tableId, taskId);
-		
 		return taskId;
 	}
 

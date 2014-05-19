@@ -66,7 +66,7 @@ public class Tables {
 		Table table = tables.get(tableId);
 		table.updateTaskGlobalId(taskId, taskGlobalId);
 	}
-	
+
 	public void updateTable(Integer tableId, Long time) {
 		tables.get(tableId).update(time);
 	}

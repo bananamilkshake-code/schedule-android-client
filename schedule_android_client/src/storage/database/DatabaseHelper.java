@@ -60,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					TABLE_ID + " INT(10) NOT NULL," +
 					UPDATE_TIME + " INT(10) NOT NULL DEFAULT 0," +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
-					"UNIQUE(" + INNER_ID + "," + GLOBAL_ID + ")" +
+					"UNIQUE(" + INNER_ID + "," + GLOBAL_ID + "," + TABLE_ID + ")" +
 				")";
 	
 	private static final String CREATE_TABLES_CHANGES = 

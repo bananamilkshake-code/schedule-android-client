@@ -96,7 +96,6 @@ public class Database {
 		}
 		cursorTasks.close();
 
-		
 		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, 
 				DatabaseHelper.CHANGE_NAME, DatabaseHelper.CHANGE_DESCRIPTION, DatabaseHelper.CHANGE_TASK_PERIOD,
 				DatabaseHelper.CHANGE_TASK_START_DATE, DatabaseHelper.CHANGE_TASK_END_DATE, 
@@ -216,6 +215,7 @@ public class Database {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.TABLE_ID, tableId);
 		values.put(DatabaseHelper.UPDATE_TIME, Utility.getUnixTime());
+		values.put(DatabaseHelper.GLOBAL_ID, 0);
 		Integer taskId = (int) database.insert(DatabaseHelper.TABLE_TASKS, null, values);
 		changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime, period);
 		return taskId;
@@ -266,7 +266,7 @@ public class Database {
 		database.update(DatabaseHelper.TABLE_TABLES, values, DatabaseHelper.INNER_ID + " =?", new String[] {tableId.toString()});
 	}
 
-	public void updateTaskGlobalId(Integer taskId, Integer tableGlobalId, Integer taskGlobalId) {
+	public void updateTaskGlobalId(Integer tableGlobalId, Integer taskGlobalId, Integer taskId) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.GLOBAL_ID, tableGlobalId);
 		String columns[] = {DatabaseHelper.INNER_ID};
