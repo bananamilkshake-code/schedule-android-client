@@ -991,7 +991,8 @@ containing a value of this type.
     }
     public static final class id {
         public static final int action_add=0x7f05004a;
-        public static final int action_add_task=0x7f050084;
+        public static final int action_add_task=0x7f050085;
+        public static final int action_add_user=0x7f050083;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -999,15 +1000,15 @@ containing a value of this type.
         public static final int action_bar_root=0x7f05001a;
         public static final int action_bar_subtitle=0x7f050023;
         public static final int action_bar_title=0x7f050022;
-        public static final int action_change=0x7f050083;
-        public static final int action_change_task=0x7f050086;
+        public static final int action_change=0x7f050084;
+        public static final int action_change_task=0x7f050087;
         public static final int action_context_bar=0x7f05001d;
         public static final int action_forgot_password=0x7f050081;
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
         public static final int action_settings=0x7f050080;
-        public static final int action_users=0x7f050085;
+        public static final int action_users=0x7f050086;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1253,6 +1254,7 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_add_task=0x7f0a0033;
+        public static final int action_add_user=0x7f0a003d;
         /**  Items settings 
          */
         public static final int action_change=0x7f0a0032;
@@ -1266,13 +1268,13 @@ containing a value of this type.
         public static final int action_users=0x7f0a0034;
         public static final int app_name=0x7f0a000d;
         public static final int button_comment_add=0x7f0a0037;
-        public static final int button_create_task=0x7f0a0049;
-        public static final int button_new_table_create=0x7f0a003d;
+        public static final int button_create_task=0x7f0a004a;
+        public static final int button_new_table_create=0x7f0a003e;
         public static final int button_permission=0x7f0a003c;
-        public static final int button_table_change=0x7f0a003e;
-        public static final int button_task_change=0x7f0a004a;
+        public static final int button_table_change=0x7f0a003f;
+        public static final int button_task_change=0x7f0a004b;
         public static final int button_users_find=0x7f0a0038;
-        public static final int desc_text_task_desc=0x7f0a0044;
+        public static final int desc_text_task_desc=0x7f0a0045;
         public static final int dialog_title_users=0x7f0a0039;
         public static final int error_false_password=0x7f0a002c;
         public static final int error_field_required=0x7f0a0023;
@@ -1283,18 +1285,18 @@ containing a value of this type.
         public static final int error_no_verification=0x7f0a002d;
         public static final int hello_world=0x7f0a0018;
         public static final int hint_add_comment=0x7f0a0035;
-        public static final int hint_new_table_name=0x7f0a003f;
+        public static final int hint_new_table_name=0x7f0a0040;
         public static final int login_progress_signing_in=0x7f0a001f;
         /**  Menu items text 
          */
         public static final int menu_login=0x7f0a0027;
         public static final int menu_users_list=0x7f0a0028;
         public static final int new_password_hint=0x7f0a002e;
-        public static final int new_table_description=0x7f0a0040;
-        public static final int new_task_date_end=0x7f0a0046;
-        public static final int new_task_date_start=0x7f0a0045;
-        public static final int new_task_time_end=0x7f0a0048;
-        public static final int new_task_time_start=0x7f0a0047;
+        public static final int new_table_description=0x7f0a0041;
+        public static final int new_task_date_end=0x7f0a0047;
+        public static final int new_task_date_start=0x7f0a0046;
+        public static final int new_task_time_end=0x7f0a0049;
+        public static final int new_task_time_start=0x7f0a0048;
         public static final int no_connection=0x7f0a000e;
         public static final int plans=0x7f0a0026;
         /**  Strings related to login 
@@ -1307,9 +1309,9 @@ containing a value of this type.
         public static final int string_verify_password=0x7f0a002a;
         public static final int table_description=0x7f0a0031;
         public static final int table_name=0x7f0a0030;
-        public static final int text_desc_task_name=0x7f0a0043;
-        public static final int text_task_description=0x7f0a0042;
-        public static final int text_task_name=0x7f0a0041;
+        public static final int text_desc_task_name=0x7f0a0044;
+        public static final int text_task_description=0x7f0a0043;
+        public static final int text_task_name=0x7f0a0042;
         public static final int title_activity_change_table=0x7f0a0011;
         public static final int title_activity_change_task=0x7f0a0013;
         public static final int title_activity_create_comment=0x7f0a0015;

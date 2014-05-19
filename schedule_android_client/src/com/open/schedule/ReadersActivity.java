@@ -29,10 +29,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ReadersActivity extends ActionBarActivity {
-	
 	private Table table;
 	private ListView readersList;
-	
+
+	public static final String TABLE_ID = "tableId";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,10 +53,17 @@ public class ReadersActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_add_user) {
+			addNewUser();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void addNewUser() {
+		Intent intent = new Intent(ReadersActivity.this, UsersActivity.class);
+		intent.putExtra(TABLE_ID, table.getId());
+		startActivity(intent);
 	}
 
 	public void changePermission(Integer userId, Permission permission) {
@@ -64,7 +72,7 @@ public class ReadersActivity extends ActionBarActivity {
 	}
 
 	static final String BUNDLE_USERID = "userId";
-	
+
 	public void choosePermission(Integer userId) {
 		PermissionFragment permissionFragment = new PermissionFragment();
 		Bundle bundle = new Bundle();
