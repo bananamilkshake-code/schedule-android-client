@@ -152,12 +152,12 @@ public class ViewTableActivity extends ActionBarActivity {
 		tasksList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				showComments(Long.valueOf(id).intValue());
+				showTask(Long.valueOf(id).intValue());
 			}
 		});
 	}
 
-	private void showComments(Integer taskId) {
+	private void showTask(Integer taskId) {
 		Intent intent = new Intent(ViewTableActivity.this, ViewTaskActivity.class);
 		intent.putExtra(TABLE_ID, this.tableId);
 		intent.putExtra(TASK_ID, taskId);

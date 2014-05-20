@@ -14,7 +14,7 @@
 	
 	<string name="periods_choose">Выберете период для задания</string>
 	<string-array name="periods">
-	    <item>Один раз</item>
+	    <item>Каждый день</item>
 	    <item>Каждую неделю</item>
 	    <item>Каждые 2 недели</item>
 	    <item>Каждый месяц</item>
