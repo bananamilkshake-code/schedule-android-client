@@ -34,7 +34,8 @@ public class Tables {
 		Task task = new Task(taskId, updateTime);
 		tables.get(tableId).addTask(taskId, task);
 		Integer tableGlobalId = this.findInnerTable(tableId);
-		updateTaskGlobalId(tableGlobalId, globalId, taskId);
+		if (tableGlobalId != 0)
+			updateTaskGlobalId(tableGlobalId, globalId, taskId);
 	}
 	
 	public void createComment(Integer tableId, Integer taskId, Integer userId, Long time, String comment) {
