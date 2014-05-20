@@ -1,7 +1,6 @@
 package com.open.schedule;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.SortedMap;
 
 import storage.database.Database;
@@ -43,8 +42,6 @@ public class MainActivity extends ActionBarActivity {
 	public static final String TABLE_ID = "TABLE_ID";
 
 	public static final int REQUEST_NEW_TABLE = 1;
-	
-	private Integer dayOfMonth;
 
 	private RelativeLayout drawer;
 	private DrawerLayout drawerLayout;
@@ -61,8 +58,6 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		this.dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		
 		Client.createInstance(new Database(this));
 

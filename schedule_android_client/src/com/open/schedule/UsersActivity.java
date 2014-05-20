@@ -130,11 +130,7 @@ public class UsersActivity extends ActionBarActivity implements OnClickListener 
 			activity.emailText = (EditText) rootView.findViewById(R.id.edit_email);
 			activity.usersList = (ListView) rootView.findViewById(R.id.list_users);
 			rootView.findViewById(R.id.button_search_user).setOnClickListener(activity);
-			Users users = new Users();
-			users.users.put(1, users.new User("John Doe", "example@mail.com"));
-			users.users.put(2, users.new User("Alan Smithee", "second@mail.com"));
-			users.users.put(3, users.new User("Tommy Atkins", "tommy@mail.com"));
-			activity.usersList.setAdapter(activity.new UsersAdapter(users));
+			activity.usersList.setAdapter(activity.new UsersAdapter(Client.getInstance().getUsers()));
 			
 			Intent intent = getActivity().getIntent();
 			if (intent.hasExtra(ReadersActivity.TABLE_ID)) {
