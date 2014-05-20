@@ -237,7 +237,10 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private void openTaskActivity(Integer tableId, Integer taskId) {
-		
+		Intent intent = new Intent(MainActivity.this, ViewTaskActivity.class);
+		intent.putExtra(ViewTableActivity.TABLE_ID, tableId);
+		intent.putExtra(ViewTableActivity.TASK_ID, taskId);
+		startActivity(intent);
 	}
 
 	private void showTableInfo(Integer position, long id) {
