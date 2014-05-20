@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -31,7 +32,6 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -95,8 +95,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		updatePlans();
+			updatePlans();
 	}
 
 	@Override
@@ -181,9 +180,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private void updatePlans() {
-		Integer currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-		if (this.dayOfMonth != currentDay)
-			((PlansAdapter) this.listTablePlans.getAdapter()).update();
+		((PlansAdapter) this.listTablePlans.getAdapter()).update();
+		((BaseAdapter) this.listTablePlans.getAdapter()).notifyDataSetChanged();
 	}
 
 	private void createNewTable(Intent data) {

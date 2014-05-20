@@ -138,6 +138,7 @@ public class ViewTableActivity extends ActionBarActivity {
 		((BaseAdapter)(this.changes.getAdapter())).notifyDataSetChanged();
 		this.tableName.setText(name);
 		this.tableDesc.setText(description);
+		
 	}
 	
 	private void showTable() {

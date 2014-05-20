@@ -992,8 +992,8 @@ containing a value of this type.
     }
     public static final class id {
         public static final int action_add=0x7f05004a;
-        public static final int action_add_task=0x7f050090;
-        public static final int action_add_user=0x7f05008e;
+        public static final int action_add_task=0x7f050091;
+        public static final int action_add_user=0x7f05008f;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -1001,15 +1001,15 @@ containing a value of this type.
         public static final int action_bar_root=0x7f05001a;
         public static final int action_bar_subtitle=0x7f050023;
         public static final int action_bar_title=0x7f050022;
-        public static final int action_change=0x7f05008f;
-        public static final int action_change_task=0x7f050092;
+        public static final int action_change=0x7f050090;
+        public static final int action_change_task=0x7f050093;
         public static final int action_context_bar=0x7f05001d;
-        public static final int action_forgot_password=0x7f05008c;
+        public static final int action_forgot_password=0x7f05008d;
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05008b;
-        public static final int action_users=0x7f050091;
+        public static final int action_settings=0x7f05008c;
+        public static final int action_users=0x7f050092;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1045,7 +1045,7 @@ containing a value of this type.
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
-        public static final int image_permission=0x7f05007c;
+        public static final int image_permission=0x7f05007f;
         public static final int item_change_table_desc=0x7f05006f;
         public static final int item_change_table_desc_label=0x7f05006d;
         public static final int item_change_table_end_date=0x7f050071;
@@ -1060,17 +1060,18 @@ containing a value of this type.
         public static final int item_comment_author=0x7f050077;
         public static final int item_comment_text=0x7f050079;
         public static final int item_comment_time=0x7f050078;
-        public static final int item_table_description=0x7f05007f;
-        public static final int item_table_name=0x7f05007e;
-        public static final int item_task_date_end=0x7f050083;
-        public static final int item_task_date_start=0x7f050082;
-        public static final int item_task_description=0x7f050081;
-        public static final int item_task_name=0x7f050080;
-        public static final int item_task_period=0x7f050087;
-        public static final int item_task_period_after=0x7f050086;
-        public static final int item_task_period_before=0x7f050088;
-        public static final int item_task_time_end=0x7f050085;
-        public static final int item_task_time_start=0x7f050084;
+        public static final int item_table_description=0x7f050082;
+        public static final int item_table_name=0x7f050081;
+        public static final int item_task_date_end=0x7f050086;
+        public static final int item_task_date_start=0x7f050085;
+        public static final int item_task_description=0x7f050084;
+        public static final int item_task_name=0x7f050083;
+        public static final int item_task_period=0x7f050088;
+        public static final int item_task_period_after=0x7f050087;
+        public static final int item_task_period_before=0x7f050089;
+        public static final int item_task_time_between=0x7f05007c;
+        public static final int item_task_time_end=0x7f05007b;
+        public static final int item_task_time_start=0x7f05007d;
         public static final int left_drawer=0x7f050049;
         public static final int listMode=0x7f050001;
         public static final int list_changes_task=0x7f050051;
@@ -1091,7 +1092,7 @@ containing a value of this type.
         public static final int normal=0x7f050000;
         public static final int password=0x7f050041;
         public static final int password_verification=0x7f05004b;
-        public static final int plan_table_name=0x7f05007b;
+        public static final int plan_table_name=0x7f05007e;
         public static final int plan_task_name=0x7f05007a;
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
@@ -1117,10 +1118,10 @@ containing a value of this type.
         public static final int tabMode=0x7f050002;
         public static final int text_change_table_author=0x7f05006a;
         public static final int text_change_table_time=0x7f05006b;
-        public static final int text_email=0x7f05008a;
-        public static final int text_name=0x7f050089;
+        public static final int text_email=0x7f05008b;
+        public static final int text_name=0x7f05008a;
         public static final int text_plans=0x7f050046;
-        public static final int text_reader_name=0x7f05007d;
+        public static final int text_reader_name=0x7f050080;
         public static final int text_table_description=0x7f05004f;
         public static final int text_table_name=0x7f05004e;
         public static final int text_task_date_end=0x7f050058;
@@ -1136,7 +1137,7 @@ containing a value of this type.
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
         public static final int useLogo=0x7f050003;
-        public static final int users=0x7f05008d;
+        public static final int users=0x7f05008e;
         public static final int withText=0x7f05000c;
     }
     public static final class integer {
