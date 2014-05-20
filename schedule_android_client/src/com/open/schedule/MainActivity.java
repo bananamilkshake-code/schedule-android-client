@@ -178,19 +178,6 @@ public class MainActivity extends ActionBarActivity {
 	
 	private void initPlans() {
 		listTablePlans.setAdapter(new PlansAdapter(getApplicationContext(), Client.getInstance().tables()));
-		listTablePlans.setOnChildClickListener(new OnChildClickListener() {			
-			@Override
-			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-				PlansAdapter adapter = (PlansAdapter) listTablePlans.getAdapter();
-				boolean isSelectable = adapter.isChildSelectable(groupPosition, childPosition);
-				if (isSelectable) {
-					Integer tableId = adapter.getTableId(groupPosition);
-					Integer taskId = adapter.getTaskId(groupPosition, childPosition);
-					openTaskActivity(tableId, taskId);					
-				}
-				return isSelectable;
-			}
-		});
 	}
 	
 	private void updatePlans() {
@@ -336,14 +323,30 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		@Override
-		public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+		public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 			Task task = plans.getTodayPlan(groupPosition).tasks.get(childPosition);	
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.item_plan, null);
 			}
 
 			TextView taskTitle = (TextView) convertView.findViewById(R.id.plan_task_name);
-			taskTitle.setText(((Task.TaskChange) task.getData()).name);
+			TextView taskTimeStart = (TextView) convertView.findViewById(R.id.item_task_time_start);
+			TextView taskTimeEnd = (TextView) convertView.findViewById(R.id.item_task_time_end);
+
+			Task.TaskChange data = (Task.TaskChange) task.getData();
+			taskTitle.setText(data.name);
+			taskTimeStart.setText(CreateTaskActivity.timeFormatter.format(data.startTime));
+			taskTimeEnd.setText(CreateTaskActivity.timeFormatter.format(data.endTime));
+			
+			convertView.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View v) {
+					Integer tableId = PlansAdapter.this.getTableId(groupPosition);
+					Integer taskId = PlansAdapter.this.getTaskId(groupPosition, childPosition);
+					openTaskActivity(tableId, taskId);					
+				}
+			});
+			
 			return convertView;
 		}
 
