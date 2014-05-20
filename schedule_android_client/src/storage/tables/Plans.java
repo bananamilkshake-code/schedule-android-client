@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import storage.tables.Task.TaskChange;
+import utility.Utility;
 import io.Tables;
 
 public class Plans {
@@ -43,6 +45,17 @@ public class Plans {
 
 	static private ArrayList<Task> getTodayTasks(Table table) {
 		ArrayList<Task> tasks = new ArrayList<Task>();
+		Iterator<Entry<Integer, Task>> iterator = table.getTasks().entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<Integer, Task> entry = iterator.next();
+			Long currentTime = Utility.getUnixTime();
+			Task task = entry.getValue();
+			TaskChange data = (TaskChange) task.getData();
+			if (data.endDate.getTime() < currentTime * 1000 || data.startDate.getTime() > currentTime * 1000)
+				continue;
+			if ((currentTime - data.startDate.getTime()) % data.period == 0)
+				tasks.add(task);
+		}
 		return tasks;
 	}
 
