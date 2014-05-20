@@ -1091,8 +1091,8 @@ containing a value of this type.
         public static final int normal=0x7f050000;
         public static final int password=0x7f050041;
         public static final int password_verification=0x7f05004b;
-        public static final int plan_table=0x7f05007a;
-        public static final int plan_tasks=0x7f05007b;
+        public static final int plan_table_name=0x7f05007b;
+        public static final int plan_task_name=0x7f05007a;
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
@@ -1206,11 +1206,12 @@ containing a value of this type.
         public static final int item_change_task=0x7f030026;
         public static final int item_comment=0x7f030027;
         public static final int item_plan=0x7f030028;
-        public static final int item_reader=0x7f030029;
-        public static final int item_table=0x7f03002a;
-        public static final int item_task=0x7f03002b;
-        public static final int item_user=0x7f03002c;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002d;
+        public static final int item_plan_group=0x7f030029;
+        public static final int item_reader=0x7f03002a;
+        public static final int item_table=0x7f03002b;
+        public static final int item_task=0x7f03002c;
+        public static final int item_user=0x7f03002d;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002e;
     }
     public static final class menu {
         public static final int create_table=0x7f0d0000;

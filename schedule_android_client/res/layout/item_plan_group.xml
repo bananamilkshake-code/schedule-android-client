@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+    
     <TextView
-		android:id="@+id/plan_task_name"
+		android:id="@+id/plan_table_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Задание" />
+        android:text="Расписание" />
 
 </LinearLayout>

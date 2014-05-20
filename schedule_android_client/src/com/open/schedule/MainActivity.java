@@ -337,15 +337,14 @@ public class MainActivity extends ActionBarActivity {
 
 		@Override
 		public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-			View resultView = convertView;			
-			if (resultView == null) {
-				resultView = inflater.inflate(android.R.layout.test_list_item, parent);
+			Task task = plans.getTodayPlan(groupPosition).tasks.get(childPosition);	
+			if (convertView == null) {
+				convertView = inflater.inflate(R.layout.item_plan, null);
 			}
 
-			TextView taskTitle = (TextView) resultView.findViewById(android.R.id.title);
-			Task task = plans.getTodayPlan(groupPosition).tasks.get(childPosition);
+			TextView taskTitle = (TextView) convertView.findViewById(R.id.plan_task_name);
 			taskTitle.setText(((Task.TaskChange) task.getData()).name);
-			return resultView;
+			return convertView;
 		}
 
 		@Override
@@ -372,11 +371,11 @@ public class MainActivity extends ActionBarActivity {
 		public View getGroupView(int groupPosition, boolean isExpanded, View theConvertView, ViewGroup parent) {
 			View resultView = theConvertView;
 			if (resultView == null) {
-				resultView = inflater.inflate(android.R.layout.test_list_item, null);
+				resultView = inflater.inflate(R.layout.item_plan_group, null);
 			}
 
 			final TablePlan item = getGroup(groupPosition);
-			TextView tableTitle = (TextView) resultView.findViewById(android.R.id.title);
+			TextView tableTitle = (TextView) resultView.findViewById(R.id.plan_table_name);
 			tableTitle.setText(((Table.TableInfo) item.table.getData()).name);
 			return resultView;
 		}
