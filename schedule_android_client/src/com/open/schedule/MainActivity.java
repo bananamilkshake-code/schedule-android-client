@@ -30,7 +30,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -60,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Client.createInstance(new Database(this));
+		Client.createInstance(new Database(this), this);
 
 		getActivityElements();
 
@@ -87,6 +86,13 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		}.start();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		
+		Client.getInstance().updateLogoutTime(Utility.getUnixTime());
 	}
 	
 	@Override
