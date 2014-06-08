@@ -30,6 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -175,8 +176,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private void updatePlans() {
-		((PlansAdapter) this.listTablePlans.getAdapter()).update();
-		((BaseAdapter) this.listTablePlans.getAdapter()).notifyDataSetChanged();
+		((PlansAdapter) listTablePlans.getExpandableListAdapter()).update();
+		((PlansAdapter) listTablePlans.getExpandableListAdapter()).notifyDataSetChanged();
 	}
 
 	private void createNewTable(Intent data) {

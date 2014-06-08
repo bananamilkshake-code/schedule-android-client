@@ -15,5 +15,9 @@ public class Users {
 	}
 	
 	public SortedMap<Integer, User> users = new TreeMap<Integer, User>();
+
+	public void add(Integer userId, String name) {
+		users.put(userId, new User(name, name));		
+	}
 	
 }

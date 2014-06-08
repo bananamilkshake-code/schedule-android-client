@@ -215,7 +215,6 @@ public class Database {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.TABLE_ID, tableId);
 		values.put(DatabaseHelper.UPDATE_TIME, Utility.getUnixTime());
-		values.put(DatabaseHelper.GLOBAL_ID, 0);
 		Integer taskId = (int) database.insert(DatabaseHelper.TABLE_TASKS, null, values);
 		changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime, period);
 		return taskId;
@@ -231,7 +230,7 @@ public class Database {
 		Long res = database.insert(DatabaseHelper.TABLE_COMMENTS, null, values);
 		Log.d("Comment creation", res.toString());
 	}
-	
+
 	public void changeTable(Integer userId, Integer tableId, Long time, String name, String description) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.USER_ID, userId);
@@ -325,13 +324,13 @@ public class Database {
 	public void updateUserId(Integer userId) {
 		ContentValues userValues = new ContentValues();
 		userValues.put(DatabaseHelper.GLOBAL_ID, userId);
-		database.update(DatabaseHelper.TABLE_USERS, userValues, DatabaseHelper.GLOBAL_ID + " =?", new String[] {userId.toString()});
+		database.update(DatabaseHelper.TABLE_USERS, userValues, DatabaseHelper.GLOBAL_ID + " = 0", null);
 
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.USER_ID, userId);
 		String tablesToUpdate[] = {DatabaseHelper.TABLE_TABLE_CHANGES, DatabaseHelper.TABLE_TASK_CHANGES, DatabaseHelper.TABLE_READERS, DatabaseHelper.TABLE_COMMENTS};
 		for (String table : tablesToUpdate) {
-			database.update(table, values, DatabaseHelper.USER_ID + " =?", new String[] {userId.toString()});
+			database.update(table, values, DatabaseHelper.USER_ID + " = 0", null);
 		}
 	}
 }

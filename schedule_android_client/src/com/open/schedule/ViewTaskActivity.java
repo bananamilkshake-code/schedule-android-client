@@ -102,7 +102,7 @@ public class ViewTaskActivity extends ActionBarActivity {
 		String endDate = data.getExtras().getString(CreateTaskActivity.END_DATE);
 		String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
 		String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
-		Integer period = Integer.parseInt(data.getExtras().getString(CreateTaskActivity.PERIOD));
+		Integer period = data.getExtras().getInt(CreateTaskActivity.PERIOD);
 	
 		Date startDateVal = null;
 		Date endDateVal = null;

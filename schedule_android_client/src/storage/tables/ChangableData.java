@@ -14,7 +14,7 @@ public class ChangableData {
 	public TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
 	private long lastUpdate = 0;
 	private Integer id;
-	private Integer globalId;
+	private Integer globalId = null;
 
 	public ChangableData(Integer id) {
 		this.id = id;
