@@ -74,7 +74,7 @@ public class Client extends TCPClient {
 	}
 	
 	@Override
-	protected void clear() {
+	protected void onDisconnect() {
 		logged = false;
 	}
 
@@ -505,5 +505,10 @@ public class Client extends TCPClient {
 
 	public String getUserName(Integer creatorId) {
 		return creatorId.toString();
+	}
+
+	public void updateLogoutTime(long logoutTime) {
+		this.database.updateLogoutTime(logoutTime);
+		
 	}
 }

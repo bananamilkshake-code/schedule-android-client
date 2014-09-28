@@ -333,4 +333,8 @@ public class Database {
 			database.update(table, values, DatabaseHelper.USER_ID + " = 0", null);
 		}
 	}
+	
+	public void updateLogoutTime(long logoutTime) {
+		
+	}
 }

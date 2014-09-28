@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Client.createInstance(new Database(this), this);
+		Client.createInstance(new Database(this));
 
 		getActivityElements();
 

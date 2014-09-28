@@ -64,7 +64,7 @@ public abstract class TCPClient
 	}
 
 	public void disconnect() {
-		this.on_disconnect();
+		this.onDisconnect();
 
 		try {
 			inFromServer.close();
@@ -118,5 +118,6 @@ public abstract class TCPClient
 	}
 
 	public abstract void recv(ServerPacket packet);
-	protected abstract void on_disconnect();
+	
+	protected abstract void onDisconnect();
 }
