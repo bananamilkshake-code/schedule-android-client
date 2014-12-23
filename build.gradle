@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    buildToolsVersion "21.0.0"
+    compileSdkVersion 21
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+    }
+
+    dependencies {
+        compile 'com.android.support:appcompat-v7:21.0.0'
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+    }
+}
+
+task appStart(type: Exec, dependsOn: 'installDebug') {
+    commandLine '/home/vnuchka/Documents/android-sdk-linux/platform-tools/adb', 'shell', 'am', 'start', '-n', 'activity/.MainActivity'
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="plans">Планы на сегодня</string>
+
+	<!-- Menu items text -->
+	<string name="menu_login">Войти</string>
+	<string name="menu_users_list">Знакомые</string>
+	<string name="tasks_action_settings">Настройки</string>
+</resources>

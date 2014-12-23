@@ -1,9 +1,12 @@
 syntax: glob
 
-schedule_android_client/bin
-appcompat_v7/bin
+build
+.gradle
 .metadata
+.idea
 
 *.class
 *.apk
 *.jar
+
+schedule_android_client.iml

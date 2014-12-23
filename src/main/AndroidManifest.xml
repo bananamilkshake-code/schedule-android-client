@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.open.schedule"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name=".activity.CreateTableActivity"
+            android:label="@string/title_activity_create_table" >
+        </activity>
+        <activity
+            android:name=".activity.ViewTableActivity"
+            android:label="@string/title_activity_view_tables" >
+        </activity>
+        <activity
+            android:name=".activity.CreateTaskActivity"
+            android:label="@string/title_activity_create_task" >
+        </activity>
+        <activity
+            android:name=".activity.ViewTaskActivity"
+            android:label="@string/title_activity_create_comment" >
+        </activity>
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name=".activity.UsersActivity"
+            android:label="@string/title_activity_find_user" >
+        </activity>
+        <activity
+            android:name=".activity.ReadersActivity"
+            android:label="@string/title_activity_readers" >
+        </activity>
+    </application>
+
+</manifest>

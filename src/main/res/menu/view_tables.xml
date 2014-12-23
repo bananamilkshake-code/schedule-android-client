@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.open.schedule.ViewTables" >
+
+    <item
+        android:id="@+id/action_change"
+        android:orderInCategory="100"
+        android:title="@string/tables_action_change"/>
+
+    <item
+        android:id="@+id/action_add_task"
+        android:orderInCategory="100"
+        android:title="@string/tables_action_add_task"/>
+
+    <item
+        android:id="@+id/action_users"
+        android:orderInCategory="100"
+        android:title="@string/tables_action_users"/>
+
+</menu>

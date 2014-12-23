@@ -1,0 +1,15 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+	<string name="title_activity_login">Sign in</string>
+	<!-- Strings related to login -->
+	<string name="login_email">E-mail</string>
+	<string name="login_password">Пароль</string>
+	<string name="login_action_sign_in_short">Войти</string>
+	<string name="login_action_forgot_password">Восстановить пароль</string>
+	<string name="login_progress_signing_in">Авторизация&#8230;</string>
+	<string name="login_error_invalid_email">Неверный e-mail</string>
+	<string name="login_error_invalid_password">Слишком короткий пароль</string>
+	<string name="login_error_incorrect_password">Неправильный пароль</string>
+	<string name="login_error_field_required">Это поле необходимо заполнить</string>
+	<string name="login_string_register">Новый аккаунт</string>
+	<string name="login_error_invalid_auth">Неправильный логин или пароль</string>
+</resources>
