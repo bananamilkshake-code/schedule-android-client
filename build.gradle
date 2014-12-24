@@ -34,7 +34,3 @@ android {
         }
     }
 }
-
-task appStart(type: Exec, dependsOn: 'installDebug') {
-    commandLine '/home/vnuchka/Documents/android-sdk-linux/platform-tools/adb', 'shell', 'am', 'start', '-n', 'activity/.MainActivity'
-}
