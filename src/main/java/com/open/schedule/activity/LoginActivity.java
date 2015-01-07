@@ -3,32 +3,29 @@ package com.open.schedule.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.view.View.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.open.schedule.R;
-
 import com.open.schedule.events.listeners.EventListener;
 import com.open.schedule.events.objects.Event;
 import com.open.schedule.events.objects.EventWarehouse;
-import com.open.schedule.io.Client;
 import com.open.schedule.io.packet.server.LoginPacket;
 
 public class LoginActivity extends ScheduleActivity implements OnClickListener {
 	public static final int REGISTER = 1;
-	
+
 	public static final int RESULT_REGISTERED = RESULT_FIRST_USER + 1;
-	
+
 	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
@@ -41,13 +38,13 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
-	
+
 	private LoginActivityListener loginListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
@@ -56,15 +53,15 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
+			@Override
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					attemptLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
@@ -72,10 +69,10 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 
 		findViewById(R.id.button_sign_in).setOnClickListener(this);
 		findViewById(R.id.button_register).setOnClickListener(this);
-		
+
 		loginListener = new LoginActivityListener();
 	}
-	
+
 	@Override
 	protected void onStop() {
 		loginListener.shutdown();
@@ -85,15 +82,15 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.button_sign_in:
-			attemptLogin();
-			break;
-		case R.id.button_register:
-			openRegisterActivity();
-			break;
+			case R.id.button_sign_in:
+				attemptLogin();
+				break;
+			case R.id.button_register:
+				openRegisterActivity();
+				break;
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_REGISTERED)
@@ -104,7 +101,7 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 		Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
 		startActivityForResult(registerIntent, REGISTER);
 	}
-	
+
 	private void attemptLogin() {
 		if (mAuthTask != null) {
 			return;
@@ -165,19 +162,19 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
 			mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-						}
-					});
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+				}
+			});
 
 			mLoginFormView.setVisibility(View.VISIBLE);
 			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-						}
-					});
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+				}
+			});
 		} else {
 			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -187,33 +184,32 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 	private class LoginActivityListener implements EventListener {
 		public LoginActivityListener() {
 			super();
-			EventWarehouse.getInstance().addListener((EventListener)this, Event.Type.LOGIN);
+			EventWarehouse.getInstance().addListener((EventListener) this, Event.Type.LOGIN);
 		}
 
-		public void handle(Event event) 
-		{
+		public void handle(Event event) {
 			showProgress(false);
 			switch (event.getType()) {
-			case LOGIN: {
-					LoginPacket.Status status = (LoginPacket.Status)event.getData();
+				case LOGIN: {
+					LoginPacket.Status status = (LoginPacket.Status) event.getData();
 					switch (status) {
-					case SUCCESS:
-						finish();
-						break;
-					case FAILURE:
-						setAuthorisationFail();
-						break;
+						case SUCCESS:
+							finish();
+							break;
+						case FAILURE:
+							setAuthorisationFail();
+							break;
 					}
 				}
 				break;
-			default:
-				break;
+				default:
+					break;
 			}
-			
+
 		}
 
 		public final void shutdown() {
-			EventWarehouse.getInstance().removeListener((EventListener)this, Event.Type.LOGIN);
+			EventWarehouse.getInstance().removeListener((EventListener) this, Event.Type.LOGIN);
 		}
 	}
 

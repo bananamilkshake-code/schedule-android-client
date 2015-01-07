@@ -9,7 +9,7 @@ public class ChangeTablePacket extends ServerPacket {
 	public Integer userId;
 	public String name;
 	public String description;
-	
+
 	public ChangeTablePacket() {
 		super(ServerPacket.Type.CHANGE_TABLE);
 	}

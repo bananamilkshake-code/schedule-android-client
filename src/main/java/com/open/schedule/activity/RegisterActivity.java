@@ -1,10 +1,5 @@
 package com.open.schedule.activity;
 
-import com.open.schedule.R;
-import com.open.schedule.io.packet.server.RegisterPacket;
-import com.open.schedule.events.listeners.EventListener;
-import com.open.schedule.events.objects.Event;
-import com.open.schedule.events.objects.EventWarehouse;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -19,6 +14,12 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.open.schedule.R;
+import com.open.schedule.events.listeners.EventListener;
+import com.open.schedule.events.objects.Event;
+import com.open.schedule.events.objects.EventWarehouse;
+import com.open.schedule.io.packet.server.RegisterPacket;
 
 public class RegisterActivity extends ScheduleActivity implements OnClickListener {
 	private RegisterTask registerTask = null;
@@ -49,16 +50,16 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 
 		passwordView = (EditText) findViewById(R.id.password);
 		passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							register();
-							return true;
-						}
-						return false;
-					}
-				});
-		
+			@Override
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					register();
+					return true;
+				}
+				return false;
+			}
+		});
+
 		passwordVerifyView = (EditText) findViewById(R.id.password_verification);
 		nameView = (EditText) findViewById(R.id.name);
 
@@ -67,10 +68,10 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 		loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
 		findViewById(R.id.register_button).setOnClickListener(this);
-		
+
 		registerListener = new RegisterActivityLister();
 	}
-	
+
 	@Override
 	protected void onStop() {
 		registerListener.shutdown();
@@ -80,9 +81,9 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.register_button:
-			register();
-			break;
+			case R.id.register_button:
+				register();
+				break;
 		}
 	}
 
@@ -155,7 +156,7 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 			registerTask.execute();
 		}
 	}
-	
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
@@ -163,36 +164,36 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 
 			loginStatusView.setVisibility(View.VISIBLE);
 			loginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-						}
-					});
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+				}
+			});
 
 			loginFormView.setVisibility(View.VISIBLE);
 			loginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-						}
-					});
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+				}
+			});
 		} else {
 			loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
-	
+
 	private void setRegistrationFail() {
 		emailView.setError(getString(R.string.register_error_invalid_email));
 		emailView.requestFocus();
 	}
-	
+
 	private void returnSuccess() {
 		Intent result = new Intent();
 		setResult(LoginActivity.RESULT_REGISTERED, result);
 		finish();
 	}
-	
+
 	private class RegisterActivityLister implements EventListener {
 		public RegisterActivityLister() {
 			super();
@@ -202,20 +203,20 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 		@Override
 		public void handle(Event event) {
 			showProgress(false);
-			switch(event.getType()) {
-			case REGISTER:
-				RegisterPacket.Status status = (RegisterPacket.Status) event.getData();
-				switch (status) {
-				case SUCCESS:
-					returnSuccess();
+			switch (event.getType()) {
+				case REGISTER:
+					RegisterPacket.Status status = (RegisterPacket.Status) event.getData();
+					switch (status) {
+						case SUCCESS:
+							returnSuccess();
+							break;
+						case FAILURE:
+							setRegistrationFail();
+							break;
+					}
 					break;
-				case FAILURE:
-					setRegistrationFail();
+				default:
 					break;
-				}
-				break;
-			default:
-				break;
 			}
 		}
 

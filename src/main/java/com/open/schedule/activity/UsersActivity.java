@@ -1,10 +1,5 @@
 package com.open.schedule.activity;
 
-import java.util.ArrayList;
-
-import com.open.schedule.storage.tables.Users;
-import com.open.schedule.storage.tables.Table.Permission;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -26,11 +21,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.open.schedule.R;
+import com.open.schedule.storage.tables.Table.Permission;
+import com.open.schedule.storage.tables.Users;
+
+import java.util.ArrayList;
 
 public class UsersActivity extends ScheduleActivity implements OnClickListener {
+	static final String BUNDLE_USERID = "userId";
 	public EditText emailText;
 	public ListView usersList;
-
 	private Integer tableId;
 
 	@Override
@@ -46,18 +45,17 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.button_search_user:
-			searchUser();
-			return;
+			case R.id.button_search_user:
+				searchUser();
+				return;
 		}
 	}
-	
+
 	private void searchUser() {
 		if (this.isConnected()) {
 			DialogFragment users = new UserFragment();
 			users.show(getFragmentManager(), getResources().getString(R.string.dialog_title_users));
-		}
-		else {
+		} else {
 			Toast.makeText(this.getBaseContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -65,7 +63,7 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 	private void changePermission(Integer userId, Permission permission) {
 		this.getClient().changePermision(true, tableId, userId, permission);
 	}
-	
+
 	private void checkPermision(Integer userId) {
 		PermissionFragment permissionFragment = new PermissionFragment();
 		Bundle bundle = new Bundle();
@@ -73,8 +71,6 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 		permissionFragment.setArguments(bundle);
 		permissionFragment.show(getFragmentManager(), getResources().getString(R.string.title_permissions));
 	}
-	
-	static final String BUNDLE_USERID = "userId";
 
 	public static class PermissionFragment extends DialogFragment {
 		Permission permission;
@@ -99,14 +95,14 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 				}
 			});
 			return builder.create();
-		}	
+		}
 	}
 
 	public static class UserFragment extends DialogFragment {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			UsersActivity activity = (UsersActivity) getActivity();
-			final String[] foundUsers = { activity.emailText.getText().toString() };
+			final String[] foundUsers = {activity.emailText.getText().toString()};
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setTitle(getResources().getString(R.string.title_found_users)).setItems(foundUsers, new DialogInterface.OnClickListener() {
@@ -127,13 +123,13 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 			activity.usersList = (ListView) rootView.findViewById(R.id.list_users);
 			rootView.findViewById(R.id.button_search_user).setOnClickListener(activity);
 			activity.usersList.setAdapter(activity.new UsersAdapter(UsersActivity.this.getClient().getUsers()));
-			
+
 			Intent intent = getActivity().getIntent();
 			if (intent.hasExtra(ReadersActivity.TABLE_ID)) {
 				((UsersActivity) getActivity()).tableId = intent.getIntExtra(ReadersActivity.TABLE_ID, 0);
 				activity.usersList.setOnItemClickListener(new OnItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> arg0, View view,	int position, long id) {
+					public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 						Integer userId = Long.valueOf(id).intValue();
 						activity.checkPermision(userId);
 					}
@@ -146,7 +142,7 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 	public class UsersAdapter extends BaseAdapter {
 		Users users;
 		ArrayList<Integer> idsByPos = new ArrayList<Integer>();
-		
+
 		public UsersAdapter(Users users) {
 			this.users = users;
 			updateTablesIds();
@@ -182,13 +178,13 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 			}
 
 			Users.User user = users.users.get(idsByPos.get(position));
-			TextView tableName = (TextView)rowView.findViewById(R.id.text_name);
-			TextView tableDescription = (TextView)rowView.findViewById(R.id.text_email);
-			tableName.setText((CharSequence)(user.name));
-			tableDescription.setText((CharSequence)(user.email));
+			TextView tableName = (TextView) rowView.findViewById(R.id.text_name);
+			TextView tableDescription = (TextView) rowView.findViewById(R.id.text_email);
+			tableName.setText((CharSequence) (user.name));
+			tableDescription.setText((CharSequence) (user.email));
 			return rowView;
 		}
-		
+
 		private void updateTablesIds() {
 			idsByPos.clear();
 			for (Integer userId : users.users.keySet())

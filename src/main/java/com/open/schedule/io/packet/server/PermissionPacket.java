@@ -1,7 +1,7 @@
 package com.open.schedule.io.packet.server;
 
-import com.open.schedule.utility.Utility;
 import com.open.schedule.io.packet.ServerPacket;
+import com.open.schedule.utility.Utility;
 
 public class PermissionPacket extends ServerPacket {
 	public Integer userId;

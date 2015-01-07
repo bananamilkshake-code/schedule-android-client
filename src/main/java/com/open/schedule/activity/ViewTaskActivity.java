@@ -1,19 +1,5 @@
 package com.open.schedule.activity;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
-import com.open.schedule.storage.database.Database;
-import com.open.schedule.storage.tables.Table;
-import com.open.schedule.storage.tables.Task;
-import com.open.schedule.storage.tables.Task.Comment;
-import com.open.schedule.storage.tables.Task.TaskChange;
-import com.open.schedule.utility.Utility;
-
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -30,10 +16,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.open.schedule.R;
+import com.open.schedule.storage.database.Database;
+import com.open.schedule.storage.tables.Table;
+import com.open.schedule.storage.tables.Task;
+import com.open.schedule.storage.tables.Task.Comment;
+import com.open.schedule.storage.tables.Task.TaskChange;
+import com.open.schedule.utility.Utility;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class ViewTaskActivity extends ScheduleActivity {
 	public static final int REQUEST_CHANGE = 1;
-	
+
 	private Integer tableId;
 	private Integer taskId;
 
@@ -76,24 +75,25 @@ public class ViewTaskActivity extends ScheduleActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		switch (id) {
-		case R.id.action_change_task:
-			this.openChangeTaskActivity();
-			return true;
+			case R.id.action_change_task:
+				this.openChangeTaskActivity();
+				return true;
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != RESULT_OK)
 			return;
 
 		switch (requestCode) {
-		case REQUEST_CHANGE:
-			newChange(data);
-			return;
-		default:
-			return;
+			case REQUEST_CHANGE:
+				newChange(data);
+				return;
+			default:
+				return;
 		}
 	}
 
@@ -105,12 +105,12 @@ public class ViewTaskActivity extends ScheduleActivity {
 		String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
 		String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
 		Integer period = data.getExtras().getInt(CreateTaskActivity.PERIOD);
-	
+
 		Date startDateVal = null;
 		Date endDateVal = null;
 		Date startTimeVal = null;
 		Date endTimeVal = null;
-	
+
 		try {
 			startDateVal = CreateTaskActivity.dateFormatter.parse(startDate);
 			endDateVal = CreateTaskActivity.dateFormatter.parse(endDate);
@@ -119,10 +119,10 @@ public class ViewTaskActivity extends ScheduleActivity {
 		} catch (ParseException e) {
 			Log.w(Database.class.getName(), "Date task changes parsing", e);
 		}
-		
+
 		this.getClient().changeTask(true, this.tableId, this.taskId, Utility.getUnixTime(), this.getClient().getId(),
 				name, description, startDateVal, endDateVal, startTimeVal, endTimeVal, period);
-		
+
 		taskName.setText(name);
 		taskDesc.setText(description);
 		taskStartDate.setText(startDate);
@@ -134,7 +134,7 @@ public class ViewTaskActivity extends ScheduleActivity {
 
 	private void openChangeTaskActivity() {
 		Intent intent = new Intent(ViewTaskActivity.this, CreateTaskActivity.class);
-		Task.TaskChange data = (Task.TaskChange)task.getData();
+		Task.TaskChange data = (Task.TaskChange) task.getData();
 		intent.putExtra(CreateTaskActivity.NAME, data.name);
 		intent.putExtra(CreateTaskActivity.DESCRIPTION, data.description);
 		intent.putExtra(CreateTaskActivity.START_DATE, CreateTaskActivity.dateFormatter.format(data.startDate));
@@ -144,7 +144,7 @@ public class ViewTaskActivity extends ScheduleActivity {
 		intent.putExtra(CreateTaskActivity.PERIOD, data.period);
 		startActivityForResult(intent, REQUEST_CHANGE);
 	}
-	
+
 	private void addComment(String text) {
 		Integer userId = this.getClient().getId();
 		this.getClient().createComment(true, tableId, taskId, Utility.getUnixTime(), userId, text);
@@ -173,12 +173,12 @@ public class ViewTaskActivity extends ScheduleActivity {
 			activity.taskStartTime.setText(CreateTaskActivity.dateFormatter.format(data.startTime));
 			activity.taskEndTime.setText(CreateTaskActivity.dateFormatter.format(data.endTime));
 			activity.taskPeriod.setText(data.period.toString());
-			
-			final ListView listComments =(ListView) rootView.findViewById(R.id.list_comments);
+
+			final ListView listComments = (ListView) rootView.findViewById(R.id.list_comments);
 			Integer tableId = activity.tableId;
 			Integer taskId = activity.taskId;
 			Table table = ViewTaskActivity.this.getClient().getTables().get(tableId);
-			Task task = table.getTask(taskId); 
+			Task task = table.getTask(taskId);
 			listComments.setAdapter(activity.new CommentsAdapter(task.getComments()));
 
 			rootView.findViewById(R.id.button_add_comment).setOnClickListener(new OnClickListener() {
@@ -198,6 +198,7 @@ public class ViewTaskActivity extends ScheduleActivity {
 	}
 
 	public class CommentsAdapter extends BaseAdapter {
+		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.US);
 		TreeMap<Long, Comment> comments;
 
 		public CommentsAdapter(TreeMap<Long, Comment> comments) {
@@ -224,8 +225,6 @@ public class ViewTaskActivity extends ScheduleActivity {
 			return position;
 		}
 
-		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.US);
-
 		@Override
 		public View getView(int position, View rowView, ViewGroup arg2) {
 			if (rowView == null) {
@@ -239,14 +238,14 @@ public class ViewTaskActivity extends ScheduleActivity {
 
 			Entry<Long, Comment> comment = getItem(position);
 
-			commentText.setText((CharSequence)(comment.getValue().text));
-			commentTime.setText((CharSequence)(dateFormatter.format(new Date(comment.getKey() * 1000))));
-			commentAuthor.setText((CharSequence)(comment.getValue().commentatorId.toString()));
+			commentText.setText((CharSequence) (comment.getValue().text));
+			commentTime.setText((CharSequence) (dateFormatter.format(new Date(comment.getKey() * 1000))));
+			commentAuthor.setText((CharSequence) (comment.getValue().commentatorId.toString()));
 
 			return rowView;
 		}
 	}
-	
+
 	private class TaskChangesAdapted extends ChangesAdapter {
 		public TaskChangesAdapted(LayoutInflater inflater, Task task) {
 			super(inflater, task.changes);
@@ -257,7 +256,7 @@ public class ViewTaskActivity extends ScheduleActivity {
 			if (rowView == null) {
 				rowView = this.inflater.inflate(R.layout.item_change_task, rootView, false);
 			}
-			
+
 			TaskChange change = (Task.TaskChange) getItem(position);
 			TextView author = (TextView) rowView.findViewById(R.id.text_change_table_author);
 			TextView time = (TextView) rowView.findViewById(R.id.text_change_table_time);
@@ -268,7 +267,7 @@ public class ViewTaskActivity extends ScheduleActivity {
 			TextView startTime = (TextView) rowView.findViewById(R.id.item_change_table_start_time);
 			TextView endTime = (TextView) rowView.findViewById(R.id.item_change_table_end_time);
 			TextView period = (TextView) rowView.findViewById(R.id.item_change_task_period);
-			
+
 			author.setText(ViewTaskActivity.this.getClient().getUserName(change.creatorId));
 			time.setText(timeFormat.format(new Date(change.time * 1000)));
 			name.setText(change.name);
@@ -278,7 +277,7 @@ public class ViewTaskActivity extends ScheduleActivity {
 			startTime.setText(CreateTaskActivity.timeFormatter.format(change.startTime));
 			endTime.setText(CreateTaskActivity.timeFormatter.format(change.endTime));
 			period.setText(change.period.toString());
-			
+
 			return rowView;
 		}
 	}

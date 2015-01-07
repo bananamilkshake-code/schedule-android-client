@@ -11,11 +11,11 @@ public class Task extends ChangeableData {
 	public Task(Integer id) {
 		super(id);
 	}
-	
+
 	public Task(Integer id, Long updateTime) {
 		super(id, updateTime);
 	}
-	
+
 	public Task(Integer id, Integer creatorId, Long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 		this(id);
 		this.change(time, new TaskChange(creatorId, time, name, description, startDate, endDate, startTime, endTime, period));
@@ -24,7 +24,7 @@ public class Task extends ChangeableData {
 	public void addComment(Integer commentatorId, Long time, String text) {
 		comments.put(time, new Comment(commentatorId, text));
 	}
-	
+
 	public TreeMap<Long, Comment> getComments() {
 		return comments;
 	}
@@ -44,7 +44,7 @@ public class Task extends ChangeableData {
 		}
 		return commentTimes;
 	}
-	
+
 	public class Comment {
 		public Integer commentatorId;
 		public String text;
@@ -83,19 +83,19 @@ public class Task extends ChangeableData {
 		@Override
 		public void merge(Change prev) {
 			if (this.name == null)
-				this.name = ((TaskChange)prev).name;
+				this.name = ((TaskChange) prev).name;
 			if (this.description == null)
-				this.description = ((TaskChange)prev).description;
+				this.description = ((TaskChange) prev).description;
 			if (this.startDate == null)
-				this.startDate = ((TaskChange)prev).startDate;
+				this.startDate = ((TaskChange) prev).startDate;
 			if (this.endDate == null)
-				this.endDate = ((TaskChange)prev).endDate;
+				this.endDate = ((TaskChange) prev).endDate;
 			if (this.startTime == null)
-				this.startTime = ((TaskChange)prev).startTime;
+				this.startTime = ((TaskChange) prev).startTime;
 			if (this.endTime == null)
-				this.endTime = ((TaskChange)prev).endTime;
+				this.endTime = ((TaskChange) prev).endTime;
 			if (this.period == null)
-				this.period = ((TaskChange)prev).period;
+				this.period = ((TaskChange) prev).period;
 		}
 	}
 }

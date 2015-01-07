@@ -20,8 +20,7 @@ public class PacketDecoder extends ReplayingDecoder<PacketDecoderState> {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		switch (this.state())
-		{
+		switch (this.state()) {
 			case STATE_READ_TYPE:
 				this.type = ServerPacket.Type.values()[in.readByte()];
 				this.checkpoint(PacketDecoderState.STATE_READ_LENGTH);

@@ -1,11 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.open.schedule.CrearteCommentActivity" >
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.open.schedule.CrearteCommentActivity">
 
     <item
         android:id="@+id/action_change_task"
         android:orderInCategory="100"
-        android:title="@string/tasks_action_change_task" />
+        android:title="@string/tasks_action_change_task"/>
 
 </menu>

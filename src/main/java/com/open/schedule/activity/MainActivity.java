@@ -1,20 +1,5 @@
 package com.open.schedule.activity;
 
-import java.util.ArrayList;
-import java.util.SortedMap;
-
-import com.open.schedule.R;
-import com.open.schedule.app.ScheduleApplication;
-import com.open.schedule.io.Client;
-import com.open.schedule.storage.tables.Plans;
-import com.open.schedule.storage.tables.Plans.TablePlan;
-import com.open.schedule.storage.tables.Table;
-import com.open.schedule.storage.tables.Table.TableInfo;
-import com.open.schedule.storage.tables.Task;
-import com.open.schedule.utility.Utility;
-import com.open.schedule.io.Tables;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,6 +23,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.open.schedule.R;
+import com.open.schedule.io.Client;
+import com.open.schedule.io.Tables;
+import com.open.schedule.storage.tables.Plans;
+import com.open.schedule.storage.tables.Plans.TablePlan;
+import com.open.schedule.storage.tables.Table;
+import com.open.schedule.storage.tables.Table.TableInfo;
+import com.open.schedule.storage.tables.Task;
+import com.open.schedule.utility.Utility;
+
+import java.util.ArrayList;
+import java.util.SortedMap;
+
 public class MainActivity extends ScheduleActivity {
 	public static final String TABLE_ID = "TABLE_ID";
 
@@ -49,10 +47,6 @@ public class MainActivity extends ScheduleActivity {
 	private ListView actionList;
 
 	private ExpandableListView listTablePlans;
-	
-	private enum Actions {
-		ADD_TABLE
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +59,19 @@ public class MainActivity extends ScheduleActivity {
 		this.initActions();
 		this.initPlans();
 	}
-	
+
+	;
+
 	@Override
 	public void onStop() {
 		super.onStop();
 
 		this.getClient().updateLogoutTime(Utility.getUnixTime());
 	}
-	
+
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
-			updatePlans();
+		updatePlans();
 	}
 
 	@Override
@@ -87,17 +83,17 @@ public class MainActivity extends ScheduleActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.login:
-			this.getClient().loadAuthParams();
-			//openLoginActivity();
-			return true;
-		case R.id.users:
-			openUsersActivity();
-			return true;
+			case R.id.login:
+				this.getClient().loadAuthParams();
+				//openLoginActivity();
+				return true;
+			case R.id.users:
+				openUsersActivity();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -105,11 +101,11 @@ public class MainActivity extends ScheduleActivity {
 			return;
 
 		switch (requestCode) {
-		case REQUEST_NEW_TABLE:
-			createNewTable(data);
-			return;
-		default:
-			return;
+			case REQUEST_NEW_TABLE:
+				createNewTable(data);
+				return;
+			default:
+				return;
 		}
 	}
 
@@ -131,7 +127,7 @@ public class MainActivity extends ScheduleActivity {
 		});
 	}
 
-	private void initActions() {		
+	private void initActions() {
 		String[] actions = getResources().getStringArray(R.array.drawer_elements_bottom);
 		ArrayAdapter<String> actionsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, actions) {
 			@Override
@@ -139,7 +135,7 @@ public class MainActivity extends ScheduleActivity {
 				View view = super.getView(position, convertView, parent);
 				TextView text = (TextView) view.findViewById(android.R.id.text1);
 				text.setTextColor(Color.WHITE);
-			    return view;
+				return view;
 			}
 		};
 
@@ -147,7 +143,7 @@ public class MainActivity extends ScheduleActivity {
 		actionList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+									int position, long id) {
 				if (position == Actions.ADD_TABLE.ordinal()) {
 					openNewTableActivity();
 					return;
@@ -157,11 +153,11 @@ public class MainActivity extends ScheduleActivity {
 			}
 		});
 	}
-	
+
 	private void initPlans() {
 		listTablePlans.setAdapter(new PlansAdapter(getApplicationContext(), this.getClient().tables));
 	}
-	
+
 	private void updatePlans() {
 		((PlansAdapter) listTablePlans.getExpandableListAdapter()).update();
 		((PlansAdapter) listTablePlans.getExpandableListAdapter()).notifyDataSetChanged();
@@ -185,8 +181,7 @@ public class MainActivity extends ScheduleActivity {
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 
 			startActivity(loginIntent);
-		}
-		else {
+		} else {
 			Toast.makeText(this.getBaseContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -196,7 +191,7 @@ public class MainActivity extends ScheduleActivity {
 
 		startActivity(usersIntent);
 	}
-	
+
 	private void openNewTableActivity() {
 		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
 
@@ -211,7 +206,7 @@ public class MainActivity extends ScheduleActivity {
 
 		startActivity(viewTableIntent);
 	}
-	
+
 	private void openTaskActivity(Integer tableId, Integer taskId) {
 		Intent intent = new Intent(MainActivity.this, ViewTaskActivity.class);
 		intent.putExtra(ViewTableActivity.TABLE_ID, tableId);
@@ -228,10 +223,14 @@ public class MainActivity extends ScheduleActivity {
 		drawerLayout.closeDrawer(drawer);
 	}
 
+	private enum Actions {
+		ADD_TABLE
+	}
+
 	public class TablesAdapter extends BaseAdapter {
 		SortedMap<Integer, Table> tables;
 		ArrayList<Integer> idsByPos = new ArrayList<Integer>();
-		
+
 		public TablesAdapter(SortedMap<Integer, Table> tables) {
 			this.tables = tables;
 			updateTablesIds();
@@ -273,14 +272,14 @@ public class MainActivity extends ScheduleActivity {
 			tableDescription.setText(((TableInfo) table.getData()).description);
 			return rowView;
 		}
-		
+
 		private void updateTablesIds() {
 			idsByPos.clear();
 			for (Integer tableId : tables.keySet())
 				idsByPos.add(tableId);
 		}
 	}
-	
+
 	public class PlansAdapter extends BaseExpandableListAdapter {
 		private final Plans plans;
 		private final LayoutInflater inflater;
@@ -289,11 +288,11 @@ public class MainActivity extends ScheduleActivity {
 			this.plans = new Plans(tables);
 			this.inflater = LayoutInflater.from(context);
 		}
-		
+
 		public void update() {
 			this.plans.update();
 		}
-		
+
 		public Integer getTaskId(int groupPosition, int childPosition) {
 			TablePlan plan = this.plans.getTodayPlan(groupPosition);
 			return plan.tasks.get(childPosition).getId();
@@ -316,7 +315,7 @@ public class MainActivity extends ScheduleActivity {
 
 		@Override
 		public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-			Task task = plans.getTodayPlan(groupPosition).tasks.get(childPosition);	
+			Task task = plans.getTodayPlan(groupPosition).tasks.get(childPosition);
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.item_plan, null);
 			}
@@ -329,16 +328,16 @@ public class MainActivity extends ScheduleActivity {
 			taskTitle.setText(data.name);
 			taskTimeStart.setText(CreateTaskActivity.timeFormatter.format(data.startTime));
 			taskTimeEnd.setText(CreateTaskActivity.timeFormatter.format(data.endTime));
-			
-			convertView.setOnClickListener(new OnClickListener() {				
+
+			convertView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Integer tableId = PlansAdapter.this.getTableId(groupPosition);
 					Integer taskId = PlansAdapter.this.getTaskId(groupPosition, childPosition);
-					openTaskActivity(tableId, taskId);					
+					openTaskActivity(tableId, taskId);
 				}
 			});
-			
+
 			return convertView;
 		}
 

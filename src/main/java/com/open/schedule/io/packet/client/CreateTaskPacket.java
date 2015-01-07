@@ -1,8 +1,8 @@
 package com.open.schedule.io.packet.client;
 
-import java.io.IOException;
-
 import com.open.schedule.io.packet.ClientPacket;
+
+import java.io.IOException;
 
 public class CreateTaskPacket extends ClientPacket {
 	public CreateTaskPacket(Integer taskId, Integer tableId, Long time, String name, String description, String startDate, String endDate, String startTime, String endTime) throws IOException {

@@ -1,18 +1,18 @@
 package com.open.schedule.activity;
 
-import java.text.SimpleDateFormat;
-import java.util.TreeMap;
-import java.util.Map.Entry;
-
-import com.open.schedule.storage.tables.ChangeableData.Change;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 
+import com.open.schedule.storage.tables.ChangeableData.Change;
+
+import java.text.SimpleDateFormat;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 public abstract class ChangesAdapter extends BaseAdapter {
+	protected final SimpleDateFormat timeFormat = new SimpleDateFormat("dd MMMM, yyyy HH:mm");
 	protected TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
 	protected LayoutInflater inflater;
-
-	protected final SimpleDateFormat timeFormat = new SimpleDateFormat("dd MMMM, yyyy HH:mm");
 
 	public ChangesAdapter(LayoutInflater inflater, TreeMap<Long, Change> changes) {
 		this.inflater = inflater;

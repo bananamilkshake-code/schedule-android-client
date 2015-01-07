@@ -1,13 +1,12 @@
 package com.open.schedule.activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -24,18 +23,18 @@ public class CreateTableActivity extends ScheduleActivity implements OnClickList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_table);
-		
+
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.btCreateTable:
-			returnNewTable();
-			return;
+			case R.id.btCreateTable:
+				returnNewTable();
+				return;
 		}
 	}
 
@@ -52,7 +51,8 @@ public class CreateTableActivity extends ScheduleActivity implements OnClickList
 	}
 
 	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {}
+		public PlaceholderFragment() {
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,8 +65,8 @@ public class CreateTableActivity extends ScheduleActivity implements OnClickList
 
 			Intent intent = getActivity().getIntent();
 			if (intent.hasExtra(ViewTableActivity.TABLE_NAME)) {
-				((CreateTableActivity)getActivity()).nameField.setText(intent.getStringExtra(ViewTableActivity.TABLE_NAME));
-				((CreateTableActivity)getActivity()).descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
+				((CreateTableActivity) getActivity()).nameField.setText(intent.getStringExtra(ViewTableActivity.TABLE_NAME));
+				((CreateTableActivity) getActivity()).descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
 				acceptButton.setText(R.string.button_table_change);
 			}
 

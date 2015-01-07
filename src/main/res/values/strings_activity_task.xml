@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hint_add_comment">Комментарий</string>
-	<string name="task_period_label_before">Каждые </string>
-	<string name="task_period_label_end"> дней</string>
-	
-	<!-- Menu items -->
-	<string name="tasks_action_change_task">Изменить</string>
+    <string name="hint_add_comment">Комментарий</string>
+    <string name="task_period_label_before">Каждые </string>
+    <string name="task_period_label_end"> дней</string>
+
+    <!-- Menu items -->
+    <string name="tasks_action_change_task">Изменить</string>
 </resources>

@@ -1,12 +1,12 @@
 package com.open.schedule.io.packet.server;
 
-import com.open.schedule.utility.Utility;
 import com.open.schedule.io.packet.ServerPacket;
+import com.open.schedule.utility.Utility;
 
 public class UserPacket extends ServerPacket {
 	public Integer userId;
 	public String name;
-	
+
 	public UserPacket() {
 		super(ServerPacket.Type.USER);
 	}

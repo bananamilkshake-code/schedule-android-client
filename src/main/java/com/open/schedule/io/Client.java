@@ -1,20 +1,11 @@
 package com.open.schedule.io;
 
-import java.io.IOException;
-import java.net.SocketAddress;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.SortedMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
 import android.util.Log;
 
+import com.open.schedule.events.objects.Event;
+import com.open.schedule.io.packet.ClientPacket;
 import com.open.schedule.io.packet.Packet;
+import com.open.schedule.io.packet.ServerPacket;
 import com.open.schedule.storage.database.Database;
 import com.open.schedule.storage.tables.ChangeableData.Change;
 import com.open.schedule.storage.tables.Table;
@@ -23,9 +14,18 @@ import com.open.schedule.storage.tables.Table.TableInfo;
 import com.open.schedule.storage.tables.Task;
 import com.open.schedule.storage.tables.Task.TaskChange;
 import com.open.schedule.storage.tables.Users;
-import com.open.schedule.events.objects.Event;
-import com.open.schedule.io.packet.ClientPacket;
-import com.open.schedule.io.packet.ServerPacket;
+
+import java.io.IOException;
+import java.net.SocketAddress;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelDuplexHandler;
@@ -33,16 +33,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 
 public class Client extends ChannelDuplexHandler {
+	public final Tables tables = new Tables();
+	public final Users users = new Users();
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy", Locale.US);
+	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm", Locale.US);
 	private ChannelHandlerContext context;
-
 	private boolean logged = false;
-
 	private Integer id = 0;
 	private Long logoutTime = (long) 0;
-
-	public final Tables tables  = new Tables();
-	public final Users users = new Users();
-
 	private Database database = null;
 
 	public Client(final Database database) {
@@ -71,8 +69,7 @@ public class Client extends ChannelDuplexHandler {
 				break;
 		}
 
-		switch (packet.getType())
-		{
+		switch (packet.getType()) {
 			case REGISTER:
 				this.register((com.open.schedule.io.packet.server.RegisterPacket) packet);
 				break;
@@ -121,7 +118,7 @@ public class Client extends ChannelDuplexHandler {
 	public Integer getId() {
 		return id;
 	}
-	
+
 	public boolean isLogged() {
 		return logged;
 	}
@@ -161,15 +158,15 @@ public class Client extends ChannelDuplexHandler {
 		String password = "1111";
 		this.login(username, password);
 	}
-	
+
 	private void do_login(Integer id) {
 		logged = true;
 		this.id = id;
 		database.updateUserId(id);
-		
+
 		sync();
 	}
-	
+
 	private void sync() {
 		syncTables();
 		syncTasks();
@@ -177,13 +174,13 @@ public class Client extends ChannelDuplexHandler {
 		syncTaskChanges();
 		syncComments();
 	}
-	
+
 	private void syncTables() {
 		ArrayList<Integer> tableList = tables.getNewTables();
 		for (Integer tableId : tableList)
 			syncTable(tableId);
 	}
-	
+
 	private void syncTasks() {
 		SortedMap<Integer, ArrayList<Integer>> tasks = tables.getNewTasks();
 		Iterator<Entry<Integer, ArrayList<Integer>>> taskIter = tasks.entrySet().iterator();
@@ -194,7 +191,7 @@ public class Client extends ChannelDuplexHandler {
 				syncTask(tableId, taskId);
 		}
 	}
-	
+
 	private void syncTableChanges() {
 		TreeMap<Integer, ArrayList<Long>> unsyncedTablesChanges = tables.getNewTableChanges(this.logoutTime, this.id);
 		Iterator<Entry<Integer, ArrayList<Long>>> tableIter = unsyncedTablesChanges.entrySet().iterator();
@@ -209,19 +206,19 @@ public class Client extends ChannelDuplexHandler {
 			}
 		}
 	}
-	
+
 	private void syncTaskChanges() {
 		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> unsyncedTaskChanges = tables.getNewTaskChanges(this.logoutTime, this.id);
 		Iterator<Entry<Integer, SortedMap<Integer, ArrayList<Long>>>> tableIter = unsyncedTaskChanges.entrySet().iterator();
 		while (tableIter.hasNext()) {
 			Entry<Integer, SortedMap<Integer, ArrayList<Long>>> table = tableIter.next();
 			Integer tableId = table.getKey();
-			
+
 			Iterator<Entry<Integer, ArrayList<Long>>> taskIter = table.getValue().entrySet().iterator();
 			while (taskIter.hasNext()) {
 				Entry<Integer, ArrayList<Long>> task = taskIter.next();
 				Integer taskId = task.getKey();
-				
+
 				ArrayList<Long> changesTimes = task.getValue();
 				for (Long time : changesTimes) {
 					syncChangeTask(tableId, taskId, time);
@@ -231,7 +228,7 @@ public class Client extends ChannelDuplexHandler {
 			}
 		}
 	}
-	
+
 	private void syncComments() {
 		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> comments = tables.getNewComments(this.logoutTime, this.id);
 		Iterator<Entry<Integer, SortedMap<Integer, ArrayList<Long>>>> tableIter = comments.entrySet().iterator();
@@ -249,7 +246,7 @@ public class Client extends ChannelDuplexHandler {
 			}
 		}
 	}
-	
+
 	public void login(String username, String password) {
 		try {
 			send(new com.open.schedule.io.packet.client.LoginPacket(username, password));
@@ -278,9 +275,6 @@ public class Client extends ChannelDuplexHandler {
 		return tableId;
 	}
 
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("ddMMyyyy", Locale.US);
-	SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmm", Locale.US);
-
 	public Integer createTask(Boolean local, Integer tableId, Long time, Integer userId, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
 		Integer taskId = database.createTask(userId, tableId, time, name, description, startDate, endDate, startTime, endTime, period);
 		Task task = new Task(taskId, userId, time, name, description, startDate, endDate, startTime, endTime, period);
@@ -297,7 +291,7 @@ public class Client extends ChannelDuplexHandler {
 		database.createComment(tableId, taskId, time, getId(), comment);
 		Log.d("Client", "New comment added for (" + tableId + "," + taskId + "): " + comment);
 
-		if (local) 
+		if (local)
 			syncComment(tableId, taskId, time);
 	}
 
@@ -314,7 +308,7 @@ public class Client extends ChannelDuplexHandler {
 		database.changeTable(this.id, tableId, time, name, description);
 		Log.d("Client", "Table " + tableId + " changed");
 
-		if (local) 
+		if (local)
 			syncChangeTable(tableId, time);
 	}
 
@@ -332,7 +326,7 @@ public class Client extends ChannelDuplexHandler {
 		database.changeTask(userId, tableId, taskId, time, name, description, startDate, endDate, startTime, endTime, period);
 		Log.d("Client", "Task " + taskId + " for table " + tableId + " changed");
 
-		if (local) 
+		if (local)
 			syncChangeTask(tableId, taskId, time);
 	}
 
@@ -341,31 +335,31 @@ public class Client extends ChannelDuplexHandler {
 		database.setPermission(tableId, userId, permission);
 		Log.d("Client", "Permission for user " + userId + " changed to " + permission.ordinal());
 
-		if (local) 
+		if (local)
 			syncPermission(userId, tableId, permission);
 	}
-	
+
 	private void register(com.open.schedule.io.packet.server.RegisterPacket packet) {
 		switch (packet.status) {
-		case SUCCESS:
-			Log.d("Recv", "Successfully registered in");
-			break;	
-		case FAILURE:
-			Log.w("Recv", "Username has already being used");
-			break;
+			case SUCCESS:
+				Log.d("Recv", "Successfully registered in");
+				break;
+			case FAILURE:
+				Log.w("Recv", "Username has already being used");
+				break;
 		}
 		new Event(this, Event.Type.REGISTER, (Object) packet.status);
 	}
-	
+
 	private void login(com.open.schedule.io.packet.server.LoginPacket packet) {
 		switch (packet.status) {
-		case SUCCESS:
-			Log.d("Recv", "Successfully logged in");
-			do_login(packet.id);
-			break;
-		case FAILURE:
-			Log.w("Recv", "Wrong username or password");
-			break;
+			case SUCCESS:
+				Log.d("Recv", "Successfully logged in");
+				do_login(packet.id);
+				break;
+			case FAILURE:
+				Log.w("Recv", "Wrong username or password");
+				break;
 		}
 		new Event(this, Event.Type.LOGIN, (Object) packet.status);
 	}
@@ -373,7 +367,7 @@ public class Client extends ChannelDuplexHandler {
 	private void changeTable(com.open.schedule.io.packet.server.ChangeTablePacket packet) {
 		this.changeTable(false, packet.tableGlobalId, packet.time, packet.userId, packet.name, packet.description);
 	}
-	
+
 	private void changeTask(com.open.schedule.io.packet.server.ChangeTaskPacket packet) {
 		Date startDate = null;
 		Date endDate = null;
@@ -388,9 +382,9 @@ public class Client extends ChannelDuplexHandler {
 		} catch (ParseException e) {
 			Log.w("Client", "ChangeTaskPacket parsing", e);
 		}
-		
-		this.changeTask(false, packet.tableGlobalId, packet.taskGlobalId, packet.time, packet.userId, packet.name, packet.description, 
-					startDate, endDate, startTime, endTime, packet.period);
+
+		this.changeTask(false, packet.tableGlobalId, packet.taskGlobalId, packet.time, packet.userId, packet.name, packet.description,
+				startDate, endDate, startTime, endTime, packet.period);
 	}
 
 	private void createCommentary(com.open.schedule.io.packet.server.CommentaryPacket packet) {
@@ -403,7 +397,7 @@ public class Client extends ChannelDuplexHandler {
 		syncTasks();
 		syncTableChanges();
 	}
-	
+
 	private void updateGlobalTaskId(com.open.schedule.io.packet.server.GlobalTaskIdPacket packet) {
 		tables.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
 		database.updateTaskGlobalId(packet.tableGlobalId, packet.taskGlobalId, packet.taskId);
@@ -414,11 +408,11 @@ public class Client extends ChannelDuplexHandler {
 	private void changePermission(com.open.schedule.io.packet.server.PermissionPacket packet) {
 		this.changePermision(false, packet.tableGlobalId, packet.userId, Table.Permission.values()[packet.permission]);
 	}
-	
+
 	private void addUser(com.open.schedule.io.packet.server.UserPacket packet) {
 		database.addUser(packet.userId, packet.name);
 	}
-	
+
 	private void syncTable(Integer tableId) {
 		Entry<Long, Change> entry = tables.getTables().get(tableId).getInitial();
 		Long time = entry.getKey();
@@ -431,7 +425,7 @@ public class Client extends ChannelDuplexHandler {
 			Log.w("Client", "New table creation error", e);
 		}
 	}
-	
+
 	private void syncTask(Integer tableId, Integer taskId) {
 		Integer tableGlobalId = tables.findInnerTable(tableId);
 		if (tableGlobalId == null) {
@@ -474,7 +468,7 @@ public class Client extends ChannelDuplexHandler {
 		if (tableGlobalId == null) {
 			return;
 		}
-		
+
 		TableInfo tableInfo = (TableInfo) tables.getTables().get(tableId).getChange(time);
 		String name = tableInfo.name;
 		String description = tableInfo.description;
@@ -492,7 +486,7 @@ public class Client extends ChannelDuplexHandler {
 		if (tableGlobalId == null || taskGlobalId == null) {
 			return;
 		}
-		
+
 		TaskChange task = (TaskChange) tables.getTables().get(tableId).getTask(taskId).getChange(time);
 		String startDateVal = dateFormatter.format(task.startDate);
 		String endDateVal = dateFormatter.format(task.endDate);
@@ -505,7 +499,7 @@ public class Client extends ChannelDuplexHandler {
 			Log.w("Client", "New task creation error", e);
 		}
 	}
-	
+
 	private void syncPermission(Integer userId, Integer tableId, Permission permission) {
 		Integer tableGlobalId = tables.findInnerTable(tableId);
 		if (tableGlobalId == null) {
@@ -513,7 +507,7 @@ public class Client extends ChannelDuplexHandler {
 		}
 
 		try {
-			send(new com.open.schedule.io.packet.client.PermissionPacket(tableGlobalId, userId, (byte)(permission.ordinal())));
+			send(new com.open.schedule.io.packet.client.PermissionPacket(tableGlobalId, userId, (byte) (permission.ordinal())));
 		} catch (IOException e) {
 			Log.w("Client", "Changing permission error", e);
 		}

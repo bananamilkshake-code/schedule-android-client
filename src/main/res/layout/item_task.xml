@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/item_task_name"
@@ -12,7 +12,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:text="@string/text_task_name"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/item_task_description"
@@ -21,14 +21,14 @@
         android:paddingLeft="10dp"
         android:text="@string/text_task_description"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:gravity="left" >
+        android:gravity="left">
 
         <TextView
             android:id="@+id/item_task_date_start"
@@ -38,7 +38,7 @@
             android:text="06.05.2014"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#222222"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/item_task_date_end"
@@ -49,7 +49,7 @@
             android:text="07.05.2014"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#222222"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/item_task_time_start"
@@ -61,7 +61,7 @@
             android:text="11:00"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#222222"
-            android:textSize="13sp" />
+            android:textSize="13sp"/>
 
         <TextView
             android:id="@+id/item_task_time_end"
@@ -73,16 +73,16 @@
             android:text="13:40"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#222222"
-            android:textSize="13sp" />
+            android:textSize="13sp"/>
 
         <TextView
             android:id="@+id/item_task_period_after"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/item_task_date_end"
             android:layout_alignParentRight="true"
+            android:layout_below="@+id/item_task_date_end"
             android:padding="3dp"
-            android:text="@string/task_period_label_end" />
+            android:text="@string/task_period_label_end"/>
 
         <TextView
             android:id="@+id/item_task_period"
@@ -91,16 +91,16 @@
             android:layout_below="@+id/item_task_date_end"
             android:layout_toLeftOf="@+id/item_task_period_after"
             android:padding="3dp"
-            android:text="5" />
+            android:text="5"/>
 
         <TextView
             android:id="@+id/item_task_period_before"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:layout_toLeftOf="@+id/item_task_period"
             android:layout_below="@+id/item_task_date_end"
-            android:text="@string/task_period_label_before" />
+            android:layout_toLeftOf="@+id/item_task_period"
+            android:padding="3dp"
+            android:text="@string/task_period_label_before"/>
 
     </RelativeLayout>
 

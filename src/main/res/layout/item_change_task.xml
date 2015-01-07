@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <RelativeLayout 
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-	    <TextView
-	        android:id="@+id/text_change_table_author"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_toLeftOf="@+id/text_change_table_time"
-	        android:padding="5dp"
-	        android:text="Автор"
-	        android:textSize="11sp" />
+        <TextView
+            android:id="@+id/text_change_table_author"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/text_change_table_time"
+            android:padding="5dp"
+            android:text="Автор"
+            android:textSize="11sp"/>
 
-	    <TextView
-	        android:id="@+id/text_change_table_time"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:padding="2dp"
-			android:textSize="9sp"
-	        android:text="Время" />
+        <TextView
+            android:id="@+id/text_change_table_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="2dp"
+            android:text="Время"
+            android:textSize="9sp"/>
 
     </RelativeLayout>
-    
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -36,122 +36,122 @@
         <!-- Name -->
         <TextView
             android:id="@+id/item_change_table_name_label"
-	        android:layout_width="75dp"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="10dp"
-	        android:layout_alignParentLeft="true"
-			android:layout_alignRight="@+id/item_change_table_desc_label"
-			android:textSize="9sp"
-	        android:text="@string/hint_new_table_name" />
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignRight="@+id/item_change_table_desc_label"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="@string/hint_new_table_name"
+            android:textSize="9sp"/>
 
         <TextView
-	        android:id="@+id/item_change_table_name"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/item_change_table_name_label"
-			android:textSize="9sp"
-	        android:text="Тест название" />
+            android:id="@+id/item_change_table_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/item_change_table_name_label"
+            android:text="Тест название"
+            android:textSize="9sp"/>
 
         <!-- Description -->
         <TextView
             android:id="@+id/item_change_table_desc_label"
-	        android:layout_width="75dp"
-	        android:layout_height="wrap_content"
-			android:layout_below="@+id/item_change_table_name_label"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="10dp"
-			android:textSize="9sp"
-	        android:text="@string/new_table_description" />
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_change_table_name_label"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="@string/new_table_description"
+            android:textSize="9sp"/>
 
         <TextView
-	        android:id="@+id/item_change_table_desc"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-			android:layout_below="@+id/item_change_table_name"
-	        android:layout_toRightOf="@+id/item_change_table_desc_label"
-			android:textSize="9sp"
-	        android:text="Тест описание" />
+            android:id="@+id/item_change_table_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_change_table_name"
+            android:layout_toRightOf="@+id/item_change_table_desc_label"
+            android:text="Тест описание"
+            android:textSize="9sp"/>
 
         <!-- Date -->
         <TextView
             android:id="@+id/item_change_table_start_date"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-			android:layout_below="@+id/item_change_table_desc_label"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="10dp"
-			android:textSize="9sp"
-	        android:text="11 May 2014" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/item_change_table_desc_label"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="11 May 2014"
+            android:textSize="9sp"/>
 
         <TextView
             android:id="@+id/item_change_table_end_date"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-			android:layout_below="@+id/item_change_table_desc_label"
-	        android:layout_toRightOf="@+id/item_change_table_start_date"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="10dp"
-			android:textSize="9sp"
-	        android:text="12 May 2014" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_change_table_desc_label"
+            android:layout_toRightOf="@+id/item_change_table_start_date"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="12 May 2014"
+            android:textSize="9sp"/>
 
-     <!-- Period -->
+        <!-- Period -->
 
         <TextView
             android:id="@+id/item_change_task_period_before"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="3dp"
             android:layout_alignParentLeft="true"
-	        android:paddingLeft="5dp"
-			android:textSize="9sp"
-			android:layout_below="@+id/item_change_table_start_date"
-            android:text="@string/task_period_label_before" />
+            android:layout_below="@+id/item_change_table_start_date"
+            android:paddingLeft="5dp"
+            android:paddingRight="3dp"
+            android:text="@string/task_period_label_before"
+            android:textSize="9sp"/>
 
         <TextView
             android:id="@+id/item_change_task_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:textSize="9sp"
+            android:layout_below="@+id/item_change_table_start_date"
             android:layout_toRightOf="@+id/item_change_task_period_before"
-			android:layout_below="@+id/item_change_table_start_date"
-            android:text="5" />
+            android:text="5"
+            android:textSize="9sp"/>
 
         <TextView
             android:id="@+id/item_change_task_period_after"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:textSize="9sp"
-			android:layout_below="@+id/item_change_table_start_date"
+            android:layout_below="@+id/item_change_table_start_date"
             android:layout_toRightOf="@+id/item_change_task_period"
             android:paddingLeft="3dp"
-            android:text="@string/task_period_label_end" />
+            android:text="@string/task_period_label_end"
+            android:textSize="9sp"/>
 
         <!-- Time -->
-        
+
         <TextView
             android:id="@+id/item_change_table_end_time"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-			android:layout_below="@+id/item_change_table_start_date"
-	        android:layout_alignParentRight="true"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="10dp"
-			android:textSize="9sp"
-	        android:text="12:00" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/item_change_table_start_date"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="12:00"
+            android:textSize="9sp"/>
 
         <TextView
             android:id="@+id/item_change_table_start_time"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-			android:layout_below="@+id/item_change_table_start_date"
-			android:layout_toLeftOf="@+id/item_change_table_end_time"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="10dp"
-			android:textSize="9sp"
-	        android:text="11:00" />   
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_change_table_start_date"
+            android:layout_toLeftOf="@+id/item_change_table_end_time"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="11:00"
+            android:textSize="9sp"/>
 
-   	</RelativeLayout>
+    </RelativeLayout>
 
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.open.schedule.activity;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -18,6 +17,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
+
+import com.open.schedule.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,9 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map.Entry;
-import android.widget.TimePicker;
-
-import com.open.schedule.R;
 
 public class CreateTaskActivity extends ScheduleActivity implements OnClickListener {
 	public static final String NAME = "task_name";
@@ -43,7 +42,13 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 
 	public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 	public static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
-
+	private static HashMap<Periods, Integer> periodDays = new HashMap<Periods, Integer>();
+	static {
+		periodDays.put(Periods.ONE_TIME, 1);
+		periodDays.put(Periods.WEEK, 7);
+		periodDays.put(Periods.THO_WEEKS, 14);
+		periodDays.put(Periods.MONTH, 30);
+	}
 	private EditText name;
 	private EditText desc;
 	private TextView startDate;
@@ -51,24 +56,9 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 	private TextView startTime;
 	private TextView endTime;
 	private Spinner spinnerPeriod;
+
+	;
 	private TextView period;
-
-	private enum Periods {
-		ONE_TIME,
-		WEEK,
-		THO_WEEKS,
-		MONTH,
-		OTHER
-	};
-
-	private static HashMap<Periods, Integer> periodDays = new HashMap<Periods, Integer>();
-
-	static {
-		periodDays.put(Periods.ONE_TIME, 1);
-		periodDays.put(Periods.WEEK, 7);
-		periodDays.put(Periods.THO_WEEKS, 14);
-		periodDays.put(Periods.MONTH, 30);
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,19 +73,19 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.btCreateTask:
-			returnNewTask();
-			return;
-		case R.id.text_task_date_start:
-		case R.id.text_task_date_end:
-			showDatePickerDialog((TextView) view);
-			return;
-		case R.id.text_task_time_start:
-		case R.id.text_task_time_end:
-			showTimePickerDialog((TextView) view);
-			return;
-		default:
-			return;
+			case R.id.btCreateTask:
+				returnNewTask();
+				return;
+			case R.id.text_task_date_start:
+			case R.id.text_task_date_end:
+				showDatePickerDialog((TextView) view);
+				return;
+			case R.id.text_task_time_start:
+			case R.id.text_task_time_end:
+				showTimePickerDialog((TextView) view);
+				return;
+			default:
+				return;
 		}
 	}
 
@@ -108,7 +98,7 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 		String taskDateEnd = endDate.getText().toString();
 		String taskTimeStart = startTime.getText().toString();
 		String taskTimeEnd = endTime.getText().toString();
-		
+
 		String periodValue;
 		if (period.getVisibility() == View.VISIBLE) {
 			periodValue = period.getText().toString();
@@ -137,18 +127,17 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 			timeValue.setTime(time);
 			hour = timeValue.get(Calendar.HOUR);
 			minute = timeValue.get(Calendar.MINUTE);
-		}
-		catch (ParseException e) {
+		} catch (ParseException e) {
 			Calendar currentTime = Calendar.getInstance();
 			hour = currentTime.get(Calendar.HOUR_OF_DAY);
 			minute = currentTime.get(Calendar.MINUTE);
 		}
-	
+
 		TaskTimePicker timePicker = new TaskTimePicker(CreateTaskActivity.this, hour, minute, true, textView);
 		timePicker.setTitle("Select Time");
 		timePicker.show();
 	}
-	
+
 	private void showDatePickerDialog(TextView textView) {
 		Calendar currentDate = Calendar.getInstance();
 		int year = currentDate.get(Calendar.YEAR);
@@ -160,30 +149,17 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 		datePicker.show();
 	}
 
-	private class TaskTimePicker extends TimePickerDialog {
-		public TaskTimePicker(Context context, int hourOfDay, int minute, boolean is24HourView, final TextView textView) {
-			super(context, new TimePickerDialog.OnTimeSetListener() {
-				@Override
-				public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-					textView.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
-				}
-			}, hourOfDay, minute, is24HourView);
-		}
-	}
-
-	private class TaskDatePicker extends DatePickerDialog {
-		public TaskDatePicker(Context context, int year, int monthOfYear, int dayOfMonth, final TextView textView) {
-			super(context, new OnDateSetListener() {
-				@Override
-				public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-					textView.setText(String.format("%02d", day) + "." + String.format("%02d", month + 1) + "." + year);
-				}
-			}, year, monthOfYear, dayOfMonth);
-		}
+	private enum Periods {
+		ONE_TIME,
+		WEEK,
+		THO_WEEKS,
+		MONTH,
+		OTHER
 	}
 
 	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {}
+		public PlaceholderFragment() {
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -196,10 +172,10 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 			rootView.findViewById(R.id.text_task_time_end).setOnClickListener((CreateTaskActivity) getActivity());
 
 			final CreateTaskActivity activity = (CreateTaskActivity) getActivity();
-			activity.name = (EditText)rootView.findViewById(R.id.edit_task_name);
-			activity.desc = (EditText)rootView.findViewById(R.id.edit_task_description);
-			activity.startDate = (TextView)rootView.findViewById(R.id.text_task_date_start);
-			activity.endDate = (TextView)rootView.findViewById(R.id.text_task_date_end);
+			activity.name = (EditText) rootView.findViewById(R.id.edit_task_name);
+			activity.desc = (EditText) rootView.findViewById(R.id.edit_task_description);
+			activity.startDate = (TextView) rootView.findViewById(R.id.text_task_date_start);
+			activity.endDate = (TextView) rootView.findViewById(R.id.text_task_date_end);
 			activity.startTime = (TextView) rootView.findViewById(R.id.text_task_time_start);
 			activity.endTime = (TextView) rootView.findViewById(R.id.text_task_time_end);
 			activity.spinnerPeriod = (Spinner) rootView.findViewById(R.id.spinner_period);
@@ -211,13 +187,13 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 					if (position == CreateTaskActivity.Periods.OTHER.ordinal()) {
 						activity.period.setVisibility(View.VISIBLE);
 					} else {
-						activity.period.setVisibility(View.INVISIBLE);						
+						activity.period.setVisibility(View.INVISIBLE);
 					}
 				}
 
 				@Override
 				public void onNothingSelected(AdapterView<?> parentView) {
-				}				
+				}
 			});
 
 			Intent intent = getActivity().getIntent();
@@ -247,6 +223,28 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 				acceptButton.setText(R.string.button_task_change);
 			}
 			return rootView;
+		}
+	}
+
+	private class TaskTimePicker extends TimePickerDialog {
+		public TaskTimePicker(Context context, int hourOfDay, int minute, boolean is24HourView, final TextView textView) {
+			super(context, new TimePickerDialog.OnTimeSetListener() {
+				@Override
+				public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+					textView.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
+				}
+			}, hourOfDay, minute, is24HourView);
+		}
+	}
+
+	private class TaskDatePicker extends DatePickerDialog {
+		public TaskDatePicker(Context context, int year, int monthOfYear, int dayOfMonth, final TextView textView) {
+			super(context, new OnDateSetListener() {
+				@Override
+				public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+					textView.setText(String.format("%02d", day) + "." + String.format("%02d", month + 1) + "." + year);
+				}
+			}, year, monthOfYear, dayOfMonth);
 		}
 	}
 }

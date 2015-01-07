@@ -1,104 +1,105 @@
 <LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:paddingBottom="@dimen/activity_vertical_margin"
-	android:paddingLeft="@dimen/activity_horizontal_margin"
-	android:paddingRight="@dimen/activity_horizontal_margin"
-	android:paddingTop="@dimen/activity_vertical_margin"
-	tools:context="com.open.schedule.CreateTaskActivity$PlaceholderFragment"
-	android:orientation="vertical" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.open.schedule.CreateTaskActivity$PlaceholderFragment">
 
-	<EditText
-	    android:id="@+id/edit_task_name"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:hint="@string/text_task_name"
-	    android:inputType="text" />
-	    <requestFocus />
-	
-	<EditText
-	    android:id="@+id/edit_task_description"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:hint="@string/text_task_description"
-	    android:inputType="text" >
+    <EditText
+        android:id="@+id/edit_task_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/text_task_name"
+        android:inputType="text"/>
 
-	</EditText>
+    <requestFocus/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:layout_marginBottom="10dp"
-		android:orientation="horizontal" >
+    <EditText
+        android:id="@+id/edit_task_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/text_task_description"
+        android:inputType="text">
 
-		<TextView
-		    android:id="@+id/text_task_date_start"
-		    style="?android:attr/spinnerStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_date_start" />
+    </EditText>
 
-		<TextView
-		    android:id="@+id/text_task_date_end"
-		    style="?android:attr/spinnerStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_date_end" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
-	</LinearLayout>
+        <TextView
+            android:id="@+id/text_task_date_start"
+            style="?android:attr/spinnerStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_date_start"/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:layout_marginBottom="10dp"
-		android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/text_task_date_end"
+            style="?android:attr/spinnerStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_date_end"/>
 
-		<TextView
-		    android:id="@+id/text_task_time_start"
-		    style="?android:attr/spinnerStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_time_start" />
+    </LinearLayout>
 
-		<TextView
-		    android:id="@+id/text_task_time_end"
-		    style="?android:attr/spinnerStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_time_end" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
-	</LinearLayout>
+        <TextView
+            android:id="@+id/text_task_time_start"
+            style="?android:attr/spinnerStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_time_start"/>
 
-	<Spinner
-	    android:id="@+id/spinner_period"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:entries="@array/periods"
-	    android:prompt="@string/periods_choose" />
+        <TextView
+            android:id="@+id/text_task_time_end"
+            style="?android:attr/spinnerStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_time_end"/>
 
-	<EditText
-	    android:id="@+id/edit_period"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:hint="@string/hint_task_period"
-	    android:ems="10"
-	    android:inputType="number" >
-	</EditText>
+    </LinearLayout>
 
-	<Button
-		android:id="@+id/btCreateTask"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/button_create_task" />
+    <Spinner
+        android:id="@+id/spinner_period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/periods"
+        android:prompt="@string/periods_choose"/>
+
+    <EditText
+        android:id="@+id/edit_period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/hint_task_period"
+        android:inputType="number">
+    </EditText>
+
+    <Button
+        android:id="@+id/btCreateTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_create_task"/>
 
 </LinearLayout>

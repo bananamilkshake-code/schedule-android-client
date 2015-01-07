@@ -1,27 +1,26 @@
 package com.open.schedule.storage.database;
 
-import com.open.schedule.io.Tables;
-
-import java.util.Date;
-import java.util.Locale;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import com.open.schedule.storage.tables.*;
+
+import com.open.schedule.io.Tables;
+import com.open.schedule.storage.tables.Table;
 import com.open.schedule.storage.tables.Table.Permission;
 import com.open.schedule.utility.Utility;
 
-public class Database {
-	private DatabaseHelper dbHelper;
-	private SQLiteDatabase database;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+public class Database {
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+	private DatabaseHelper dbHelper;
+	private SQLiteDatabase database;
 
 	public Database(Context context) {
 		this.dbHelper = new DatabaseHelper(context);
@@ -40,7 +39,7 @@ public class Database {
 			int id = cursorTables.getColumnIndex(DatabaseHelper.INNER_ID);
 			int globalId = cursorTables.getColumnIndex(DatabaseHelper.GLOBAL_ID);
 			int updateTime = cursorTables.getColumnIndex(DatabaseHelper.UPDATE_TIME);
-			while(!cursorTables.isAfterLast()) {
+			while (!cursorTables.isAfterLast()) {
 				Integer idVal = cursorTables.getInt(id);
 				Integer globalIdVal = cursorTables.getInt(globalId);
 				Long updateTimeVal = cursorTables.getLong(updateTime);
@@ -50,7 +49,7 @@ public class Database {
 		}
 		cursorTables.close();
 
-		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, 
+		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID,
 				DatabaseHelper.CHANGE_NAME, DatabaseHelper.CHANGE_DESCRIPTION};
 		Cursor cursorChanges = database.query(DatabaseHelper.TABLE_TABLE_CHANGES, columnsChanges, null, null, null, null, null);
 
@@ -61,7 +60,7 @@ public class Database {
 			int name = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_NAME);
 			int description = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_DESCRIPTION);
 
-			while(!cursorChanges.isAfterLast()) {
+			while (!cursorChanges.isAfterLast()) {
 				Integer tableIdVal = cursorChanges.getInt(tableId);
 				Integer userIdVal = cursorChanges.getInt(userId);
 				Long timeVal = cursorChanges.getLong(time);
@@ -85,7 +84,7 @@ public class Database {
 			int tableId = cursorTasks.getColumnIndex(DatabaseHelper.TABLE_ID);
 			int globalId = cursorTasks.getColumnIndex(DatabaseHelper.GLOBAL_ID);
 			int updateTime = cursorTasks.getColumnIndex(DatabaseHelper.UPDATE_TIME);
-			while(!cursorTasks.isAfterLast()) {
+			while (!cursorTasks.isAfterLast()) {
 				Integer idVal = cursorTasks.getInt(id);
 				Integer tableIdVal = cursorTasks.getInt(tableId);
 				Integer globalIdVal = cursorTasks.getInt(globalId);
@@ -96,9 +95,9 @@ public class Database {
 		}
 		cursorTasks.close();
 
-		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID, 
+		String[] columnsChanges = {DatabaseHelper.TABLE_ID, DatabaseHelper.TASK_ID, DatabaseHelper.TIME, DatabaseHelper.USER_ID,
 				DatabaseHelper.CHANGE_NAME, DatabaseHelper.CHANGE_DESCRIPTION, DatabaseHelper.CHANGE_TASK_PERIOD,
-				DatabaseHelper.CHANGE_TASK_START_DATE, DatabaseHelper.CHANGE_TASK_END_DATE, 
+				DatabaseHelper.CHANGE_TASK_START_DATE, DatabaseHelper.CHANGE_TASK_END_DATE,
 				DatabaseHelper.CHANGE_TASK_START_TIME, DatabaseHelper.CHANGE_TASK_END_TIME};
 		Cursor cursorChanges = database.query(DatabaseHelper.TABLE_TASK_CHANGES, columnsChanges, null, null, null, null, null);
 
@@ -115,7 +114,7 @@ public class Database {
 			int endTime = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_TASK_END_TIME);
 			int period = cursorChanges.getColumnIndex(DatabaseHelper.CHANGE_TASK_PERIOD);
 
-			while(!cursorChanges.isAfterLast()) {
+			while (!cursorChanges.isAfterLast()) {
 				Integer tableIdVal = cursorChanges.getInt(tableId);
 				Integer taskIdVal = cursorChanges.getInt(taskId);
 
@@ -133,15 +132,15 @@ public class Database {
 					String val = cursorChanges.getString(startDate);
 					if (val != null)
 						startDateVal = dateFormatter.parse(val);
-					
+
 					val = cursorChanges.getString(endDate);
 					if (val != null)
 						endDateVal = dateFormatter.parse(val);
-					
+
 					val = cursorChanges.getString(startTime);
 					if (val != null)
 						startTimeVal = timeFormatter.parse(val);
-					
+
 					val = cursorChanges.getString(endTime);
 					if (val != null)
 						endTimeVal = timeFormatter.parse(val);
@@ -161,12 +160,12 @@ public class Database {
 	public void loadPermissions(Tables tables) {
 		String[] columns = {DatabaseHelper.TABLE_ID, DatabaseHelper.USER_ID, DatabaseHelper.READERS_PERMISSION};
 		Cursor cursor = database.query(DatabaseHelper.TABLE_READERS, columns, null, null, null, null, null);
-		
+
 		if (cursor.moveToFirst()) {
 			int tableId = cursor.getColumnIndex(DatabaseHelper.TABLE_ID);
 			int userId = cursor.getColumnIndex(DatabaseHelper.USER_ID);
 			int permissionId = cursor.getColumnIndex(DatabaseHelper.READERS_PERMISSION);
-			
+
 			while (!cursor.isAfterLast()) {
 				Integer tableIdVal = cursor.getInt(tableId);
 				Integer userIdVal = cursor.getInt(userId);
@@ -189,7 +188,7 @@ public class Database {
 			int userId = cursor.getColumnIndex(DatabaseHelper.USER_ID);
 			int textId = cursor.getColumnIndex(DatabaseHelper.COMMENTS_TEXT);
 
-			while(!cursor.isAfterLast()) {
+			while (!cursor.isAfterLast()) {
 				Integer tableIdVal = cursor.getInt(tableId);
 				Integer taskIdVal = cursor.getInt(taskId);
 				Integer commentatorVal = cursor.getInt(userId);
@@ -262,7 +261,7 @@ public class Database {
 	public void updateTableGlobalId(Integer tableId, Integer tableGlobalId) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.GLOBAL_ID, tableGlobalId);
-		database.update(DatabaseHelper.TABLE_TABLES, values, DatabaseHelper.INNER_ID + " =?", new String[] {tableId.toString()});
+		database.update(DatabaseHelper.TABLE_TABLES, values, DatabaseHelper.INNER_ID + " =?", new String[]{tableId.toString()});
 	}
 
 	public void updateTaskGlobalId(Integer tableGlobalId, Integer taskGlobalId, Integer taskId) {
@@ -279,32 +278,31 @@ public class Database {
 		}
 
 		Integer tableId = 0;
-		while(!cursor.isAfterLast()) 
+		while (!cursor.isAfterLast())
 			tableId = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.INNER_ID));
 		cursor.close();
 
 		values = new ContentValues();
 		values.put(DatabaseHelper.GLOBAL_ID, taskGlobalId);
-		database.update(DatabaseHelper.TABLE_TASKS, values, DatabaseHelper.TABLE_ID + " =? AND " + DatabaseHelper.INNER_ID + " = ?", new String[] {tableId.toString(), taskId.toString()});
+		database.update(DatabaseHelper.TABLE_TASKS, values, DatabaseHelper.TABLE_ID + " =? AND " + DatabaseHelper.INNER_ID + " = ?", new String[]{tableId.toString(), taskId.toString()});
 	}
-	
+
 	public void updateTable(Integer tableId, Long time) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.UPDATE_TIME, time);
-		database.update(DatabaseHelper.TABLE_TABLES, values, DatabaseHelper.INNER_ID + " = ?", new String[] {tableId.toString()});
+		database.update(DatabaseHelper.TABLE_TABLES, values, DatabaseHelper.INNER_ID + " = ?", new String[]{tableId.toString()});
 	}
 
 	public void updateTask(Integer tableId, Integer taskId, Long time) {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.UPDATE_TIME, time);
-		database.update(DatabaseHelper.TABLE_TASKS, values, DatabaseHelper.TABLE_ID + " =? AND " + DatabaseHelper.INNER_ID + " = ?", new String[] {tableId.toString(), taskId.toString()});
+		database.update(DatabaseHelper.TABLE_TASKS, values, DatabaseHelper.TABLE_ID + " =? AND " + DatabaseHelper.INNER_ID + " = ?", new String[]{tableId.toString(), taskId.toString()});
 	}
 
 	public void setPermission(Integer table_id, Integer user_id, Table.Permission permission) {
 		if (permission == Permission.NONE) {
-			database.delete(DatabaseHelper.TABLE_READERS, DatabaseHelper.USER_ID + " = ?", new String[] {user_id.toString()});
-		}
-		else {
+			database.delete(DatabaseHelper.TABLE_READERS, DatabaseHelper.USER_ID + " = ?", new String[]{user_id.toString()});
+		} else {
 			ContentValues values = new ContentValues();
 			values.put(DatabaseHelper.TABLE_ID, table_id);
 			values.put(DatabaseHelper.USER_ID, user_id);
@@ -320,7 +318,7 @@ public class Database {
 		values.put(DatabaseHelper.USERS_NAME, name);
 		database.insert(DatabaseHelper.TABLE_USERS, null, values);
 	}
-	
+
 	public void updateUserId(Integer userId) {
 		ContentValues userValues = new ContentValues();
 		userValues.put(DatabaseHelper.GLOBAL_ID, userId);
@@ -333,8 +331,8 @@ public class Database {
 			database.update(table, values, DatabaseHelper.USER_ID + " = 0", null);
 		}
 	}
-	
+
 	public void updateLogoutTime(long logoutTime) {
-		
+
 	}
 }

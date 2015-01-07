@@ -1,6 +1,5 @@
 package com.open.schedule.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -23,18 +22,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.open.schedule.R;
+import com.open.schedule.storage.tables.Table;
+import com.open.schedule.storage.tables.Table.Permission;
 
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.open.schedule.storage.tables.Table;
-import com.open.schedule.storage.tables.Table.Permission;
-
 public class ReadersActivity extends ScheduleActivity {
+	public static final String TABLE_ID = "tableId";
+	static final String BUNDLE_USERID = "userId";
 	private Table table;
 	private ListView readersList;
-
-	public static final String TABLE_ID = "tableId";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +64,8 @@ public class ReadersActivity extends ScheduleActivity {
 
 	public void changePermission(Integer userId, Permission permission) {
 		this.getClient().changePermision(true, table.getId(), userId, permission);
-		((BaseAdapter)(readersList.getAdapter())).notifyDataSetChanged();
+		((BaseAdapter) (readersList.getAdapter())).notifyDataSetChanged();
 	}
-
-	static final String BUNDLE_USERID = "userId";
 
 	public void choosePermission(Integer userId) {
 		PermissionFragment permissionFragment = new PermissionFragment();
@@ -81,7 +77,7 @@ public class ReadersActivity extends ScheduleActivity {
 
 	public static class PermissionFragment extends DialogFragment {
 		Permission permission;
-		
+
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			final ReadersActivity activity = (ReadersActivity) getActivity();
@@ -102,9 +98,9 @@ public class ReadersActivity extends ScheduleActivity {
 				}
 			});
 			return builder.create();
-		}	
+		}
 	}
-	
+
 	public class PlaceholderFragment extends Fragment {
 		public PlaceholderFragment() {
 		}
@@ -137,7 +133,7 @@ public class ReadersActivity extends ScheduleActivity {
 		public ReadersAdapter(Table table) {
 			this.readers = table.getReaders();
 		}
-		
+
 		@Override
 		public int getCount() {
 			return readers.size();
@@ -163,21 +159,21 @@ public class ReadersActivity extends ScheduleActivity {
 			ImageView permissionImage = (ImageView) rowView.findViewById(R.id.image_permission);
 			TextView userText = (TextView) rowView.findViewById(R.id.text_reader_name);
 			userText.setText(ReadersActivity.this.getClient().getUserName(Long.valueOf(this.getItemId(position)).intValue()));
-			
+
 			switch (entry.getValue()) {
-			case READ:
-				permissionImage.setImageResource(R.drawable.ic_action_edit);
-				break;
-			case WRITE:
-				permissionImage.setImageResource(R.drawable.ic_action_edit);
-				break;
-			default:
-				break;
+				case READ:
+					permissionImage.setImageResource(R.drawable.ic_action_edit);
+					break;
+				case WRITE:
+					permissionImage.setImageResource(R.drawable.ic_action_edit);
+					break;
+				default:
+					break;
 			}
-			
+
 			return rowView;
 		}
-		
+
 		private Entry<Integer, Permission> getEntryByPosition(Integer position) {
 			return this.readers.entrySet().toArray(new Entry[this.readers.size()])[position];
 		}

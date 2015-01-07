@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="button_new_table_create">Создать</string>
-	<string name="button_table_change">Изменить</string>
-	<string name="hint_new_table_name">Название</string>
-	<string name="new_table_description">Описание</string>
+    <string name="button_new_table_create">Создать</string>
+    <string name="button_table_change">Изменить</string>
+    <string name="hint_new_table_name">Название</string>
+    <string name="new_table_description">Описание</string>
 </resources>

@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class DatabaseHelper extends SQLiteOpenHelper{
+public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String DATABASE_NAME = "schedule";
 	public static final String TABLE_USERS = "users";
 	public static final String USERS_NAME = "name";
@@ -14,46 +14,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String TABLE_TASKS = "tasks";
 	public static final String INNER_ID = "_id";
 	public static final String GLOBAL_ID = "id";
-	public static final String UPDATE_TIME = "update_time";
-	
-	public static final String TABLE_ID = "table_id";
-	public static final String TASK_ID = "task_id";
-	public static final String USER_ID = "user_id";
-	public static final String TIME = "time";
-
-	public static final String TABLE_TABLE_CHANGES = "table_changes";
-	public static final String TABLE_TASK_CHANGES = "task_changes";
-	public static final String CHANGE_NAME = "name";
-	public static final String CHANGE_DESCRIPTION = "description";
-	public static final String CHANGE_TASK_START_DATE = "start_date";
-	public static final String CHANGE_TASK_END_DATE = "end_date";
-	public static final String CHANGE_TASK_START_TIME = "start_time";
-	public static final String CHANGE_TASK_END_TIME = "end_time";
-	public static final String CHANGE_TASK_PERIOD = "period";
-	
-	public static final String TABLE_COMMENTS = "comments";
-	public static final String COMMENTS_TEXT = "commentary";
-	public static final String TABLE_READERS = "readers";
-	public static final String READERS_PERMISSION = "permission";
-
-	private static final int DATABASE_VERSION = 1;
-
-	private static final String CREATE_USERS = 
+	private static final String CREATE_USERS =
 			"CREATE TABLE " + TABLE_USERS + " (" +
 					GLOBAL_ID + " INTEGER PRIMARY KEY," +
 					USERS_NAME + " VARCHAR(50) NOT NULL," +
 					"UNIQUE(" + GLOBAL_ID + ") " +
-				")";
-
-	private static final String CREATE_TABLES = 
+					")";
+	public static final String UPDATE_TIME = "update_time";
+	private static final String CREATE_TABLES =
 			"CREATE TABLE " + TABLE_TABLES + " (" +
 					INNER_ID + " INTEGER PRIMARY KEY," +
 					GLOBAL_ID + " INT(10)," +
 					UPDATE_TIME + " INT(10) NOT NULL DEFAULT 0," +
 					"UNIQUE(" + INNER_ID + "," + GLOBAL_ID + ")" +
-				")";
-
-	private static final String CREATE_TASKS = 
+					")";
+	public static final String TABLE_ID = "table_id";
+	private static final String CREATE_TASKS =
 			"CREATE TABLE " + TABLE_TASKS + " (" +
 					INNER_ID + " INTEGER PRIMARY KEY," +
 					GLOBAL_ID + " INT(10)," +
@@ -61,9 +37,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					UPDATE_TIME + " INT(10) NOT NULL DEFAULT 0," +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"UNIQUE(" + INNER_ID + "," + GLOBAL_ID + "," + TABLE_ID + ")" +
-				")";
-	
-	private static final String CREATE_TABLES_CHANGES = 
+					")";
+	public static final String TASK_ID = "task_id";
+	public static final String USER_ID = "user_id";
+	public static final String TIME = "time";
+	public static final String TABLE_TABLE_CHANGES = "table_changes";
+	public static final String TABLE_TASK_CHANGES = "task_changes";
+	public static final String CHANGE_NAME = "name";
+	public static final String CHANGE_DESCRIPTION = "description";
+	private static final String CREATE_TABLES_CHANGES =
 			"CREATE TABLE " + TABLE_TABLE_CHANGES + " (" +
 					TABLE_ID + " INT(10)," +
 					TIME + " INT(10) NOT NULL," +
@@ -73,9 +55,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"FOREIGN KEY (" + USER_ID + ") REFERENCES users(" + GLOBAL_ID + ")," +
 					"UNIQUE(" + TABLE_ID + "," + USER_ID + "," + TIME + ")" +
-				")";
-
-	private static final String CREATE_TASKS_CHANGES = 
+					")";
+	public static final String CHANGE_TASK_START_DATE = "start_date";
+	public static final String CHANGE_TASK_END_DATE = "end_date";
+	public static final String CHANGE_TASK_START_TIME = "start_time";
+	public static final String CHANGE_TASK_END_TIME = "end_time";
+	public static final String CHANGE_TASK_PERIOD = "period";
+	private static final String CREATE_TASKS_CHANGES =
 			"CREATE TABLE " + TABLE_TASK_CHANGES + " (" +
 					TABLE_ID + " INT(10) NOT NULL," +
 					TASK_ID + " INT(10) NOT NULL," +
@@ -87,13 +73,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					CHANGE_TASK_END_DATE + " DATE, " +
 					CHANGE_TASK_START_TIME + " TIME, " +
 					CHANGE_TASK_END_TIME + " TIME, " +
-					CHANGE_TASK_PERIOD + " INT, " + 
+					CHANGE_TASK_PERIOD + " INT, " +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"FOREIGN KEY (" + TASK_ID + ") REFERENCES tasks(" + INNER_ID + ")," +
 					"UNIQUE(" + TABLE_ID + ", " + TASK_ID + "," + USER_ID + "," + TIME + ")" +
-				")";
-
-	private static final String CREATE_COMMENTS = 
+					")";
+	public static final String TABLE_COMMENTS = "comments";
+	public static final String COMMENTS_TEXT = "commentary";
+	private static final String CREATE_COMMENTS =
 			"CREATE TABLE comments (" +
 					USER_ID + " INT(10) NOT NULL," +
 					TABLE_ID + " INT(10) NOT NULL," +
@@ -103,9 +90,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					"FOREIGN KEY (" + USER_ID + ") REFERENCES users(id)," +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"FOREIGN KEY (" + TASK_ID + ") REFERENCES tasks(" + INNER_ID + ")" +
-				")";
-
-	private static final String CREATE_READERS = 
+					")";
+	public static final String TABLE_READERS = "readers";
+	public static final String READERS_PERMISSION = "permission";
+	private static final String CREATE_READERS =
 			"CREATE TABLE " + TABLE_READERS + " (" +
 					USER_ID + " INT(10) NOT NULL," +
 					TABLE_ID + " INT(10) NOT NULL," +
@@ -113,7 +101,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 					"FOREIGN KEY (" + USER_ID + ") REFERENCES users(" + GLOBAL_ID + ")," +
 					"FOREIGN KEY (" + TABLE_ID + ") REFERENCES tables(" + INNER_ID + ")," +
 					"UNIQUE(" + USER_ID + ", " + TABLE_ID + ")" +
-				")";
+					")";
+	private static final int DATABASE_VERSION = 1;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

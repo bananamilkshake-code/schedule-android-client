@@ -1,7 +1,8 @@
 package com.open.schedule.io.packet.client;
 
-import java.io.IOException;
 import com.open.schedule.io.packet.ClientPacket;
+
+import java.io.IOException;
 
 public class CreateTablePacket extends ClientPacket {
 	public CreateTablePacket(Integer tableId, Long time, String name, String description) throws IOException {

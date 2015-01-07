@@ -1,7 +1,7 @@
 package com.open.schedule.io.packet.server;
 
-import com.open.schedule.utility.Utility;
 import com.open.schedule.io.packet.ServerPacket;
+import com.open.schedule.utility.Utility;
 
 public class CommentaryPacket extends ServerPacket {
 	public Integer tableGlobalId;
@@ -9,11 +9,11 @@ public class CommentaryPacket extends ServerPacket {
 	public Integer userId;
 	public Long time;
 	public String comment;
-	
+
 	public CommentaryPacket() {
 		super(ServerPacket.Type.COMMENTARY);
 	}
-	
+
 
 	@Override
 	public void init(byte[] data) {

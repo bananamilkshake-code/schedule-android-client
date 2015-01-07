@@ -1,13 +1,13 @@
 package com.open.schedule.io.packet.server;
 
-import com.open.schedule.utility.Utility;
 import com.open.schedule.io.packet.ServerPacket;
+import com.open.schedule.utility.Utility;
 
 public class GlobalTaskIdPacket extends ServerPacket {
 	public Integer taskId;
 	public Integer taskGlobalId;
 	public Integer tableGlobalId;
-	
+
 	public GlobalTaskIdPacket() {
 		super(ServerPacket.Type.GLOBAL_TASK_ID);
 	}

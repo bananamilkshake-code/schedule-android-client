@@ -1,12 +1,12 @@
 package com.open.schedule.io.packet.client;
 
-import java.io.IOException;
-
 import com.open.schedule.io.packet.ClientPacket;
 
+import java.io.IOException;
+
 public class ChangeTaskPacket extends ClientPacket {
-	public ChangeTaskPacket(Integer taskId, Integer tableId, Long time, String name, String description, 
-			String startDate, String endDate, String startTime, String endTime) throws IOException {
+	public ChangeTaskPacket(Integer taskId, Integer tableId, Long time, String name, String description,
+							String startDate, String endDate, String startTime, String endTime) throws IOException {
 		super(ClientPacket.Type.TASK_CHANGE);
 		this.writeInt(taskId);
 		this.writeInt(tableId);

@@ -1,20 +1,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:paddingBottom="@dimen/activity_vertical_margin"
-	android:paddingLeft="@dimen/activity_horizontal_margin"
-	android:paddingRight="@dimen/activity_horizontal_margin"
-	android:paddingTop="@dimen/activity_vertical_margin"
-	tools:context="com.open.schedule.CrearteCommentActivity$PlaceholderFragment"
-	android:orientation="vertical" >
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context="com.open.schedule.CrearteCommentActivity$PlaceholderFragment">
 
     <TextView
         android:id="@+id/text_task_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_task_name"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/text_task_desc"
@@ -22,75 +22,75 @@
         android:layout_height="wrap_content"
         android:text="@string/text_task_description"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#222222" />
+        android:textColor="#222222"/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
-		<TextView
-		    android:id="@+id/text_task_date_start"
-		    style="?android:attr/spinnerItemStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_date_start" />
+        <TextView
+            android:id="@+id/text_task_date_start"
+            style="?android:attr/spinnerItemStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_date_start"/>
 
-		<TextView
-		    android:id="@+id/text_task_date_end"
-		    style="?android:attr/spinnerItemStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_date_end" />
+        <TextView
+            android:id="@+id/text_task_date_end"
+            style="?android:attr/spinnerItemStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_date_end"/>
 
-	</LinearLayout>
+    </LinearLayout>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:layout_marginBottom="10dp"
-		android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
-		<TextView
-		    android:id="@+id/text_task_time_start"
-		    style="?android:attr/spinnerItemStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_time_start" />
+        <TextView
+            android:id="@+id/text_task_time_start"
+            style="?android:attr/spinnerItemStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_time_start"/>
 
-		<TextView
-		    android:id="@+id/text_task_time_end"
-		    style="?android:attr/spinnerItemStyle"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/new_task_time_end" />
-		
-	</LinearLayout>
+        <TextView
+            android:id="@+id/text_task_time_end"
+            style="?android:attr/spinnerItemStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_task_time_end"/>
 
-	<RelativeLayout 
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/text_task_period_before"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="3dp"
             android:layout_alignParentLeft="true"
-            android:text="@string/task_period_label_before" />
+            android:paddingRight="3dp"
+            android:text="@string/task_period_label_before"/>
 
         <TextView
             android:id="@+id/text_task_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/text_task_period_before"
-            android:text="5" />
+            android:text="5"/>
 
         <TextView
             android:id="@+id/text_task_period_after"
@@ -99,39 +99,40 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/text_task_period"
             android:paddingLeft="3dp"
-            android:text="@string/task_period_label_end" />
+            android:text="@string/task_period_label_end"/>
 
-	</RelativeLayout>
+    </RelativeLayout>
 
-	<RelativeLayout 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-		<Button
-			android:id="@+id/button_add_comment"
-			style="?android:attr/buttonStyleSmall"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:text="@string/button_comment_add" />
+        <Button
+            android:id="@+id/button_add_comment"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/button_comment_add"/>
 
-		<EditText
-			android:id="@+id/edit_comment"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:hint="@string/hint_add_comment"
-			android:layout_alignParentLeft="true"
-			android:inputType="text"
-			android:layout_toLeftOf="@+id/button_add_comment" >
-			<requestFocus />
+        <EditText
+            android:id="@+id/edit_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/button_add_comment"
+            android:hint="@string/hint_add_comment"
+            android:inputType="text">
 
-		</EditText>
+            <requestFocus/>
 
-	</RelativeLayout>
+        </EditText>
 
-	<ListView
-		android:id="@+id/list_comments"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_comments"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
 </LinearLayout>

@@ -3,9 +3,9 @@ package com.open.schedule.storage.tables;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 public class ChangeableData {
 	public TreeMap<Long, Change> changes = new TreeMap<>();
@@ -18,16 +18,16 @@ public class ChangeableData {
 	public ChangeableData(Integer id) {
 		this.id = id;
 	}
-	
+
 	public ChangeableData(Integer id, Long updateTime) {
 		this(id);
 		this.lastUpdate = updateTime;
 	}
-	
+
 	public final Integer getId() {
 		return this.id;
 	}
-	
+
 	public Entry<Long, Change> getInitial() {
 		return changes.firstEntry();
 	}
@@ -35,7 +35,7 @@ public class ChangeableData {
 	public void change(Long time, Change change) {
 		changes.put(time, change);
 	}
-	
+
 	public void updateGlobalId(Integer globalId) {
 		this.globalId = globalId;
 	}
@@ -48,20 +48,20 @@ public class ChangeableData {
 
 		NavigableMap<Long, Change> reverseChanges = changes.descendingMap();
 		Collection<Entry<Long, Change>> set = reverseChanges.entrySet();
-		for (Iterator<Entry<Long, Change>> iter = set.iterator(); iter.hasNext() && info.hasNulls();)
+		for (Iterator<Entry<Long, Change>> iter = set.iterator(); iter.hasNext() && info.hasNulls(); )
 			info.merge(iter.next().getValue());
 
 		return info;
 	}
-	
+
 	public Change getChange(Long time) {
 		return changes.get(time);
 	}
-	
+
 	public Integer getGlobalId() {
 		return this.globalId;
 	}
-	
+
 	public ArrayList<Long> getNewChanges(Integer clientId) {
 		ArrayList<Long> changes = new ArrayList<Long>();
 		Iterator<Long> changeIter = this.changes.descendingKeySet().iterator();
