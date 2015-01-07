@@ -150,7 +150,7 @@ public class Tables {
 		return tasks;
 	}
 	
-	TreeMap<Integer, ArrayList<Long>> getNewTableChanges(Long logoutTime) {
+	TreeMap<Integer, ArrayList<Long>> getNewTableChanges(Long logoutTime, Integer clientId) {
 		TreeMap<Integer, ArrayList<Long>> tableChanges = new TreeMap<Integer, ArrayList<Long>>();
 		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
 		while (tableIter.hasNext()) {
@@ -159,7 +159,7 @@ public class Tables {
 			if (table.getGlobalId() == null)
 				continue;
 			
-			ArrayList<Long> changeTimes = table.getChangesAfter();
+			ArrayList<Long> changeTimes = table.getNewChanges(clientId);
 			if (changeTimes.isEmpty())
 				continue;
 			tableChanges.put(tableId, changeTimes);
@@ -167,7 +167,7 @@ public class Tables {
 		return tableChanges;
 	}
 
-	public SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> getNewTaskChanges(Long logoutTime) {
+	public SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> getNewTaskChanges(Long logoutTime, Integer clientId) {
 		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> tasksChanges = new TreeMap<Integer, SortedMap<Integer, ArrayList<Long>>>();
 		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
 		while (tableIter.hasNext()) {
@@ -183,7 +183,7 @@ public class Tables {
 				if (task.getGlobalId() == null)
 					continue;
 				
-				ArrayList<Long> changeTimes = task.getChangesAfter();
+				ArrayList<Long> changeTimes = task.getNewChanges(clientId);
 				if (changeTimes.isEmpty())
 					continue;
 				
@@ -196,7 +196,7 @@ public class Tables {
 		return tasksChanges;
 	}
 	
-	public SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> getNewComments(Long logoutTime) {
+	public SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> getNewComments(Long logoutTime, Integer clientId) {
 		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> comments = new TreeMap<Integer, SortedMap<Integer, ArrayList<Long>>>();
 		Iterator<Integer> tableIter = this.tables.descendingKeySet().iterator();
 		while (tableIter.hasNext()) {
@@ -212,7 +212,7 @@ public class Tables {
 				if (task.getGlobalId() == null)
 					continue;
 				
-				ArrayList<Long> commentTimes = task.getNewComments(logoutTime);
+				ArrayList<Long> commentTimes = task.getNewComments(logoutTime, clientId);
 				if (commentTimes.isEmpty())
 					continue;
 					

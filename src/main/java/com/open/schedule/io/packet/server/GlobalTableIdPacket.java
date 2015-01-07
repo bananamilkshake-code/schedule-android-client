@@ -12,7 +12,7 @@ public class GlobalTableIdPacket extends ServerPacket {
 	}
 
 	@Override
-	public void init(char[] data) {
+	public void init(byte[] data) {
 		int offset = 0;
 		this.tableId = Utility.getInt(data, offset);
 		this.tableGlobalId = Utility.getInt(data, offset += Integer.SIZE / 8);

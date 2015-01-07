@@ -50,5 +50,5 @@ public abstract class ServerPacket extends Packet {
 		return type;
 	}
 
-	public abstract void init(char[] data);
+	public abstract void init(byte[] data);
 }

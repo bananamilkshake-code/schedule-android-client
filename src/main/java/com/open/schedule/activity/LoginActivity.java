@@ -24,7 +24,7 @@ import com.open.schedule.events.objects.EventWarehouse;
 import com.open.schedule.io.Client;
 import com.open.schedule.io.packet.server.LoginPacket;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class LoginActivity extends ScheduleActivity implements OnClickListener {
 	public static final int REGISTER = 1;
 	
 	public static final int RESULT_REGISTERED = RESULT_FIRST_USER + 1;
@@ -220,9 +220,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public class UserLoginTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			if (!Client.getInstance().isConnected())
+			if (!LoginActivity.this.isConnected())
 				return null;
-			Client.getInstance().login(email, password);
+
+			LoginActivity.this.getClient().login(email, password);
 			return null;
 		}
 

@@ -16,7 +16,7 @@ public class CommentaryPacket extends ServerPacket {
 	
 
 	@Override
-	public void init(char[] data) {
+	public void init(byte[] data) {
 		int offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
 		this.taskGlobalId = Utility.getInt(data, offset += Integer.SIZE / 8);

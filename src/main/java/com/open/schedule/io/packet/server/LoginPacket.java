@@ -17,7 +17,7 @@ public class LoginPacket extends ServerPacket {
 	}
 
 	@Override
-	public void init(char[] data) {
+	public void init(byte[] data) {
 		this.status = Status.values()[data[0]];
 		
 		if (this.status == Status.SUCCESS) {

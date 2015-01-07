@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.SortedMap;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,15 +22,15 @@ import android.widget.TextView;
 
 import com.open.schedule.R;
 
+import com.open.schedule.io.Client;
 import com.open.schedule.storage.database.Database;
 import com.open.schedule.storage.tables.Table;
 import com.open.schedule.storage.tables.Table.TableInfo;
 import com.open.schedule.storage.tables.Task;
 import com.open.schedule.storage.tables.Task.TaskChange;
 import com.open.schedule.utility.Utility;
-import com.open.schedule.io.Client;
 
-public class ViewTableActivity extends Activity {
+public class ViewTableActivity extends ScheduleActivity {
 	public static final int REQUEST_CREATE_TASK = 1;
 	public static final int REQUEST_CHANGE = 2;
 	public static final int REQUEST_USERS = 3;
@@ -56,7 +55,7 @@ public class ViewTableActivity extends Activity {
 		setContentView(R.layout.activity_view_table);
 
 		this.tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
-		this.table = Client.getInstance().getTables().get(tableId);
+		this.table = this.getClient().getTables().get(tableId);
 
 		this.changes = (ListView) findViewById(R.id.list_changes_task);
 		this.changes.setAdapter(new TableChangesAdapted((LayoutInflater) ViewTableActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE), table));
@@ -130,14 +129,18 @@ public class ViewTableActivity extends Activity {
 			Log.w(Database.class.getName(), "Date task changes parsing", e);
 		}
 
-		Client.getInstance().createTask(true, tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal, period);
+		final Client client = this.getClient();
+		client.createTask(true, tableId, Utility.getUnixTime(), client.getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal, period);
 		((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();		
 	}
 
 	private void newChange(Intent data) {
 		String name = data.getStringExtra(CreateTableActivity.EXTRA_NAME);
 		String description = data.getStringExtra(CreateTableActivity.EXTRA_DESCRIPTION);
-		Client.getInstance().changeTable(true, this.tableId, Utility.getUnixTime(), Client.getInstance().getId(), name, description);
+
+		final Client client = this.getClient();
+		client.changeTable(true, this.tableId, Utility.getUnixTime(), client.getId(), name, description);
+
 		((BaseAdapter)(this.changes.getAdapter())).notifyDataSetChanged();
 		this.tableName.setText(name);
 		this.tableDesc.setText(description);
@@ -265,7 +268,7 @@ public class ViewTableActivity extends Activity {
 			TextView name = (TextView) rowView.findViewById(R.id.item_change_table_name);
 			TextView desc = (TextView) rowView.findViewById(R.id.item_change_table_desc);
 			
-			author.setText(Client.getInstance().getUserName(change.creatorId));
+			author.setText(ViewTableActivity.this.getClient().getUserName(change.creatorId));
 			time.setText(timeFormat.format(new Date(change.time * 1000)));
 			name.setText(change.name);
 			desc.setText(change.description);

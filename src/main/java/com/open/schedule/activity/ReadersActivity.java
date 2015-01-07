@@ -27,11 +27,10 @@ import com.open.schedule.R;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.open.schedule.io.Client;
 import com.open.schedule.storage.tables.Table;
 import com.open.schedule.storage.tables.Table.Permission;
 
-public class ReadersActivity extends Activity {
+public class ReadersActivity extends ScheduleActivity {
 	private Table table;
 	private ListView readersList;
 
@@ -66,7 +65,7 @@ public class ReadersActivity extends Activity {
 	}
 
 	public void changePermission(Integer userId, Permission permission) {
-		Client.getInstance().changePermision(true, table.getId(), userId, permission);
+		this.getClient().changePermision(true, table.getId(), userId, permission);
 		((BaseAdapter)(readersList.getAdapter())).notifyDataSetChanged();
 	}
 
@@ -106,7 +105,7 @@ public class ReadersActivity extends Activity {
 		}	
 	}
 	
-	public static class PlaceholderFragment extends Fragment {
+	public class PlaceholderFragment extends Fragment {
 		public PlaceholderFragment() {
 		}
 
@@ -117,7 +116,7 @@ public class ReadersActivity extends Activity {
 			final ReadersActivity activity = (ReadersActivity) getActivity();
 			Intent intent = getActivity().getIntent();
 			Integer tableId = intent.getIntExtra(ViewTableActivity.TABLE_ID, 0);
-			activity.table = Client.getInstance().getTables().get(tableId);
+			activity.table = ReadersActivity.this.getClient().getTables().get(tableId);
 
 			activity.readersList = (ListView) rootView.findViewById(R.id.list_readers);
 			activity.readersList.setAdapter(activity.new ReadersAdapter(activity.table));
@@ -163,7 +162,7 @@ public class ReadersActivity extends Activity {
 			Entry<Integer, Permission> entry = this.getItem(position);
 			ImageView permissionImage = (ImageView) rowView.findViewById(R.id.image_permission);
 			TextView userText = (TextView) rowView.findViewById(R.id.text_reader_name);
-			userText.setText(Client.getInstance().getUserName(Long.valueOf(this.getItemId(position)).intValue()));
+			userText.setText(ReadersActivity.this.getClient().getUserName(Long.valueOf(this.getItemId(position)).intValue()));
 			
 			switch (entry.getValue()) {
 			case READ:

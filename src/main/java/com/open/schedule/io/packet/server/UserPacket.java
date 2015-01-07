@@ -12,7 +12,7 @@ public class UserPacket extends ServerPacket {
 	}
 
 	@Override
-	public void init(char[] data) {
+	public void init(byte[] data) {
 		Integer offset = 0;
 		this.userId = Utility.getInt(data, offset);
 		Short nameLength = Utility.getShort(data, offset += Integer.SIZE / 8);

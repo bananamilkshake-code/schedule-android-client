@@ -1,13 +1,10 @@
 package com.open.schedule.activity;
-import com.open.schedule.io.Client;
 
 import java.util.ArrayList;
 
 import com.open.schedule.storage.tables.Users;
 import com.open.schedule.storage.tables.Table.Permission;
-import com.open.schedule.storage.tables.Users.User;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -30,7 +27,7 @@ import android.widget.Toast;
 
 import com.open.schedule.R;
 
-public class UsersActivity extends Activity implements OnClickListener {
+public class UsersActivity extends ScheduleActivity implements OnClickListener {
 	public EditText emailText;
 	public ListView usersList;
 
@@ -56,7 +53,7 @@ public class UsersActivity extends Activity implements OnClickListener {
 	}
 	
 	private void searchUser() {
-		if (Client.getInstance().isConnected()) {
+		if (this.isConnected()) {
 			DialogFragment users = new UserFragment();
 			users.show(getFragmentManager(), getResources().getString(R.string.dialog_title_users));
 		}
@@ -66,7 +63,7 @@ public class UsersActivity extends Activity implements OnClickListener {
 	}
 
 	private void changePermission(Integer userId, Permission permission) {
-		Client.getInstance().changePermision(true, tableId, userId, permission);		
+		this.getClient().changePermision(true, tableId, userId, permission);
 	}
 	
 	private void checkPermision(Integer userId) {
@@ -121,10 +118,7 @@ public class UsersActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {
-		}
-
+	public class PlaceholderFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_users, container, false);
@@ -132,7 +126,7 @@ public class UsersActivity extends Activity implements OnClickListener {
 			activity.emailText = (EditText) rootView.findViewById(R.id.edit_email);
 			activity.usersList = (ListView) rootView.findViewById(R.id.list_users);
 			rootView.findViewById(R.id.button_search_user).setOnClickListener(activity);
-			activity.usersList.setAdapter(activity.new UsersAdapter(Client.getInstance().getUsers()));
+			activity.usersList.setAdapter(activity.new UsersAdapter(UsersActivity.this.getClient().getUsers()));
 			
 			Intent intent = getActivity().getIntent();
 			if (intent.hasExtra(ReadersActivity.TABLE_ID)) {

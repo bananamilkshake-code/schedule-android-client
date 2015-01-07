@@ -15,7 +15,7 @@ public class ChangeTablePacket extends ServerPacket {
 	}
 
 	@Override
-	public void init(char[] data) {
+	public void init(byte[] data) {
 		int offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
 		this.time = Utility.getLong(data, offset += Integer.SIZE / 8);

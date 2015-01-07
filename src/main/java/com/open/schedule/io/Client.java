@@ -1,6 +1,7 @@
 package com.open.schedule.io;
 
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,47 +13,111 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import android.util.Log;
+
+import com.open.schedule.io.packet.Packet;
 import com.open.schedule.storage.database.Database;
-import com.open.schedule.storage.tables.ChangableData.Change;
+import com.open.schedule.storage.tables.ChangeableData.Change;
 import com.open.schedule.storage.tables.Table;
 import com.open.schedule.storage.tables.Table.Permission;
 import com.open.schedule.storage.tables.Table.TableInfo;
 import com.open.schedule.storage.tables.Task;
 import com.open.schedule.storage.tables.Task.TaskChange;
 import com.open.schedule.storage.tables.Users;
-import com.open.schedule.config.Config;
 import com.open.schedule.events.objects.Event;
 import com.open.schedule.io.packet.ClientPacket;
 import com.open.schedule.io.packet.ServerPacket;
 
-public class Client extends TCPClient {	
-	private static Client INSTANCE = null;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 
-	private  boolean logged = false;
+public class Client extends ChannelDuplexHandler {
+	private ChannelHandlerContext context;
+
+	private boolean logged = false;
+
 	private Integer id = 0;
 	private Long logoutTime = (long) 0;
 
-	private Tables tables  = new Tables();
-	private Users users = new Users();
+	public final Tables tables  = new Tables();
+	public final Users users = new Users();
 
 	private Database database = null;
 
-	protected Client(Database database) {
-		super(Config.host, Config.port);
+	public Client(final Database database) {
 		this.database = database;
 
 		database.loadTables(this.tables);
 	}
 
-	public static void createInstance(Database database) {
-		INSTANCE = new Client(database);
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) {
+		ServerPacket packet = (ServerPacket) msg;
+
+		switch (packet.getType()) {
+			case REGISTER:
+			case LOGIN:
+				if (isLogged()) {
+					Log.e("Client.recv", "Received auth packets when already logged in");
+					System.exit(1);
+				}
+				break;
+			default:
+				if (!isLogged()) {
+					Log.e("Client.recv", "Received packets when not logged in");
+					System.exit(1);
+				}
+				break;
+		}
+
+		switch (packet.getType())
+		{
+			case REGISTER:
+				this.register((com.open.schedule.io.packet.server.RegisterPacket) packet);
+				break;
+			case LOGIN:
+				this.login((com.open.schedule.io.packet.server.LoginPacket) packet);
+				break;
+			case CHANGE_TABLE:
+				this.changeTable((com.open.schedule.io.packet.server.ChangeTablePacket) packet);
+				break;
+			case CHANGE_TASK:
+				this.changeTask((com.open.schedule.io.packet.server.ChangeTaskPacket) packet);
+				break;
+			case COMMENTARY:
+				this.createCommentary((com.open.schedule.io.packet.server.CommentaryPacket) packet);
+				break;
+			case GLOBAL_TABLE_ID:
+				this.updateGlobalTableId((com.open.schedule.io.packet.server.GlobalTableIdPacket) packet);
+				break;
+			case GLOBAL_TASK_ID:
+				this.updateGlobalTaskId((com.open.schedule.io.packet.server.GlobalTaskIdPacket) packet);
+				break;
+			case PERMISSION:
+				this.changePermission((com.open.schedule.io.packet.server.PermissionPacket) packet);
+				break;
+			case USER:
+				this.addUser((com.open.schedule.io.packet.server.UserPacket) packet);
+				break;
+			default:
+				break;
+		}
 	}
-	
-	public static Client getInstance() {
-		assert INSTANCE != null;
-		return INSTANCE;
+
+	@Override
+	public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise future) throws Exception {
+		super.connect(ctx, remoteAddress, localAddress, future);
+
+		this.context = ctx;
 	}
-	
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+		Log.w("Client", "Netty Exception", cause);
+		ctx.close();
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -64,85 +129,37 @@ public class Client extends TCPClient {
 	public final SortedMap<Integer, Table> getTables() {
 		return tables.getTables();
 	}
-	
-	public final Tables tables() {
-		return tables;
-	}
 
 	public final Users getUsers() {
 		return this.users;
 	}
-	
-	@Override
-	protected void onDisconnect() {
-		logged = false;
-	}
 
-	@Override
 	public void send(ClientPacket packet) {
-		if (!logged && 
-				(packet.getType() != ClientPacket.Type.LOGIN && 
-				packet.getType() != ClientPacket.Type.REGISTER))
-			return;
-		super.send(packet);
+		try {
+			this.write(packet);
+		} catch (IOException e) {
+			Log.e("Client", "Error on message sending", e);
+		}
 	}
-	
-	@Override
-	public void recv(ServerPacket packet) {
-		switch (packet.getType()) {
-		case REGISTER:
-		case LOGIN:
-			if (isLogged()) {
-				Log.e("Recv", "Recieved auth packets when already logged in");
-				System.exit(1);
-			}
-			break;
-		default:
-			if (!isLogged()) {
-				Log.e("Recv", "Recieved packets when not logged in");
-				System.exit(1);	
-			}
-			break;
-		}
 
-		switch (packet.getType())
-		{
-		case REGISTER:
-			this.register((com.open.schedule.io.packet.server.RegisterPacket) packet);
-			break;
-		case LOGIN:
-			this.login((com.open.schedule.io.packet.server.LoginPacket) packet);
-			break;
-		case CHANGE_TABLE:
-			this.changeTable((com.open.schedule.io.packet.server.ChangeTablePacket) packet);
-			break;
-		case CHANGE_TASK:
-			this.changeTask((com.open.schedule.io.packet.server.ChangeTaskPacket) packet);
-			break;
-		case COMMENTARY:
-			this.createCommentary((com.open.schedule.io.packet.server.CommentaryPacket) packet);
-			break;
-		case GLOBAL_TABLE_ID:
-			this.updateGlobalTableId((com.open.schedule.io.packet.server.GlobalTableIdPacket) packet);
-			break;
-		case GLOBAL_TASK_ID:
-			this.updateGlobalTaskId((com.open.schedule.io.packet.server.GlobalTaskIdPacket) packet);
-			break;
-		case PERMISSION:
-			this.changePermission((com.open.schedule.io.packet.server.PermissionPacket) packet);
-			break;
-		case USER:
-			this.addUser((com.open.schedule.io.packet.server.UserPacket) packet);
-			break;
-		default:
-			break;
-		}
+	public void write(ClientPacket packet) throws IOException {
+		short size = packet.getSize();
+
+		int bufferCapacity = (Packet.PACKET_TYPE_LENGTH + Packet.PACKET_SIZE_LENGTH + size);
+
+		ByteBuf data = context.alloc().buffer(bufferCapacity, bufferCapacity);
+
+		data.writeByte(packet.getType().ordinal());
+		data.writeShort(size * Byte.SIZE);
+		data.writeBytes(packet.getBuffer(), 0, (int) size);
+
+		context.writeAndFlush(data);
 	}
 
 	public void loadAuthParams() {
-		//String username = "l@m.c";
-		//String password = "qqqq";
-		//this.login(username, password);
+		String username = "l@m.c";
+		String password = "1111";
+		this.login(username, password);
 	}
 	
 	private void do_login(Integer id) {
@@ -179,7 +196,7 @@ public class Client extends TCPClient {
 	}
 	
 	private void syncTableChanges() {
-		TreeMap<Integer, ArrayList<Long>> unsyncedTablesChanges = tables.getNewTableChanges(this.logoutTime);
+		TreeMap<Integer, ArrayList<Long>> unsyncedTablesChanges = tables.getNewTableChanges(this.logoutTime, this.id);
 		Iterator<Entry<Integer, ArrayList<Long>>> tableIter = unsyncedTablesChanges.entrySet().iterator();
 		while (tableIter.hasNext()) {
 			Entry<Integer, ArrayList<Long>> table = tableIter.next();
@@ -194,7 +211,7 @@ public class Client extends TCPClient {
 	}
 	
 	private void syncTaskChanges() {
-		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> unsyncedTaskChanges = tables.getNewTaskChanges(this.logoutTime);
+		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> unsyncedTaskChanges = tables.getNewTaskChanges(this.logoutTime, this.id);
 		Iterator<Entry<Integer, SortedMap<Integer, ArrayList<Long>>>> tableIter = unsyncedTaskChanges.entrySet().iterator();
 		while (tableIter.hasNext()) {
 			Entry<Integer, SortedMap<Integer, ArrayList<Long>>> table = tableIter.next();
@@ -216,7 +233,7 @@ public class Client extends TCPClient {
 	}
 	
 	private void syncComments() {
-		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> comments = tables.getNewComments(this.logoutTime);
+		SortedMap<Integer, SortedMap<Integer, ArrayList<Long>>> comments = tables.getNewComments(this.logoutTime, this.id);
 		Iterator<Entry<Integer, SortedMap<Integer, ArrayList<Long>>>> tableIter = comments.entrySet().iterator();
 		while (tableIter.hasNext()) {
 			Entry<Integer, SortedMap<Integer, ArrayList<Long>>> table = tableIter.next();
@@ -399,7 +416,6 @@ public class Client extends TCPClient {
 	}
 	
 	private void addUser(com.open.schedule.io.packet.server.UserPacket packet) {
-		//users.add(packet.userId, packet.name);
 		database.addUser(packet.userId, packet.name);
 	}
 	
@@ -499,7 +515,7 @@ public class Client extends TCPClient {
 		try {
 			send(new com.open.schedule.io.packet.client.PermissionPacket(tableGlobalId, userId, (byte)(permission.ordinal())));
 		} catch (IOException e) {
-			Log.w("Client", "Changin permission error", e);
+			Log.w("Client", "Changing permission error", e);
 		}
 	}
 
@@ -509,6 +525,5 @@ public class Client extends TCPClient {
 
 	public void updateLogoutTime(long logoutTime) {
 		this.database.updateLogoutTime(logoutTime);
-		
 	}
 }

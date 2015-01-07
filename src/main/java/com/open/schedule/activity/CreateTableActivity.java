@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 import com.open.schedule.R;
 
-public class CreateTableActivity extends Activity implements OnClickListener {
+public class CreateTableActivity extends ScheduleActivity implements OnClickListener {
 	public final static String EXTRA_NAME = "Table Name";
 	public final static String EXTRA_DESCRIPTION = "Table decription";
 

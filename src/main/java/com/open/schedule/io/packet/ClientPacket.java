@@ -1,6 +1,5 @@
 package com.open.schedule.io.packet;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -29,21 +28,12 @@ public abstract class ClientPacket extends Packet {
 		return type;
 	}
 
-	public void write(DataOutputStream outToServer) throws IOException {
-		short size = this.getSize();
-		int dataOffset = PACKET_TYPE_BYTE + PACKET_SIZE_BYTE;
-		byte data[] = new byte[dataOffset + size];
-
-		data[0] = (byte)(this.getType().ordinal());
-		data[1] = (byte)((size * Byte.SIZE >> 8) & 0xff);
-		data[2] = (byte)(size * Byte.SIZE & 0xff);
-		System.arraycopy(buffer.array(), 0, data, dataOffset, size);
-
-		outToServer.write(data);
-	}
-
 	public short getSize() {
 		return (short) this.buffer.position();
+	}
+
+	public byte[] getBuffer() {
+		return this.buffer.array();
 	}
 	
 	protected void writeString(String value) throws IOException {

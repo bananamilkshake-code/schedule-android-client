@@ -13,7 +13,7 @@ public class PermissionPacket extends ServerPacket {
 	}
 
 	@Override
-	public void init(char[] data) {
+	public void init(byte[] data) {
 		Integer offset = 0;
 		this.tableGlobalId = Utility.getInt(data, offset);
 		this.userId = Utility.getInt(data, offset += Integer.SIZE / 8);

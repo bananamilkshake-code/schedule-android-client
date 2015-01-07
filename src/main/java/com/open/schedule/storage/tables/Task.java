@@ -1,7 +1,5 @@
 package com.open.schedule.storage.tables;
 
-import com.open.schedule.io.Client;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -31,14 +29,15 @@ public class Task extends ChangableData {
 		return comments;
 	}
 
-	public ArrayList<Long> getNewComments(Long logoutTime) {
+	public ArrayList<Long> getNewComments(Long logoutTime, Integer clientId) {
 		ArrayList<Long> commentTimes = new ArrayList<Long>();
 		Iterator<Long> commentIter = comments.descendingKeySet().iterator();
 		while (commentIter.hasNext()) {
 			Long time = commentIter.next();
 			if (time >= logoutTime)
 				return commentTimes;
-			if (comments.get(time).commentatorId != Client.getInstance().getId())
+
+			if (comments.get(time).commentatorId != clientId)
 				continue;
 			commentTimes.add(time);
 		}

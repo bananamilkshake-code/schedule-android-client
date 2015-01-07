@@ -1,7 +1,6 @@
 package com.open.schedule.activity;
 
 import com.open.schedule.R;
-import com.open.schedule.io.Client;
 import com.open.schedule.io.packet.server.RegisterPacket;
 import com.open.schedule.events.listeners.EventListener;
 import com.open.schedule.events.objects.Event;
@@ -9,7 +8,6 @@ import com.open.schedule.events.objects.EventWarehouse;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,7 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class RegisterActivity extends Activity implements OnClickListener {
+public class RegisterActivity extends ScheduleActivity implements OnClickListener {
 	private RegisterTask registerTask = null;
 
 	private String email;
@@ -226,9 +224,10 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	private class RegisterTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			if (!Client.getInstance().isConnected())
+			if (!RegisterActivity.this.isConnected())
 				return null;
-			Client.getInstance().register(email, password, name);
+
+			RegisterActivity.this.getClient().register(email, password, name);
 			return null;
 		}
 

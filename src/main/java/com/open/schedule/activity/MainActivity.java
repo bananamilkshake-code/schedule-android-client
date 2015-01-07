@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.SortedMap;
 
 import com.open.schedule.R;
-import com.open.schedule.storage.database.Database;
+import com.open.schedule.app.ScheduleApplication;
+import com.open.schedule.io.Client;
 import com.open.schedule.storage.tables.Plans;
 import com.open.schedule.storage.tables.Plans.TablePlan;
 import com.open.schedule.storage.tables.Table;
 import com.open.schedule.storage.tables.Table.TableInfo;
 import com.open.schedule.storage.tables.Task;
 import com.open.schedule.utility.Utility;
-import com.open.schedule.io.Client;
 import com.open.schedule.io.Tables;
 
 import android.app.Activity;
@@ -38,9 +38,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
-	public static final int TIMEOUT_CONNECTION_CHECK = 5000;
-	
+public class MainActivity extends ScheduleActivity {
 	public static final String TABLE_ID = "TABLE_ID";
 
 	public static final int REQUEST_NEW_TABLE = 1;
@@ -59,42 +57,20 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-		Client.createInstance(new Database(this));
+		this.setContentView(R.layout.activity_main);
 
-		getActivityElements();
+		this.getActivityElements();
 
-		initDrawer();
-		initActions();
-		initPlans();
-
-		new Thread() {
-			@Override
-			public void run() {
-				while(true) {
-					while(Client.getInstance().isConnected());
-					Client.getInstance().tryConnect();
-					if (!Client.getInstance().isConnected()) {
-						try {
-							Thread.sleep(TIMEOUT_CONNECTION_CHECK);
-						} catch (InterruptedException e) {
-							Log.e("MainActivity", "Connection sleep", e);
-						}
-					}
-					else {
-						Client.getInstance().loadAuthParams();
-					}
-				}
-			}
-		}.start();
+		this.initDrawer();
+		this.initActions();
+		this.initPlans();
 	}
 	
 	@Override
 	public void onStop() {
 		super.onStop();
-		
-		Client.getInstance().updateLogoutTime(Utility.getUnixTime());
+
+		this.getClient().updateLogoutTime(Utility.getUnixTime());
 	}
 	
 	@Override
@@ -145,7 +121,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void initDrawer() {
-		drawerList.setAdapter(new TablesAdapter(Client.getInstance().getTables()));
+		drawerList.setAdapter(new TablesAdapter(this.getClient().getTables()));
 		drawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -180,7 +156,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void initPlans() {
-		listTablePlans.setAdapter(new PlansAdapter(getApplicationContext(), Client.getInstance().tables()));
+		listTablePlans.setAdapter(new PlansAdapter(getApplicationContext(), this.getClient().tables));
 	}
 	
 	private void updatePlans() {
@@ -193,12 +169,15 @@ public class MainActivity extends Activity {
 			return;
 		String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
 		String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
-		Client.getInstance().createTable(true, Client.getInstance().getId(), Utility.getUnixTime(), name, description);
+
+		Client client = this.getClient();
+		client.createTable(true, client.getId(), Utility.getUnixTime(), name, description);
+
 		((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
 	}
 
 	private void openLoginActivity() {
-		if (Client.getInstance().isConnected()) {
+		if (this.isConnected()) {
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivity(loginIntent);
 		}
@@ -218,10 +197,10 @@ public class MainActivity extends Activity {
 		drawerLayout.closeDrawer(drawer);
 	}
 
-	private void openViewTableActivity(Long id) {
+	private void openViewTableActivity(Long tableId) {
 		Intent viewTableIntent = new Intent(MainActivity.this, ViewTableActivity.class);
-		Integer tableId = Long.valueOf(id).intValue();
-		viewTableIntent.putExtra(TABLE_ID, tableId);
+		viewTableIntent.putExtra(TABLE_ID, Long.valueOf(tableId).intValue());
+
 		startActivity(viewTableIntent);
 	}
 	

@@ -13,9 +13,7 @@ import com.open.schedule.storage.tables.Task;
 import com.open.schedule.storage.tables.Task.Comment;
 import com.open.schedule.storage.tables.Task.TaskChange;
 import com.open.schedule.utility.Utility;
-import com.open.schedule.io.Client;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +31,7 @@ import android.widget.TextView;
 
 import com.open.schedule.R;
 
-public class ViewTaskActivity extends Activity {
+public class ViewTaskActivity extends ScheduleActivity {
 	public static final int REQUEST_CHANGE = 1;
 	
 	private Integer tableId;
@@ -58,7 +56,7 @@ public class ViewTaskActivity extends Activity {
 
 		this.tableId = getIntent().getExtras().getInt(ViewTableActivity.TABLE_ID);
 		this.taskId = getIntent().getExtras().getInt(ViewTableActivity.TASK_ID);
-		this.task = Client.getInstance().getTables().get(tableId).getTask(taskId);
+		this.task = this.getClient().getTables().get(tableId).getTask(taskId);
 
 		this.changes = (ListView) findViewById(R.id.list_changes_task);
 		this.changes.setAdapter(new TaskChangesAdapted((LayoutInflater) ViewTaskActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE), task));
@@ -121,7 +119,7 @@ public class ViewTaskActivity extends Activity {
 			Log.w(Database.class.getName(), "Date task changes parsing", e);
 		}
 		
-		Client.getInstance().changeTask(true, this.tableId, this.taskId, Utility.getUnixTime(), Client.getInstance().getId(), 
+		this.getClient().changeTask(true, this.tableId, this.taskId, Utility.getUnixTime(), this.getClient().getId(),
 				name, description, startDateVal, endDateVal, startTimeVal, endTimeVal, period);
 		
 		taskName.setText(name);
@@ -147,13 +145,11 @@ public class ViewTaskActivity extends Activity {
 	}
 	
 	private void addComment(String text) {
-		Integer userId = Client.getInstance().getId();
-		Client.getInstance().createComment(true, tableId, taskId, Utility.getUnixTime(), userId, text);
+		Integer userId = this.getClient().getId();
+		this.getClient().createComment(true, tableId, taskId, Utility.getUnixTime(), userId, text);
 	}
 
-	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {}
-
+	private class PlaceholderFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_view_task, container, false);
@@ -180,7 +176,7 @@ public class ViewTaskActivity extends Activity {
 			final ListView listComments =(ListView) rootView.findViewById(R.id.list_comments);
 			Integer tableId = activity.tableId;
 			Integer taskId = activity.taskId;
-			Table table = Client.getInstance().getTables().get(tableId);
+			Table table = ViewTaskActivity.this.getClient().getTables().get(tableId);
 			Task task = table.getTask(taskId); 
 			listComments.setAdapter(activity.new CommentsAdapter(task.getComments()));
 
@@ -250,7 +246,7 @@ public class ViewTaskActivity extends Activity {
 		}
 	}
 	
-	public class TaskChangesAdapted extends ChangesAdapter {
+	private class TaskChangesAdapted extends ChangesAdapter {
 		public TaskChangesAdapted(LayoutInflater inflater, Task task) {
 			super(inflater, task.changes);
 		}
@@ -272,7 +268,7 @@ public class ViewTaskActivity extends Activity {
 			TextView endTime = (TextView) rowView.findViewById(R.id.item_change_table_end_time);
 			TextView period = (TextView) rowView.findViewById(R.id.item_change_task_period);
 			
-			author.setText(Client.getInstance().getUserName(change.creatorId));
+			author.setText(ViewTaskActivity.this.getClient().getUserName(change.creatorId));
 			time.setText(timeFormat.format(new Date(change.time * 1000)));
 			name.setText(change.name);
 			desc.setText(change.description);

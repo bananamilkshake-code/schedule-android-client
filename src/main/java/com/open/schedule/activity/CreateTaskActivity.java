@@ -32,7 +32,7 @@ import android.widget.TimePicker;
 
 import com.open.schedule.R;
 
-public class CreateTaskActivity extends Activity implements OnClickListener {
+public class CreateTaskActivity extends ScheduleActivity implements OnClickListener {
 	public static final String NAME = "task_name";
 	public static final String DESCRIPTION = "task_description";
 	public static final String START_DATE = "task_start_date";
