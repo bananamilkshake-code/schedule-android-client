@@ -5,7 +5,7 @@ import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class Table extends ChangableData {
+public class Table extends ChangeableData {
 	public enum Permission {
 		NONE,
 		READ,
@@ -53,7 +53,7 @@ public class Table extends ChangableData {
 	}
 	
 	public void updateTaskGlobalId(Integer taskId, Integer taskGlobalId) {
-		tasks.get(taskId).updateglobalId(taskGlobalId);
+		tasks.get(taskId).updateGlobalId(taskGlobalId);
 		indexId.put(taskGlobalId, taskId);
 	}
 	

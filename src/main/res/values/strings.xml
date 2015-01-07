@@ -5,6 +5,7 @@
     <string name="no_connection">Нет подключения</string>
 
     <!-- Titles -->
+    <string name="title_activity_readers">Читатели</string>
     <string name="title_activity_view_tables">Расписания</string>
     <string name="title_activity_create_table">Создание расписания</string>
     <string name="title_activity_change_table">Изменение расписания</string>
@@ -13,6 +14,5 @@
     <string name="title_activity_view_tasks">Задания</string>
     <string name="title_activity_create_comment">Задание</string>
     <string name="title_activity_find_user">Знакомые</string>
-    <string name="title_activity_readers">ReadersActivity</string>
 
 </resources>

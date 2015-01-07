@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import com.open.schedule.storage.tables.ChangableData.Change;
+import com.open.schedule.storage.tables.ChangeableData.Change;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 

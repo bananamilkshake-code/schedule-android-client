@@ -68,7 +68,7 @@ public class ViewTaskActivity extends ScheduleActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.view_task, menu);
+		this.getMenuInflater().inflate(R.menu.view_task, menu);
 		return true;
 	}
 
@@ -77,9 +77,10 @@ public class ViewTaskActivity extends ScheduleActivity {
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.action_change_task:
-			openChangeTaskActivity();
+			this.openChangeTaskActivity();
 			return true;
 		}
+
 		return super.onOptionsItemSelected(item);
 	}
 	@Override

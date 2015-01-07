@@ -1,7 +1,5 @@
 package com.open.schedule.storage.tables;
 
-import com.open.schedule.io.Client;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -9,18 +7,19 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-public class ChangableData {
+public class ChangeableData {
+	public TreeMap<Long, Change> changes = new TreeMap<>();
 
-	public TreeMap<Long, Change> changes = new TreeMap<Long, Change>();
-	private long lastUpdate = 0;
 	private Integer id;
 	private Integer globalId = null;
 
-	public ChangableData(Integer id) {
+	private long lastUpdate = 0;
+
+	public ChangeableData(Integer id) {
 		this.id = id;
 	}
 	
-	public ChangableData(Integer id, Long updateTime) {
+	public ChangeableData(Integer id, Long updateTime) {
 		this(id);
 		this.lastUpdate = updateTime;
 	}
@@ -37,7 +36,7 @@ public class ChangableData {
 		changes.put(time, change);
 	}
 	
-	public void updateglobalId(Integer globalId) {
+	public void updateGlobalId(Integer globalId) {
 		this.globalId = globalId;
 	}
 
@@ -63,15 +62,17 @@ public class ChangableData {
 		return this.globalId;
 	}
 	
-	public ArrayList<Long> getChangesAfter() {
+	public ArrayList<Long> getNewChanges(Integer clientId) {
 		ArrayList<Long> changes = new ArrayList<Long>();
 		Iterator<Long> changeIter = this.changes.descendingKeySet().iterator();
 		while (changeIter.hasNext()) {
 			Long time = changeIter.next();
-			if (time <= lastUpdate)
+			if (time <= this.lastUpdate)
 				break;
-			if (this.changes.get(time).creatorId != Client.getInstance().getId())
+
+			if (this.changes.get(time).creatorId != clientId)
 				continue;
+
 			changes.add(time);
 		}
 		return changes;
@@ -83,6 +84,7 @@ public class ChangableData {
 
 	public abstract class Change {
 		public final Integer creatorId;
+
 		public final long time;
 
 		public Change(Integer creator_id, Long creationTime) {

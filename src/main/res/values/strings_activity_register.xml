@@ -7,7 +7,7 @@
     <string name="register_password">Пароль</string>
 	<string name="register_string_verify_password">Подтверждение пароля</string>
     <string name="register_action_sign_in_register">Войти</string>
-    <string name="register_action_sign_in_short">Sign in</string>
+    <string name="register_action_sign_in_short">Войти</string>
     <string name="register_progress_signing_in">Регистрация&#8230;</string>
     <string name="register_error_invalid_email">Неправильный e-mail</string>
     <string name="register_error_invalid_password">Слишком короткий пароль</string>

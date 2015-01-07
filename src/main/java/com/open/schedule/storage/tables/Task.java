@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeMap;
 
-public class Task extends ChangableData {
+public class Task extends ChangeableData {
 	private TreeMap<Long, Comment> comments = new TreeMap<Long, Comment>();
 
 	public Task(Integer id) {
@@ -39,6 +39,7 @@ public class Task extends ChangableData {
 
 			if (comments.get(time).commentatorId != clientId)
 				continue;
+
 			commentTimes.add(time);
 		}
 		return commentTimes;

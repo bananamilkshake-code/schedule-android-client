@@ -44,7 +44,6 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 
 		setContentView(R.layout.activity_register);
 
-		// Set up the login form.
 		emailView = (EditText) findViewById(R.id.email);
 		emailView.setText(email);
 
@@ -110,19 +109,23 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 		// Check for a valid password.
 		if (TextUtils.isEmpty(password)) {
 			passwordView.setError(getString(R.string.register_error_field_required));
+
 			focusView = passwordView;
 			cancel = true;
 		} else if (password.length() < 4) {
 			passwordView.setError(getString(R.string.register_error_invalid_password));
+
 			focusView = passwordView;
 			cancel = true;
 		} else if (TextUtils.isEmpty(passwordVerification)) {
 			passwordVerifyView.setError(getString(R.string.register_error_no_verification));
+
 			focusView = passwordVerifyView;
 			cancel = true;
 		} else if (!TextUtils.equals(password, passwordVerification)) {
 			passwordVerifyView.getEditableText().clear();
 			passwordView.setError(getString(R.string.register_error_false_password));
+
 			focusView = passwordView;
 			cancel = true;
 		}
@@ -234,6 +237,7 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 		@Override
 		protected void onCancelled() {
 			registerTask = null;
+
 			showProgress(false);
 		}
 	}

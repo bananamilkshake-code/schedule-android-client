@@ -142,6 +142,7 @@ public class ViewTableActivity extends ScheduleActivity {
 		client.changeTable(true, this.tableId, Utility.getUnixTime(), client.getId(), name, description);
 
 		((BaseAdapter)(this.changes.getAdapter())).notifyDataSetChanged();
+
 		this.tableName.setText(name);
 		this.tableDesc.setText(description);
 		

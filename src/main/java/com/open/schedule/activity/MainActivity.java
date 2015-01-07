@@ -88,7 +88,8 @@ public class MainActivity extends ScheduleActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.login:
-			openLoginActivity();
+			this.getClient().loadAuthParams();
+			//openLoginActivity();
 			return true;
 		case R.id.users:
 			openUsersActivity();
@@ -113,11 +114,11 @@ public class MainActivity extends ScheduleActivity {
 	}
 
 	private void getActivityElements() {
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawer = (RelativeLayout) findViewById(R.id.drawer);
-		drawerList = (ListView) findViewById(R.id.left_drawer);
-		actionList = (ListView) findViewById(R.id.action_add);
-		listTablePlans = (ExpandableListView) findViewById(R.id.list_tables_plan);
+		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		this.drawer = (RelativeLayout) findViewById(R.id.drawer);
+		this.drawerList = (ListView) findViewById(R.id.left_drawer);
+		this.actionList = (ListView) findViewById(R.id.action_add);
+		this.listTablePlans = (ExpandableListView) findViewById(R.id.list_tables_plan);
 	}
 
 	private void initDrawer() {
@@ -141,6 +142,7 @@ public class MainActivity extends ScheduleActivity {
 			    return view;
 			}
 		};
+
 		actionList.setAdapter(actionsAdapter);
 		actionList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -150,6 +152,7 @@ public class MainActivity extends ScheduleActivity {
 					openNewTableActivity();
 					return;
 				}
+
 				Log.wtf("MainActivity", "Clicked on nonexistent action in listview");
 			}
 		});
@@ -167,6 +170,7 @@ public class MainActivity extends ScheduleActivity {
 	private void createNewTable(Intent data) {
 		if (!data.hasExtra(CreateTableActivity.EXTRA_NAME))
 			return;
+
 		String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
 		String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
 
@@ -179,6 +183,7 @@ public class MainActivity extends ScheduleActivity {
 	private void openLoginActivity() {
 		if (this.isConnected()) {
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+
 			startActivity(loginIntent);
 		}
 		else {
@@ -188,12 +193,15 @@ public class MainActivity extends ScheduleActivity {
 
 	private void openUsersActivity() {
 		Intent usersIntent = new Intent(MainActivity.this, UsersActivity.class);
+
 		startActivity(usersIntent);
 	}
 	
 	private void openNewTableActivity() {
 		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
+
 		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
+
 		drawerLayout.closeDrawer(drawer);
 	}
 
@@ -208,12 +216,15 @@ public class MainActivity extends ScheduleActivity {
 		Intent intent = new Intent(MainActivity.this, ViewTaskActivity.class);
 		intent.putExtra(ViewTableActivity.TABLE_ID, tableId);
 		intent.putExtra(ViewTableActivity.TASK_ID, taskId);
+
 		startActivity(intent);
 	}
 
 	private void showTableInfo(Integer position, long id) {
 		drawerList.setItemChecked(position, true);
+
 		openViewTableActivity(id);
+
 		drawerLayout.closeDrawer(drawer);
 	}
 
@@ -256,10 +267,10 @@ public class MainActivity extends ScheduleActivity {
 			}
 
 			Table table = tables.get(idsByPos.get(position));
-			TextView tableName = (TextView)rowView.findViewById(R.id.item_table_name);
-			TextView tableDescription = (TextView)rowView.findViewById(R.id.item_table_description);
-			tableName.setText((CharSequence)(((TableInfo)table.getData()).name));
-			tableDescription.setText((CharSequence)(((TableInfo)table.getData()).description));
+			TextView tableName = (TextView) rowView.findViewById(R.id.item_table_name);
+			TextView tableDescription = (TextView) rowView.findViewById(R.id.item_table_description);
+			tableName.setText(((TableInfo) table.getData()).name);
+			tableDescription.setText(((TableInfo) table.getData()).description);
 			return rowView;
 		}
 		

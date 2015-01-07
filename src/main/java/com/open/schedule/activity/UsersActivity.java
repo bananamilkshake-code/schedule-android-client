@@ -163,7 +163,7 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 		}
 
 		@Override
-		public User getItem(int position) {
+		public Users.User getItem(int position) {
 			return users.users.get(idsByPos.get(position));
 		}
 
@@ -181,7 +181,7 @@ public class UsersActivity extends ScheduleActivity implements OnClickListener {
 				rowView = inflater.inflate(R.layout.item_user, arg2, false);
 			}
 
-			User user = users.users.get(idsByPos.get(position));
+			Users.User user = users.users.get(idsByPos.get(position));
 			TextView tableName = (TextView)rowView.findViewById(R.id.text_name);
 			TextView tableDescription = (TextView)rowView.findViewById(R.id.text_email);
 			tableName.setText((CharSequence)(user.name));

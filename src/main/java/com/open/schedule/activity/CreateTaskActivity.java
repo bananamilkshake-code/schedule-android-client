@@ -62,6 +62,7 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 	};
 
 	private static HashMap<Periods, Integer> periodDays = new HashMap<Periods, Integer>();
+
 	static {
 		periodDays.put(Periods.ONE_TIME, 1);
 		periodDays.put(Periods.WEEK, 7);

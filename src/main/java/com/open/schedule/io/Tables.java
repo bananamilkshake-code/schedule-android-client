@@ -58,7 +58,7 @@ public class Tables {
 	}
 	
 	public void updateTableGlobalId(Integer tableId, Integer tableGlobalId) {
-		tables.get(tableId).updateglobalId(tableGlobalId);
+		tables.get(tableId).updateGlobalId(tableGlobalId);
 		indexId.put(tableGlobalId, tableId);
 	}
 
@@ -162,6 +162,7 @@ public class Tables {
 			ArrayList<Long> changeTimes = table.getNewChanges(clientId);
 			if (changeTimes.isEmpty())
 				continue;
+
 			tableChanges.put(tableId, changeTimes);
 		}
 		return tableChanges;

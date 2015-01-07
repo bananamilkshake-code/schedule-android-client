@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 
 public abstract class ClientPacket extends Packet {
 	public static final int MAX_PACKET_SIZE = Short.MAX_VALUE;
+
 	private ByteBuffer buffer = ByteBuffer.allocate(MAX_PACKET_SIZE);
 
 	public enum Type {
