@@ -19,7 +19,7 @@ import com.open.schedule.R;
 import com.open.schedule.events.listeners.EventListener;
 import com.open.schedule.events.objects.Event;
 import com.open.schedule.events.objects.EventWarehouse;
-import com.open.schedule.io.packet.server.RegisterPacket;
+import com.open.schedule.io.packet.server.RegisteredPacket;
 
 public class RegisterActivity extends ScheduleActivity implements OnClickListener {
 	private RegisterTask registerTask = null;
@@ -205,7 +205,7 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 			showProgress(false);
 			switch (event.getType()) {
 				case REGISTER:
-					RegisterPacket.Status status = (RegisterPacket.Status) event.getData();
+					RegisteredPacket.Status status = (RegisteredPacket.Status) event.getData();
 					switch (status) {
 						case SUCCESS:
 							returnSuccess();

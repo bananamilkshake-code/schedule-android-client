@@ -16,13 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.open.schedule.R;
-import com.open.schedule.io.Client;
-import com.open.schedule.storage.database.Database;
-import com.open.schedule.storage.tables.Table;
-import com.open.schedule.storage.tables.Table.TableInfo;
-import com.open.schedule.storage.tables.Task;
-import com.open.schedule.storage.tables.Task.TaskChange;
-import com.open.schedule.utility.Utility;
+import com.open.schedule.account.Account;
+import com.open.schedule.account.tables.Table;
+import com.open.schedule.account.tables.Task;
+import com.open.schedule.account.tables.Task.TaskChange;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,9 +27,10 @@ import java.util.Date;
 import java.util.SortedMap;
 
 public class ViewTableActivity extends ScheduleActivity {
+	private static final String LOG_TAG = ViewTableActivity.class.getName();
+
 	public static final int REQUEST_CREATE_TASK = 1;
 	public static final int REQUEST_CHANGE = 2;
-	public static final int REQUEST_USERS = 3;
 
 	public static final String TABLE_ID = "tableId";
 	public static final String TASK_ID = "taskId";
@@ -43,7 +41,6 @@ public class ViewTableActivity extends ScheduleActivity {
 	private Table table;
 
 	private ListView tasksList;
-	private ListView changes;
 
 	private TextView tableName;
 	private TextView tableDesc;
@@ -54,10 +51,7 @@ public class ViewTableActivity extends ScheduleActivity {
 		setContentView(R.layout.activity_view_table);
 
 		this.tableId = getIntent().getExtras().getInt(MainActivity.TABLE_ID);
-		this.table = this.getClient().getTables().get(tableId);
-
-		this.changes = (ListView) findViewById(R.id.list_changes_task);
-		this.changes.setAdapter(new TableChangesAdapted((LayoutInflater) ViewTableActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE), table));
+		this.table = this.getAccount().getTables().get(tableId);
 
 		this.tableName = (TextView) findViewById(R.id.text_table_name);
 		this.tableDesc = ((TextView) findViewById(R.id.text_table_description));
@@ -81,9 +75,6 @@ public class ViewTableActivity extends ScheduleActivity {
 			case R.id.action_add_task:
 				showCreateTaskActivity();
 				return true;
-			case R.id.action_users:
-				showReadersActivity();
-				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -96,9 +87,6 @@ public class ViewTableActivity extends ScheduleActivity {
 		switch (requestCode) {
 			case REQUEST_CREATE_TASK:
 				newTask(data);
-				return;
-			case REQUEST_CHANGE:
-				newChange(data);
 				return;
 			default:
 				return;
@@ -125,31 +113,18 @@ public class ViewTableActivity extends ScheduleActivity {
 			startTimeVal = CreateTaskActivity.timeFormatter.parse(startTime);
 			endTimeVal = CreateTaskActivity.timeFormatter.parse(endTime);
 		} catch (ParseException e) {
-			Log.w(Database.class.getName(), "Date task changes parsing", e);
+			Log.w(LOG_TAG, "Date task changes parsing", e);
 		}
 
-		final Client client = this.getClient();
-		client.createTask(true, tableId, Utility.getUnixTime(), client.getId(), name, description, startDateVal, endDateVal, startTimeVal, endTimeVal, period);
+		final Account account = this.getAccount();
+		account.createTask(this.tableId, name, description, account.getId(), startDateVal, endDateVal, startTimeVal, endTimeVal, period, true);
+
 		((BaseAdapter) tasksList.getAdapter()).notifyDataSetChanged();
 	}
 
-	private void newChange(Intent data) {
-		String name = data.getStringExtra(CreateTableActivity.EXTRA_NAME);
-		String description = data.getStringExtra(CreateTableActivity.EXTRA_DESCRIPTION);
-
-		final Client client = this.getClient();
-		client.changeTable(true, this.tableId, Utility.getUnixTime(), client.getId(), name, description);
-
-		((BaseAdapter) (this.changes.getAdapter())).notifyDataSetChanged();
-
-		this.tableName.setText(name);
-		this.tableDesc.setText(description);
-
-	}
-
 	private void showTable() {
-		String name = ((Table.TableInfo) table.getData()).name;
-		String description = ((Table.TableInfo) table.getData()).description;
+		String name = ((Table.TableChange) table.getData()).name;
+		String description = ((Table.TableChange) table.getData()).description;
 
 		this.tableName.setText(name);
 		this.tableDesc.setText(description);
@@ -173,20 +148,14 @@ public class ViewTableActivity extends ScheduleActivity {
 
 	private void showChangeTableActivity() {
 		Intent intent = new Intent(ViewTableActivity.this, CreateTableActivity.class);
-		intent.putExtra(TABLE_NAME, ((Table.TableInfo) table.getData()).name);
-		intent.putExtra(TABLE_DESC, ((Table.TableInfo) table.getData()).description);
+		intent.putExtra(TABLE_NAME, ((Table.TableChange) table.getData()).name);
+		intent.putExtra(TABLE_DESC, ((Table.TableChange) table.getData()).description);
 		startActivityForResult(intent, REQUEST_CHANGE);
 	}
 
 	private void showCreateTaskActivity() {
 		Intent intent = new Intent(ViewTableActivity.this, CreateTaskActivity.class);
 		startActivityForResult(intent, REQUEST_CREATE_TASK);
-	}
-
-	private void showReadersActivity() {
-		Intent intent = new Intent(ViewTableActivity.this, ReadersActivity.class);
-		intent.putExtra(TABLE_ID, this.tableId);
-		startActivityForResult(intent, REQUEST_USERS);
 	}
 
 	public class TasksAdapter extends BaseAdapter {
@@ -246,32 +215,6 @@ public class ViewTableActivity extends ScheduleActivity {
 			taskStartTime.setText((CharSequence) (CreateTaskActivity.timeFormatter.format(data.startTime)));
 			taskEndTime.setText((CharSequence) (CreateTaskActivity.timeFormatter.format(data.endTime)));
 			taskPeriod.setText((CharSequence) (data.period.toString()));
-
-			return rowView;
-		}
-	}
-
-	public class TableChangesAdapted extends ChangesAdapter {
-		public TableChangesAdapted(LayoutInflater inflater, Table table) {
-			super(inflater, table.changes);
-		}
-
-		@Override
-		public View getView(int position, View rowView, ViewGroup rootView) {
-			if (rowView == null) {
-				rowView = this.inflater.inflate(R.layout.item_change_table, rootView, false);
-			}
-
-			TableInfo change = (TableInfo) getItem(position);
-			TextView author = (TextView) rowView.findViewById(R.id.text_change_table_author);
-			TextView time = (TextView) rowView.findViewById(R.id.text_change_table_time);
-			TextView name = (TextView) rowView.findViewById(R.id.item_change_table_name);
-			TextView desc = (TextView) rowView.findViewById(R.id.item_change_table_desc);
-
-			author.setText(ViewTableActivity.this.getClient().getUserName(change.creatorId));
-			time.setText(timeFormat.format(new Date(change.time * 1000)));
-			name.setText(change.name);
-			desc.setText(change.description);
 
 			return rowView;
 		}

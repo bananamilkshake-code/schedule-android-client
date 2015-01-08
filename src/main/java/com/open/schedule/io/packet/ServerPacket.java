@@ -1,16 +1,23 @@
 package com.open.schedule.io.packet;
 
-import com.open.schedule.io.packet.server.ChangeTablePacket;
-import com.open.schedule.io.packet.server.ChangeTaskPacket;
-import com.open.schedule.io.packet.server.CommentaryPacket;
-import com.open.schedule.io.packet.server.GlobalTableIdPacket;
-import com.open.schedule.io.packet.server.GlobalTaskIdPacket;
-import com.open.schedule.io.packet.server.LoginPacket;
-import com.open.schedule.io.packet.server.PermissionPacket;
-import com.open.schedule.io.packet.server.RegisterPacket;
-import com.open.schedule.io.packet.server.UserPacket;
+import com.open.schedule.io.packet.server.LoggedPacket;
+import com.open.schedule.io.packet.server.TablePacket;
+import com.open.schedule.io.packet.server.TaskPacket;
+import com.open.schedule.io.packet.server.RegisteredPacket;
 
 public abstract class ServerPacket extends Packet {
+	public enum Type {
+		REGISTERED,
+		LOGGED,
+		NOT_USED_GLOBAL_TABLE_ID,        // Локальная база данных клиента занесена в глобальную базу даных
+		NOT_USED_GLOBAL_TASK_ID,            // Локальное задание клиента занесено в глобальную базу данных
+		TABLE,
+		TASK,
+		NOT_USED_PERMISSION,
+		NOT_USED_COMMENTARY,
+		NOT_USED_USER
+	}
+
 	private final Type type;
 
 	protected ServerPacket(Type type) {
@@ -19,24 +26,14 @@ public abstract class ServerPacket extends Packet {
 
 	public static ServerPacket get(Type type) {
 		switch (type) {
-			case REGISTER:
-				return new RegisterPacket();
-			case LOGIN:
-				return new LoginPacket();
-			case GLOBAL_TABLE_ID:
-				return new GlobalTableIdPacket();
-			case GLOBAL_TASK_ID:
-				return new GlobalTaskIdPacket();
-			case CHANGE_TABLE:
-				return new ChangeTablePacket();
-			case CHANGE_TASK:
-				return new ChangeTaskPacket();
-			case COMMENTARY:
-				return new CommentaryPacket();
-			case PERMISSION:
-				return new PermissionPacket();
-			case USER:
-				return new UserPacket();
+			case REGISTERED:
+				return new RegisteredPacket();
+			case LOGGED:
+				return new LoggedPacket();
+			case TABLE:
+				return new TablePacket();
+			case TASK:
+				return new TaskPacket();
 		}
 
 		return null;
@@ -47,16 +44,4 @@ public abstract class ServerPacket extends Packet {
 	}
 
 	public abstract void init(byte[] data);
-
-	public enum Type {
-		REGISTER,
-		LOGIN,
-		GLOBAL_TABLE_ID,        // Локальная база данных клиента занесена в глобальную базу даных
-		GLOBAL_TASK_ID,            // Локальное задание клиента занесено в глобальную базу данных
-		CHANGE_TABLE,            // Так же используется для создания новой таблицы
-		CHANGE_TASK,            // Так же используется для создания нового расписания
-		PERMISSION,
-		COMMENTARY,
-		USER
-	}
 }

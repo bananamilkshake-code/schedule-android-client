@@ -10,13 +10,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -24,14 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.open.schedule.R;
-import com.open.schedule.io.Client;
-import com.open.schedule.io.Tables;
-import com.open.schedule.storage.tables.Plans;
-import com.open.schedule.storage.tables.Plans.TablePlan;
-import com.open.schedule.storage.tables.Table;
-import com.open.schedule.storage.tables.Table.TableInfo;
-import com.open.schedule.storage.tables.Task;
-import com.open.schedule.utility.Utility;
+import com.open.schedule.account.Account;
+import com.open.schedule.account.tables.Table;
+import com.open.schedule.activity.adapter.PlansAdapter;
 
 import java.util.ArrayList;
 import java.util.SortedMap;
@@ -60,15 +53,6 @@ public class MainActivity extends ScheduleActivity {
 		this.initPlans();
 	}
 
-	;
-
-	@Override
-	public void onStop() {
-		super.onStop();
-
-		this.getClient().updateLogoutTime(Utility.getUnixTime());
-	}
-
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		updatePlans();
@@ -84,11 +68,7 @@ public class MainActivity extends ScheduleActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.login:
-				this.getClient().loadAuthParams();
-				//openLoginActivity();
-				return true;
-			case R.id.users:
-				openUsersActivity();
+				openLoginActivity();
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -118,7 +98,7 @@ public class MainActivity extends ScheduleActivity {
 	}
 
 	private void initDrawer() {
-		drawerList.setAdapter(new TablesAdapter(this.getClient().getTables()));
+		drawerList.setAdapter(new TablesAdapter(this.getAccount().getTables()));
 		drawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -142,20 +122,19 @@ public class MainActivity extends ScheduleActivity {
 		actionList.setAdapter(actionsAdapter);
 		actionList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-									int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (position == Actions.ADD_TABLE.ordinal()) {
 					openNewTableActivity();
 					return;
 				}
 
-				Log.wtf("MainActivity", "Clicked on nonexistent action in listview");
+				Log.wtf("MainActivity", "Clicked on nonexistent action in ListView");
 			}
 		});
 	}
 
 	private void initPlans() {
-		listTablePlans.setAdapter(new PlansAdapter(getApplicationContext(), this.getClient().tables));
+		listTablePlans.setAdapter(new PlansAdapter(this, this.getAccount().getTablePlans()));
 	}
 
 	private void updatePlans() {
@@ -170,8 +149,8 @@ public class MainActivity extends ScheduleActivity {
 		String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
 		String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
 
-		Client client = this.getClient();
-		client.createTable(true, client.getId(), Utility.getUnixTime(), name, description);
+		Account account = this.getAccount();
+		account.createTable(name, description, account.getId(), false);
 
 		((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
 	}
@@ -184,12 +163,6 @@ public class MainActivity extends ScheduleActivity {
 		} else {
 			Toast.makeText(this.getBaseContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
 		}
-	}
-
-	private void openUsersActivity() {
-		Intent usersIntent = new Intent(MainActivity.this, UsersActivity.class);
-
-		startActivity(usersIntent);
 	}
 
 	private void openNewTableActivity() {
@@ -207,7 +180,7 @@ public class MainActivity extends ScheduleActivity {
 		startActivity(viewTableIntent);
 	}
 
-	private void openTaskActivity(Integer tableId, Integer taskId) {
+	public void openTaskActivity(Integer tableId, Integer taskId) {
 		Intent intent = new Intent(MainActivity.this, ViewTaskActivity.class);
 		intent.putExtra(ViewTableActivity.TABLE_ID, tableId);
 		intent.putExtra(ViewTableActivity.TASK_ID, taskId);
@@ -268,8 +241,8 @@ public class MainActivity extends ScheduleActivity {
 			Table table = tables.get(idsByPos.get(position));
 			TextView tableName = (TextView) rowView.findViewById(R.id.item_table_name);
 			TextView tableDescription = (TextView) rowView.findViewById(R.id.item_table_description);
-			tableName.setText(((TableInfo) table.getData()).name);
-			tableDescription.setText(((TableInfo) table.getData()).description);
+			tableName.setText(((Table.TableChange) table.getData()).name);
+			tableDescription.setText(((Table.TableChange) table.getData()).description);
 			return rowView;
 		}
 
@@ -277,111 +250,6 @@ public class MainActivity extends ScheduleActivity {
 			idsByPos.clear();
 			for (Integer tableId : tables.keySet())
 				idsByPos.add(tableId);
-		}
-	}
-
-	public class PlansAdapter extends BaseExpandableListAdapter {
-		private final Plans plans;
-		private final LayoutInflater inflater;
-
-		public PlansAdapter(Context context, Tables tables) {
-			this.plans = new Plans(tables);
-			this.inflater = LayoutInflater.from(context);
-		}
-
-		public void update() {
-			this.plans.update();
-		}
-
-		public Integer getTaskId(int groupPosition, int childPosition) {
-			TablePlan plan = this.plans.getTodayPlan(groupPosition);
-			return plan.tasks.get(childPosition).getId();
-		}
-
-		public Integer getTableId(int groupPosition) {
-			TablePlan plan = this.plans.getTodayPlan(groupPosition);
-			return plan.table.getId();
-		}
-
-		@Override
-		public Object getChild(int groupPosition, int childPosition) {
-			return this.plans.getTodayPlan(groupPosition).tasks.get(childPosition);
-		}
-
-		@Override
-		public long getChildId(int groupPosition, int childPosition) {
-			return childPosition;
-		}
-
-		@Override
-		public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-			Task task = plans.getTodayPlan(groupPosition).tasks.get(childPosition);
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.item_plan, null);
-			}
-
-			TextView taskTitle = (TextView) convertView.findViewById(R.id.plan_task_name);
-			TextView taskTimeStart = (TextView) convertView.findViewById(R.id.item_task_time_start);
-			TextView taskTimeEnd = (TextView) convertView.findViewById(R.id.item_task_time_end);
-
-			Task.TaskChange data = (Task.TaskChange) task.getData();
-			taskTitle.setText(data.name);
-			taskTimeStart.setText(CreateTaskActivity.timeFormatter.format(data.startTime));
-			taskTimeEnd.setText(CreateTaskActivity.timeFormatter.format(data.endTime));
-
-			convertView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Integer tableId = PlansAdapter.this.getTableId(groupPosition);
-					Integer taskId = PlansAdapter.this.getTaskId(groupPosition, childPosition);
-					openTaskActivity(tableId, taskId);
-				}
-			});
-
-			return convertView;
-		}
-
-		@Override
-		public int getChildrenCount(int groupPosition) {
-			return this.plans.getTodayPlan(groupPosition).tasks.size();
-		}
-
-		@Override
-		public TablePlan getGroup(int groupPosition) {
-			return this.plans.getTodayPlan(groupPosition);
-		}
-
-		@Override
-		public int getGroupCount() {
-			return this.plans.count();
-		}
-
-		@Override
-		public long getGroupId(int groupPosition) {
-			return groupPosition;
-		}
-
-		@Override
-		public View getGroupView(int groupPosition, boolean isExpanded, View theConvertView, ViewGroup parent) {
-			View resultView = theConvertView;
-			if (resultView == null) {
-				resultView = inflater.inflate(R.layout.item_plan_group, null);
-			}
-
-			final TablePlan item = getGroup(groupPosition);
-			TextView tableTitle = (TextView) resultView.findViewById(R.id.plan_table_name);
-			tableTitle.setText(((Table.TableInfo) item.table.getData()).name);
-			return resultView;
-		}
-
-		@Override
-		public boolean hasStableIds() {
-			return true;
-		}
-
-		@Override
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
-			return true;
 		}
 	}
 }

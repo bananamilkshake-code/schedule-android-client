@@ -5,7 +5,7 @@ import com.open.schedule.io.packet.ClientPacket;
 import java.io.IOException;
 
 public class CreateTaskPacket extends ClientPacket {
-	public CreateTaskPacket(Integer taskId, Integer tableId, Long time, String name, String description, String startDate, String endDate, String startTime, String endTime) throws IOException {
+	public CreateTaskPacket(int taskId, int tableId, long time, String name, String description, String startDate, String endDate, String startTime, String endTime) {
 		super(ClientPacket.Type.CREATE_TASK);
 		this.writeInt(taskId);
 		this.writeInt(tableId);

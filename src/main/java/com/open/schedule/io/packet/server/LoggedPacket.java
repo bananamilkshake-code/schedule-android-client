@@ -3,11 +3,11 @@ package com.open.schedule.io.packet.server;
 import com.open.schedule.io.packet.ServerPacket;
 import com.open.schedule.utility.Utility;
 
-public class LoginPacket extends ServerPacket {
+public class LoggedPacket extends ServerPacket {
 	public Status status;
 	public Integer id;
-	public LoginPacket() {
-		super(ServerPacket.Type.LOGIN);
+	public LoggedPacket() {
+		super(ServerPacket.Type.LOGGED);
 	}
 
 	@Override

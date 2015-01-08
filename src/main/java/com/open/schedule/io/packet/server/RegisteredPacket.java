@@ -2,11 +2,11 @@ package com.open.schedule.io.packet.server;
 
 import com.open.schedule.io.packet.ServerPacket;
 
-public class RegisterPacket extends ServerPacket {
+public class RegisteredPacket extends ServerPacket {
 	public Status status;
 
-	public RegisterPacket() {
-		super(ServerPacket.Type.REGISTER);
+	public RegisteredPacket() {
+		super(ServerPacket.Type.REGISTERED);
 	}
 
 	@Override

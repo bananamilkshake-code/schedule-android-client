@@ -51,22 +51,25 @@ public class CreateTableActivity extends ScheduleActivity implements OnClickList
 	}
 
 	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {
-		}
+		public PlaceholderFragment() {}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_create_table, container, false);
-			Button acceptButton = (Button) rootView.findViewById(R.id.btCreateTable);
-			acceptButton.setOnClickListener((CreateTableActivity) getActivity());
 
-			((CreateTableActivity) getActivity()).nameField = (EditText) rootView.findViewById(R.id.editTableName);
-			((CreateTableActivity) getActivity()).descField = (EditText) rootView.findViewById(R.id.editTableDescription);
+			Button acceptButton = (Button) rootView.findViewById(R.id.btCreateTable);
+			CreateTableActivity activity = (CreateTableActivity) getActivity();
+
+			acceptButton.setOnClickListener(activity);
+
+			activity.nameField = (EditText) rootView.findViewById(R.id.editTableName);
+			activity.descField = (EditText) rootView.findViewById(R.id.editTableDescription);
 
 			Intent intent = getActivity().getIntent();
 			if (intent.hasExtra(ViewTableActivity.TABLE_NAME)) {
-				((CreateTableActivity) getActivity()).nameField.setText(intent.getStringExtra(ViewTableActivity.TABLE_NAME));
-				((CreateTableActivity) getActivity()).descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
+				activity.nameField.setText(intent.getStringExtra(ViewTableActivity.TABLE_NAME));
+				activity.descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
+
 				acceptButton.setText(R.string.button_table_change);
 			}
 

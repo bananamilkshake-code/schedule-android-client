@@ -19,7 +19,7 @@ import com.open.schedule.R;
 import com.open.schedule.events.listeners.EventListener;
 import com.open.schedule.events.objects.Event;
 import com.open.schedule.events.objects.EventWarehouse;
-import com.open.schedule.io.packet.server.LoginPacket;
+import com.open.schedule.io.packet.server.LoggedPacket;
 
 public class LoginActivity extends ScheduleActivity implements OnClickListener {
 	public static final int REGISTER = 1;
@@ -71,6 +71,9 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 		findViewById(R.id.button_register).setOnClickListener(this);
 
 		loginListener = new LoginActivityListener();
+
+		this.mEmailView.setText("l@m.c");
+		this.mPasswordView.setText("1111");
 	}
 
 	@Override
@@ -191,7 +194,7 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 			showProgress(false);
 			switch (event.getType()) {
 				case LOGIN: {
-					LoginPacket.Status status = (LoginPacket.Status) event.getData();
+					LoggedPacket.Status status = (LoggedPacket.Status) event.getData();
 					switch (status) {
 						case SUCCESS:
 							finish();

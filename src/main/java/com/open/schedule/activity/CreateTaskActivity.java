@@ -43,6 +43,7 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 	public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 	public static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
 	private static HashMap<Periods, Integer> periodDays = new HashMap<Periods, Integer>();
+
 	static {
 		periodDays.put(Periods.ONE_TIME, 1);
 		periodDays.put(Periods.WEEK, 7);
@@ -57,7 +58,6 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 	private TextView endTime;
 	private Spinner spinnerPeriod;
 
-	;
 	private TextView period;
 
 	@Override
@@ -158,8 +158,7 @@ public class CreateTaskActivity extends ScheduleActivity implements OnClickListe
 	}
 
 	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {
-		}
+		public PlaceholderFragment() {}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

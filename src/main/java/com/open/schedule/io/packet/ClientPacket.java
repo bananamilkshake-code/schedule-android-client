@@ -25,28 +25,28 @@ public abstract class ClientPacket extends Packet {
 		return this.buffer.array();
 	}
 
-	protected void writeString(String value) throws IOException {
+	protected void writeString(String value) {
 		this.buffer.putShort((short) (Byte.SIZE * value.length()));
 		this.buffer.put(value.getBytes());
 	}
 
-	protected void writeFixedString(String value) throws IOException {
+	protected void writeFixedString(String value) {
 		this.buffer.put(value.getBytes());
 	}
 
-	protected void writeByte(Byte value) throws IOException {
+	protected void writeByte(Byte value) {
 		this.buffer.put(value);
 	}
 
-	protected void writeShort(Short value) throws IOException {
+	protected void writeShort(Short value) {
 		this.buffer.putShort(value);
 	}
 
-	protected void writeInt(Integer value) throws IOException {
+	protected void writeInt(Integer value) {
 		this.buffer.putInt(value);
 	}
 
-	protected void writeLong(Long value) throws IOException {
+	protected void writeLong(Long value) {
 		this.buffer.putLong(value);
 	}
 
@@ -55,9 +55,9 @@ public abstract class ClientPacket extends Packet {
 		LOGIN,
 		CREATE_TABLE,
 		CREATE_TASK,
-		TABLE_CHANGE,
-		TASK_CHANGE,
-		PERMISSION,
-		COMMENTARY
+		NOT_USED_TABLE_CHANGE,
+		NOT_USED_TASK_CHANGE,
+		NOT_USED_PERMISSION,
+		NOT_USED_COMMENTARY
 	}
 }
