@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Application Name -->
     <string name="app_name">Open Schedule</string>
-    <string name="no_connection">Нет подключения</string>
 
     <!-- Titles -->
     <string name="title_activity_readers">Читатели</string>
@@ -14,5 +14,9 @@
     <string name="title_activity_view_tasks">Задания</string>
     <string name="title_activity_create_comment">Задание</string>
     <string name="title_activity_find_user">Знакомые</string>
+
+    <!-- Toasts -->
+    <string name="toast_no_connection">Нет подключения</string>
+    <string name="toast_connection_up">Соединение с сервером установлено</string>
 
 </resources>

@@ -2,6 +2,11 @@ package com.open.schedule.io;
 
 import android.util.Log;
 
+import com.open.schedule.app.ScheduleApplication;
+
+import java.net.Inet4Address;
+import java.net.InetAddress;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -14,8 +19,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class ServerConnection {
-	static final private int RETRY_TIMEOUT = (1 * 60 * 1000);
-
 	final private EventLoopGroup workerGroup = new NioEventLoopGroup();
 	final private Bootstrap bootstrap = new Bootstrap();
 
@@ -24,7 +27,9 @@ public class ServerConnection {
 
 	private Channel channel = null;
 
-	public ServerConnection(final PacketDecoder packetDecoder, final Client client, final String host, final int port) {
+	private final ChannelFutureListener channelCloseListener;
+
+	public ServerConnection(final ScheduleApplication application, final PacketDecoder packetDecoder, final Client client, final String host, final int port) {
 		this.host = host;
 		this.port = port;
 
@@ -35,37 +40,31 @@ public class ServerConnection {
 			.handler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel channel) throws Exception {
-					channel.pipeline().addLast(packetDecoder, client);
+					if (channel.pipeline().first() == null)
+						channel.pipeline().addLast(packetDecoder, client);
 				}
 			});
+
+		this.channelCloseListener = new ChannelFutureListener() {
+			@Override
+			public void operationComplete(ChannelFuture future) throws Exception {
+				application.new ConnectionAsyncTask().execute();
+			}
+		};
 	}
 
 	public void tryConnect() {
 		try {
-			ChannelFuture future = bootstrap.connect(host, port).sync();
+			ChannelFuture future = bootstrap.connect(this.host, this.port).sync();
 			Channel channel = future.channel();
 
 			this.channel = channel;
 
-			channel.closeFuture().addListener(new ChannelFutureListener() {
-				@Override
-				public void operationComplete(ChannelFuture future) throws Exception {
-					Log.w("ServerConnector", "Connection is closed");
-					ServerConnection.this.retryAfterTimeout();
-				}
-			});
+			channel.closeFuture().addListener(this.channelCloseListener);
 		} catch (Exception e) {
 			Log.w("ServerConnector", "Exception on connection", e);
-		}
-	}
 
-	private void retryAfterTimeout() {
-		try {
-			Thread.sleep(RETRY_TIMEOUT);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			this.tryConnect();
+			this.channel = null;
 		}
 	}
 
@@ -77,6 +76,7 @@ public class ServerConnection {
 	public void disconnect() {
 		workerGroup.shutdownGracefully();
 
+		this.channel.close();
 		this.channel = null;
 	}
 

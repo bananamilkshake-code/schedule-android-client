@@ -161,7 +161,7 @@ public class MainActivity extends ScheduleActivity {
 
 			startActivity(loginIntent);
 		} else {
-			Toast.makeText(this.getBaseContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this.getBaseContext(), getResources().getString(R.string.toast_no_connection), Toast.LENGTH_SHORT).show();
 		}
 	}
 
