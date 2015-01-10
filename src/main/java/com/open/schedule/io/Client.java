@@ -17,7 +17,6 @@ import com.open.schedule.io.packet.server.RegisteredPacket;
 import com.open.schedule.io.packet.server.TablePacket;
 import com.open.schedule.io.packet.server.TaskPacket;
 
-import java.net.SocketAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,14 +25,15 @@ import java.util.Locale;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
+import io.netty.channel.ChannelHandler.Sharable;
 
+@Sharable
 public class Client extends ChannelDuplexHandler {
 	private final static String LOG_TAG = "SCHEDULE_CLIENT";
 
 	private final Account account;
 
-	private ChannelHandlerContext context;
+	private ChannelHandlerContext context = null;
 	private boolean logged = false;
 
 	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("ddMMyyyy", Locale.US);
@@ -41,6 +41,11 @@ public class Client extends ChannelDuplexHandler {
 
 	public Client(Account account) {
 		this.account = account;
+	}
+
+	@Override
+	public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+		this.context = ctx;
 	}
 
 	@Override
@@ -80,13 +85,6 @@ public class Client extends ChannelDuplexHandler {
 	}
 
 	@Override
-	public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise future) throws Exception {
-		super.connect(ctx, remoteAddress, localAddress, future);
-
-		this.context = ctx;
-	}
-
-	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		Log.w(LOG_TAG, "Netty Exception", cause);
 
@@ -102,13 +100,13 @@ public class Client extends ChannelDuplexHandler {
 
 		int bufferCapacity = (Packet.PACKET_TYPE_LENGTH + Packet.PACKET_SIZE_LENGTH + size);
 
-		ByteBuf data = context.alloc().buffer(bufferCapacity, bufferCapacity);
+		ByteBuf data = this.context.alloc().buffer(bufferCapacity, bufferCapacity);
 
 		data.writeByte(packet.getType().ordinal());
 		data.writeShort(size * Byte.SIZE);
 		data.writeBytes(packet.getBuffer(), 0, (int) size);
 
-		context.writeAndFlush(data);
+		this.context.writeAndFlush(data);
 	}
 
 	public void login(String username, String password) {

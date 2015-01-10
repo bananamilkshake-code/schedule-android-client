@@ -33,7 +33,7 @@ public class ScheduleApplication extends Application {
 		this.client = new Client(this.account);
 		this.account.setClient(this.client);
 
-		this.connector = new ServerConnection(this, new PacketDecoder(), this.client, Config.HOST, Config.PORT);
+		this.connector = new ServerConnection(this, this.client, Config.HOST, Config.PORT);
 
 		new ConnectionAsyncTask().execute();
 

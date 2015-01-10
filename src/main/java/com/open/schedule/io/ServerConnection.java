@@ -4,9 +4,6 @@ import android.util.Log;
 
 import com.open.schedule.app.ScheduleApplication;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -19,6 +16,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class ServerConnection {
+	private final static String LOG_TAG = ServerConnection.class.getName();
+
 	final private EventLoopGroup workerGroup = new NioEventLoopGroup();
 	final private Bootstrap bootstrap = new Bootstrap();
 
@@ -29,7 +28,7 @@ public class ServerConnection {
 
 	private final ChannelFutureListener channelCloseListener;
 
-	public ServerConnection(final ScheduleApplication application, final PacketDecoder packetDecoder, final Client client, final String host, final int port) {
+	public ServerConnection(final ScheduleApplication application, final Client client, final String host, final int port) {
 		this.host = host;
 		this.port = port;
 
@@ -40,8 +39,7 @@ public class ServerConnection {
 			.handler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel channel) throws Exception {
-					if (channel.pipeline().first() == null)
-						channel.pipeline().addLast(packetDecoder, client);
+					channel.pipeline().addLast(new PacketDecoder(), client);
 				}
 			});
 
@@ -57,7 +55,6 @@ public class ServerConnection {
 		try {
 			ChannelFuture future = bootstrap.connect(this.host, this.port).sync();
 			Channel channel = future.channel();
-
 			this.channel = channel;
 
 			channel.closeFuture().addListener(this.channelCloseListener);
@@ -66,11 +63,6 @@ public class ServerConnection {
 
 			this.channel = null;
 		}
-	}
-
-	protected void finalize() throws Exception {
-		if (this.isConnected())
-			disconnect();
 	}
 
 	public void disconnect() {
