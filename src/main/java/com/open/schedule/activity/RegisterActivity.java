@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,12 +17,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.open.schedule.R;
-import com.open.schedule.events.listeners.EventListener;
-import com.open.schedule.events.objects.Event;
-import com.open.schedule.events.objects.EventWarehouse;
 import com.open.schedule.io.packet.server.RegisteredPacket;
 
-public class RegisterActivity extends ScheduleActivity implements OnClickListener {
+public class RegisterActivity extends ScheduleActivity implements UiMessageHandler {
 	private RegisterTask registerTask = null;
 
 	private String email;
@@ -37,19 +35,17 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 	private View loginStatusView;
 	private TextView loginStatusMessageView;
 
-	private RegisterActivityLister registerListener;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_register);
 
-		emailView = (EditText) findViewById(R.id.email);
-		emailView.setText(email);
+		this.emailView = (EditText) findViewById(R.id.email);
+		this.emailView.setText(this.email);
 
-		passwordView = (EditText) findViewById(R.id.password);
-		passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		this.passwordView = (EditText) findViewById(R.id.password);
+		this.passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
 				if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -60,101 +56,82 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 			}
 		});
 
-		passwordVerifyView = (EditText) findViewById(R.id.password_verification);
-		nameView = (EditText) findViewById(R.id.name);
+		this.passwordVerifyView = (EditText) findViewById(R.id.password_verification);
+		this.nameView = (EditText) findViewById(R.id.name);
 
-		loginFormView = findViewById(R.id.login_form);
-		loginStatusView = findViewById(R.id.login_status);
-		loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+		this.loginFormView = findViewById(R.id.login_form);
+		this.loginStatusView = findViewById(R.id.login_status);
+		this.loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-		findViewById(R.id.register_button).setOnClickListener(this);
-
-		registerListener = new RegisterActivityLister();
-	}
-
-	@Override
-	protected void onStop() {
-		registerListener.shutdown();
-		super.onStop();
-	}
-
-	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-			case R.id.register_button:
+		findViewById(R.id.register_button).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				register();
-				break;
-		}
+			}
+		});
 	}
 
 	private void register() {
-		if (registerTask != null) {
+		if (this.registerTask != null) {
 			return;
 		}
 
-		// Reset errors.
-		emailView.setError(null);
-		passwordView.setError(null);
-		passwordVerifyView.setError(null);
-		nameView.setError(null);
+		boolean isValuesCorrected = this.checkValues();
+		if (isValuesCorrected) {
+			this.loginStatusMessageView.setText(R.string.login_progress_signing_in);
+			showProgress(true);
+			this.registerTask = new RegisterTask();
+			this.registerTask.execute();
+		}
+	}
 
-		// Store values at the time of the login attempt.
-		email = emailView.getText().toString();
-		password = passwordView.getText().toString();
-		passwordVerification = passwordVerifyView.getText().toString();
-		name = nameView.getText().toString();
+	private boolean checkValues() {
+		this.emailView.setError(null);
+		this.passwordView.setError(null);
+		this.passwordVerifyView.setError(null);
+		this.nameView.setError(null);
 
-		boolean cancel = false;
-		View focusView = null;
+		email = this.emailView.getText().toString();
+		password = this.passwordView.getText().toString();
+		passwordVerification = this.passwordVerifyView.getText().toString();
+		name = this.nameView.getText().toString();
 
-		// Check for a valid password.
 		if (TextUtils.isEmpty(password)) {
-			passwordView.setError(getString(R.string.register_error_field_required));
-
-			focusView = passwordView;
-			cancel = true;
+			this.passwordView.setError(getString(R.string.register_error_field_required));
+			this.passwordView.requestFocus();
+			return false;
 		} else if (password.length() < 4) {
-			passwordView.setError(getString(R.string.register_error_invalid_password));
-
-			focusView = passwordView;
-			cancel = true;
+			this.passwordView.setError(getString(R.string.register_error_invalid_password));
+			this.passwordView.requestFocus();
+			return false;
 		} else if (TextUtils.isEmpty(passwordVerification)) {
-			passwordVerifyView.setError(getString(R.string.register_error_no_verification));
-
-			focusView = passwordVerifyView;
-			cancel = true;
+			this.passwordVerifyView.setError(getString(R.string.register_error_no_verification));
+			this.passwordVerifyView.requestFocus();
+			return false;
 		} else if (!TextUtils.equals(password, passwordVerification)) {
-			passwordVerifyView.getEditableText().clear();
-			passwordView.setError(getString(R.string.register_error_false_password));
-
-			focusView = passwordView;
-			cancel = true;
+			this.passwordVerifyView.getEditableText().clear();
+			this.passwordView.setError(getString(R.string.register_error_false_password));
+			this.passwordView.requestFocus();
+			return false;
 		}
 
 		if (TextUtils.isEmpty(email)) {
-			emailView.setError(getString(R.string.register_error_field_required));
-			focusView = emailView;
-			cancel = true;
+			this.emailView.setError(getString(R.string.register_error_field_required));
+			this.emailView.requestFocus();
+			return false;
 		} else if (!email.contains("@")) {
-			emailView.setError(getString(R.string.register_error_invalid_email));
-			focusView = emailView;
-			cancel = true;
+			this.emailView.setError(getString(R.string.register_error_invalid_email));
+			this.emailView.requestFocus();
+			return false;
 		}
 
 		if (TextUtils.isEmpty(name)) {
-			emailView.setError(getString(R.string.register_error_field_required));
-			focusView = nameView;
-			cancel = true;
+			this.emailView.setError(getString(R.string.register_error_field_required));
+			this.nameView.requestFocus();
+			return false;
 		}
 
-		if (cancel) {
-			focusView.requestFocus();
-		} else {
-			loginStatusMessageView.setText(R.string.login_progress_signing_in);
-			showProgress(true);
-			registerTask = new RegisterTask();
-			registerTask.execute();
-		}
+		return true;
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -162,66 +139,55 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-			loginStatusView.setVisibility(View.VISIBLE);
-			loginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+			this.loginStatusView.setVisibility(View.VISIBLE);
+			this.loginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
-					loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+					RegisterActivity.this.loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 				}
 			});
 
-			loginFormView.setVisibility(View.VISIBLE);
-			loginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+			this.loginFormView.setVisibility(View.VISIBLE);
+			this.loginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
-					loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+					RegisterActivity.this.loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 				}
 			});
 		} else {
-			loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+			this.loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			this.loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
 
-	private void setRegistrationFail() {
-		emailView.setError(getString(R.string.register_error_invalid_email));
-		emailView.requestFocus();
-	}
-
-	private void returnSuccess() {
+	public void returnSuccess() {
 		Intent result = new Intent();
-		setResult(LoginActivity.RESULT_REGISTERED, result);
-		finish();
+		this.setResult(LoginActivity.RESULT_REGISTERED, result);
+		this.finish();
 	}
 
-	private class RegisterActivityLister implements EventListener {
-		public RegisterActivityLister() {
-			super();
-			EventWarehouse.getInstance().addListener((EventListener) this, Event.Type.REGISTER);
-		}
+	public void setRegistrationFail() {
+		this.emailView.setError(getString(R.string.register_error_invalid_email));
+		this.emailView.requestFocus();
+	}
 
-		@Override
-		public void handle(Event event) {
-			showProgress(false);
-			switch (event.getType()) {
-				case REGISTER:
-					RegisteredPacket.Status status = (RegisteredPacket.Status) event.getData();
-					switch (status) {
-						case SUCCESS:
-							returnSuccess();
-							break;
-						case FAILURE:
-							setRegistrationFail();
-							break;
-					}
-					break;
-				default:
-					break;
+	@Override
+	public void handleMessage(Message message) {
+		UiMessageType type = UiMessageType.values()[message.what];
+		switch (type) {
+			case UI_MESSAGE_REGISTERED: {
+				switch ((RegisteredPacket.Status) message.obj) {
+					case SUCCESS:
+						this.returnSuccess();
+						break;
+					case FAILURE:
+						this.setRegistrationFail();
+						break;
+				}
+				return;
 			}
-		}
-
-		public final void shutdown() {
-			EventWarehouse.getInstance().removeListener((EventListener) this, Event.Type.REGISTER);
+			default:
+				throw new IllegalArgumentException("Wrong message  type" + type);
 		}
 	}
 
@@ -231,13 +197,13 @@ public class RegisterActivity extends ScheduleActivity implements OnClickListene
 			if (!RegisterActivity.this.isConnected())
 				return null;
 
-			RegisterActivity.this.getClient().register(email, password, name);
+			RegisterActivity.this.getClient().register(email, password, name, RegisterActivity.this);
 			return null;
 		}
 
 		@Override
 		protected void onCancelled() {
-			registerTask = null;
+			RegisterActivity.this.registerTask = null;
 
 			showProgress(false);
 		}

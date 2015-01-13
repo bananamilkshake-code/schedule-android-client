@@ -1,12 +1,16 @@
 package com.open.schedule.io;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
 import com.open.schedule.account.Account;
 import com.open.schedule.account.tables.ChangeableData;
 import com.open.schedule.account.tables.Table;
 import com.open.schedule.account.tables.Task;
-import com.open.schedule.events.objects.Event;
+import com.open.schedule.activity.UiMessageHandler;
+import com.open.schedule.activity.UiMessageType;
 import com.open.schedule.io.packet.*;
 import com.open.schedule.io.packet.client.CreateTablePacket;
 import com.open.schedule.io.packet.client.CreateTaskPacket;
@@ -16,11 +20,14 @@ import com.open.schedule.io.packet.server.LoggedPacket;
 import com.open.schedule.io.packet.server.RegisteredPacket;
 import com.open.schedule.io.packet.server.TablePacket;
 import com.open.schedule.io.packet.server.TaskPacket;
+import static com.open.schedule.activity.UiMessageType.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelDuplexHandler;
@@ -36,11 +43,17 @@ public class Client extends ChannelDuplexHandler {
 	private ChannelHandlerContext context = null;
 	private boolean logged = false;
 
+	private final HashSet<Handler> messageHandlers[] = new HashSet[UiMessageType.values().length];
+
 	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("ddMMyyyy", Locale.US);
 	private static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("HHmm", Locale.US);
 
 	public Client(Account account) {
 		this.account = account;
+
+		for (int i = 0; i < this.messageHandlers.length; ++i) {
+			this.messageHandlers[i] = new HashSet<>();
+		}
 	}
 
 	@Override
@@ -52,20 +65,10 @@ public class Client extends ChannelDuplexHandler {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		ServerPacket packet = (ServerPacket) msg;
 
-		switch (packet.getType()) {
-			case REGISTERED:
-			case LOGGED:
-				if (isLogged()) {
-					Log.e(LOG_TAG, "Received auth packets when already logged in");
-					System.exit(1);
-				}
-				break;
-			default:
-				if (!isLogged()) {
-					Log.e(LOG_TAG, "Received packets when not logged in");
-					System.exit(1);
-				}
-				break;
+		if (packet.getType().needLogged && !this.isLogged()) {
+			throw new IllegalStateException("Received packets when not logged in");
+		} else if (!packet.getType().needLogged && this.isLogged()) {
+			throw new IllegalStateException("Received auth packets when already logged in");
 		}
 
 		switch (packet.getType()) {
@@ -91,6 +94,10 @@ public class Client extends ChannelDuplexHandler {
 		ctx.close();
 	}
 
+	public void logout() {
+		this.logged = false;
+	}
+
 	public boolean isLogged() {
 		return logged;
 	}
@@ -109,11 +116,15 @@ public class Client extends ChannelDuplexHandler {
 		this.context.writeAndFlush(data);
 	}
 
-	public void login(String username, String password) {
+	public void login(String username, String password, final UiMessageHandler activity) {
+		this.addMessageListener(UI_MESSAGE_LOGGED, activity);
+
 		this.send(new LoginPacket(username, password));
 	}
 
-	public void register(String email, String password, String name) {
+	public void register(String email, String password, String name, final UiMessageHandler activity) {
+		this.addMessageListener(UI_MESSAGE_REGISTERED, activity);
+
 		this.send(new RegisterPacket(email, password));
 	}
 
@@ -147,7 +158,7 @@ public class Client extends ChannelDuplexHandler {
 				break;
 		}
 
-		new Event(this, Event.Type.REGISTER, (Object) packet.status);
+		this.notify(UI_MESSAGE_REGISTERED, packet.status);
 	}
 
 	private void logged(LoggedPacket packet) {
@@ -164,7 +175,7 @@ public class Client extends ChannelDuplexHandler {
 				break;
 		}
 
-		new Event(this, Event.Type.LOGIN, (Object) packet.status);
+		this.notify(UI_MESSAGE_LOGGED, packet.status);
 	}
 
 	private void newTable(TablePacket packet) {
@@ -183,9 +194,35 @@ public class Client extends ChannelDuplexHandler {
 			startTime = TIME_FORMATTER.parse(packet.startTime);
 			endTime = TIME_FORMATTER.parse(packet.endTime);
 		} catch (ParseException e) {
-			Log.w(LOG_TAG, "NewTask parsing", e);
+			Log.w(LOG_TAG, "NewTask parsing exception", e);
 		}
 
 		this.account.createTask(packet.tableId, packet.name, packet.description, packet.userId, startDate, endDate, startTime, endTime, packet.period, false);
+	}
+
+	private void addMessageListener(final UiMessageType messageType, final UiMessageHandler activity) {
+		HashSet<Handler> handlers = this.messageHandlers[messageType.ordinal()];
+
+		synchronized (handlers) {
+			handlers.add(new Handler(Looper.getMainLooper()) {
+				@Override
+				public void handleMessage(Message inputMessage) {
+					activity.handleMessage(inputMessage);
+				}
+			});
+		}
+	}
+
+	private void notify(UiMessageType messageType, Object data) {
+		HashSet<Handler> handlers = this.messageHandlers[messageType.ordinal()];
+		
+		synchronized (handlers) {
+			for (Handler handler : handlers) {
+				Message message = handler.obtainMessage(messageType.ordinal(), data);
+				message.sendToTarget();
+			}
+
+			handlers.clear();
+		}
 	}
 }

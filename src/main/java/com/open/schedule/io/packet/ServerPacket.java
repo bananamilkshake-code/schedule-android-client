@@ -7,15 +7,25 @@ import com.open.schedule.io.packet.server.RegisteredPacket;
 
 public abstract class ServerPacket extends Packet {
 	public enum Type {
-		REGISTERED,
-		LOGGED,
+		REGISTERED(false),
+		LOGGED(false),
 		NOT_USED_GLOBAL_TABLE_ID,        // Локальная база данных клиента занесена в глобальную базу даных
 		NOT_USED_GLOBAL_TASK_ID,            // Локальное задание клиента занесено в глобальную базу данных
 		TABLE,
 		TASK,
 		NOT_USED_PERMISSION,
 		NOT_USED_COMMENTARY,
-		NOT_USED_USER
+		NOT_USED_USER;
+
+		public final boolean needLogged;
+
+		Type() {
+			this(true);
+		}
+
+		Type(boolean needLogged) {
+			this.needLogged = needLogged;
+		}
 	}
 
 	private final Type type;

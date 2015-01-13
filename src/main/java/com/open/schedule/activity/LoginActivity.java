@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,30 +17,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.open.schedule.R;
-import com.open.schedule.events.listeners.EventListener;
-import com.open.schedule.events.objects.Event;
-import com.open.schedule.events.objects.EventWarehouse;
 import com.open.schedule.io.packet.server.LoggedPacket;
 
-public class LoginActivity extends ScheduleActivity implements OnClickListener {
+public class LoginActivity extends ScheduleActivity implements UiMessageHandler {
 	public static final int REGISTER = 1;
 
 	public static final int RESULT_REGISTERED = RESULT_FIRST_USER + 1;
 
-	private UserLoginTask mAuthTask = null;
+	private static final int PASSWORD_MIN_LENGTH = 4;
+
+	private UserLoginTask authTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String email;
-	private String password;
+	private String email = "l@m.c";
+	private String password = "1111";
 
-	// UI references.
-	private EditText mEmailView;
-	private EditText mPasswordView;
-	private View mLoginFormView;
-	private View mLoginStatusView;
-	private TextView mLoginStatusMessageView;
-
-	private LoginActivityListener loginListener;
+	private EditText emailView;
+	private EditText passwordView;
+	private View loginFormView;
+	private View loginStatusView;
+	private TextView loginStatusMessageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,115 +44,115 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 
 		setContentView(R.layout.activity_login);
 
-		// Set up the login form.
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(email);
+		emailView = (EditText) findViewById(R.id.email);
+		emailView.setText(email);
 
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		passwordView = (EditText) findViewById(R.id.password);
+		passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
 				if (id == R.id.login || id == EditorInfo.IME_NULL) {
 					attemptLogin();
 					return true;
 				}
+
 				return false;
 			}
 		});
 
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+		loginFormView = findViewById(R.id.login_form);
+		loginStatusView = findViewById(R.id.login_status);
+		loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-		findViewById(R.id.button_sign_in).setOnClickListener(this);
-		findViewById(R.id.button_register).setOnClickListener(this);
+		findViewById(R.id.button_sign_in).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LoginActivity.this.attemptLogin();
+			}
+		});
 
-		loginListener = new LoginActivityListener();
-
-		this.mEmailView.setText("l@m.c");
-		this.mPasswordView.setText("1111");
-	}
-
-	@Override
-	protected void onStop() {
-		loginListener.shutdown();
-		super.onStop();
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.button_sign_in:
-				attemptLogin();
-				break;
-			case R.id.button_register:
-				openRegisterActivity();
-				break;
-		}
+		findViewById(R.id.button_register).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LoginActivity.this.openRegisterActivity();
+			}
+		});
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_REGISTERED)
-			finish();
+			this.finish();
+	}
+
+	@Override
+	public void handleMessage(Message message) {
+		UiMessageType type = UiMessageType.values()[message.what];
+		switch (type) {
+			case UI_MESSAGE_LOGGED: {
+				LoggedPacket.Status status = (LoggedPacket.Status) message.obj;
+				switch (status) {
+					case SUCCESS:
+						this.loginSucceeded();
+						break;
+					case FAILURE:
+						this.loginFailed();
+						break;
+				}
+				return;
+			}
+			default:
+				throw new IllegalArgumentException("Wrong message  type" + type);
+		}
+
 	}
 
 	private void openRegisterActivity() {
 		Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-		startActivityForResult(registerIntent, REGISTER);
+		this.startActivityForResult(registerIntent, REGISTER);
 	}
 
 	private void attemptLogin() {
-		if (mAuthTask != null) {
+		if (authTask != null) {
 			return;
 		}
 
-		// Reset errors.
-		mEmailView.setError(null);
-		mPasswordView.setError(null);
-
-		// Store values at the time of the login attempt.
-		email = mEmailView.getText().toString();
-		password = mPasswordView.getText().toString();
-
-		boolean cancel = false;
-		View focusView = null;
-
-		// Check for a valid password.
-		if (TextUtils.isEmpty(password)) {
-			mPasswordView.setError(getString(R.string.login_error_field_required));
-			focusView = mPasswordView;
-			cancel = true;
-		} else if (password.length() < 4) {
-			mPasswordView.setError(getString(R.string.login_error_invalid_password));
-			focusView = mPasswordView;
-			cancel = true;
-		}
-
-		// Check for a valid email address.
-		if (TextUtils.isEmpty(email)) {
-			mEmailView.setError(getString(R.string.login_error_field_required));
-			focusView = mEmailView;
-			cancel = true;
-		} else if (!email.contains("@")) {
-			mEmailView.setError(getString(R.string.login_error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
-		}
-
-		if (cancel) {
-			focusView.requestFocus();
-		} else {
-			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
-			showProgress(true);
+		boolean isValuesCorrected = this.checkValues();
+		if (isValuesCorrected) {
+			this.loginStatusMessageView.setText(R.string.login_progress_signing_in);
+			this.showProgress(true);
 			new UserLoginTask().execute();
 		}
 	}
 
-	private void setAuthorisationFail() {
-		String error = getString(R.string.login_error_invalid_auth);
-		mPasswordView.setError(error);
-		mPasswordView.requestFocus();
+	private boolean checkValues() {
+		this.emailView.setError(null);
+		this.passwordView.setError(null);
+
+		this.email = this.emailView.getText().toString();
+		this.password = this.passwordView.getText().toString();
+
+		if (TextUtils.isEmpty(this.password)) {
+			this.passwordView.setError(getString(R.string.login_error_field_required));
+			this.passwordView.requestFocus();
+			return false;
+		} else if (this.password.length() < PASSWORD_MIN_LENGTH) {
+			this.passwordView.setError(getString(R.string.login_error_invalid_password));
+			this.passwordView.requestFocus();
+			return false;
+		}
+
+		if (TextUtils.isEmpty(this.email)) {
+			this.emailView.setError(getString(R.string.login_error_field_required));
+			this.emailView.requestFocus();
+			return false;
+		} else if (!email.contains("@")) {
+			this.emailView.setError(getString(R.string.login_error_invalid_email));
+			this.emailView.requestFocus();
+			return false;
+		}
+
+		return true;
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -163,57 +160,38 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+			this.loginStatusView.setVisibility(View.VISIBLE);
+			this.loginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
-					mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+					LoginActivity.this.loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 				}
 			});
 
-			mLoginFormView.setVisibility(View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+			this.loginFormView.setVisibility(View.VISIBLE);
+			this.loginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
-					mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+					LoginActivity.this.loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 				}
 			});
 		} else {
-			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+			this.loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			this.loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
 
-	private class LoginActivityListener implements EventListener {
-		public LoginActivityListener() {
-			super();
-			EventWarehouse.getInstance().addListener((EventListener) this, Event.Type.LOGIN);
-		}
+	public void loginSucceeded() {
+		this.finish();
+	}
 
-		public void handle(Event event) {
-			showProgress(false);
-			switch (event.getType()) {
-				case LOGIN: {
-					LoggedPacket.Status status = (LoggedPacket.Status) event.getData();
-					switch (status) {
-						case SUCCESS:
-							finish();
-							break;
-						case FAILURE:
-							setAuthorisationFail();
-							break;
-					}
-				}
-				break;
-				default:
-					break;
-			}
+	public void loginFailed() {
+		this.authTask = null;
+		this.showProgress(false);
 
-		}
-
-		public final void shutdown() {
-			EventWarehouse.getInstance().removeListener((EventListener) this, Event.Type.LOGIN);
-		}
+		String error = this.getString(R.string.login_error_invalid_auth);
+		this.passwordView.setError(error);
+		this.passwordView.requestFocus();
 	}
 
 	public class UserLoginTask extends AsyncTask<Void, Void, Void> {
@@ -222,13 +200,13 @@ public class LoginActivity extends ScheduleActivity implements OnClickListener {
 			if (!LoginActivity.this.isConnected())
 				return null;
 
-			LoginActivity.this.getClient().login(email, password);
+			LoginActivity.this.getClient().login(LoginActivity.this.email, LoginActivity.this.password, LoginActivity.this);
 			return null;
 		}
 
 		@Override
 		protected void onCancelled() {
-			mAuthTask = null;
+			LoginActivity.this.authTask = null;
 			showProgress(false);
 		}
 	}
