@@ -11,6 +11,7 @@ import java.util.SortedMap;
 
 public class Account {
 	private int id = 0;
+	private long lastSyncTime = 0;
 
 	private final Tables tables = new Tables();
 
@@ -28,6 +29,10 @@ public class Account {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public long getLastSyncTime() {
+		return this.lastSyncTime;
 	}
 
 	public int createTable(String name, String description, int creatorId, boolean local) {

@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelDuplexHandler;
@@ -119,7 +118,7 @@ public class Client extends ChannelDuplexHandler {
 	public void login(String username, String password, final UiMessageHandler activity) {
 		this.addMessageListener(UI_MESSAGE_LOGGED, activity);
 
-		this.send(new LoginPacket(username, password));
+		this.send(new LoginPacket(username, password, this.account.getLastSyncTime()));
 	}
 
 	public void register(String email, String password, String name, final UiMessageHandler activity) {
@@ -215,7 +214,7 @@ public class Client extends ChannelDuplexHandler {
 
 	private void notify(UiMessageType messageType, Object data) {
 		HashSet<Handler> handlers = this.messageHandlers[messageType.ordinal()];
-		
+
 		synchronized (handlers) {
 			for (Handler handler : handlers) {
 				Message message = handler.obtainMessage(messageType.ordinal(), data);
