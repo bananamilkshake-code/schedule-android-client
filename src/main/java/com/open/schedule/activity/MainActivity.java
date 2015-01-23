@@ -150,7 +150,7 @@ public class MainActivity extends ScheduleActivity {
 		String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
 
 		Account account = this.getAccount();
-		account.createTable(name, description, account.getId(), false);
+		account.createTable(name, description, account.getId(), true);
 
 		((BaseAdapter) drawerList.getAdapter()).notifyDataSetChanged();
 	}
