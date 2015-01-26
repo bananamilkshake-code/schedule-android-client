@@ -28,14 +28,10 @@ public class PacketDecoder extends ReplayingDecoder<PacketDecoderState> {
 				this.length = in.readShort();
 				this.checkpoint(PacketDecoderState.STATE_READ_CONTENT);
 			case STATE_READ_CONTENT:
-				ServerPacket packet = ServerPacket.get(this.type);
-
 				byte[] data = new byte[this.length];
 				in.readBytes(data, 0, this.length);
 
-				packet.init(data);
-
-				out.add(packet);
+				out.add(ServerPacket.get(this.type, data));
 
 				Log.d("PacketDecoder", "Packet with type " + this.type.toString() + " received");
 

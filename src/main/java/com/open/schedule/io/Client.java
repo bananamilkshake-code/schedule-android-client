@@ -108,7 +108,7 @@ public class Client extends ChannelDuplexHandler {
 
 		ByteBuf data = this.context.alloc().buffer(bufferCapacity, bufferCapacity);
 
-		data.writeByte(packet.getType().ordinal());
+		data.writeByte(packet.type.ordinal());
 		data.writeShort(size * Byte.SIZE);
 		data.writeBytes(packet.getBuffer(), 0, (int) size);
 
@@ -142,8 +142,9 @@ public class Client extends ChannelDuplexHandler {
 			Task.TaskChange taskInfo = (Task.TaskChange) info;
 
 			this.send(new CreateTaskPacket(id, ((Task) data).getTableId(), taskInfo.time, taskInfo.name, taskInfo.description,
-					DATE_FORMATTER.format(taskInfo.startDate), DATE_FORMATTER.format(taskInfo.endDate),
-					TIME_FORMATTER.format(taskInfo.startTime), TIME_FORMATTER.format(taskInfo.endTime)));
+					taskInfo.startDate, taskInfo.endDate,
+					taskInfo.startTime, taskInfo.endTime,
+					taskInfo.period));
 		}
 	}
 
@@ -178,7 +179,7 @@ public class Client extends ChannelDuplexHandler {
 	}
 
 	private void newTable(TablePacket packet) {
-		this.account.createTable(packet.name, packet.description, packet.userId, false);
+		this.account.createTable(packet.name, packet.description, packet.creatorId, false);
 	}
 
 	private void newTask(TaskPacket packet) {
@@ -196,7 +197,7 @@ public class Client extends ChannelDuplexHandler {
 			Log.w(LOG_TAG, "NewTask parsing exception", e);
 		}
 
-		this.account.createTask(packet.tableId, packet.name, packet.description, packet.userId, startDate, endDate, startTime, endTime, packet.period, false);
+		this.account.createTask(packet.tableId, packet.name, packet.description, packet.creatorId, startDate, endDate, startTime, endTime, packet.period, false);
 	}
 
 	private void addMessageListener(final UiMessageType messageType, final UiMessageHandler activity) {

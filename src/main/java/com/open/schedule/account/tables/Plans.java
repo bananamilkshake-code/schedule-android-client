@@ -1,6 +1,6 @@
 package com.open.schedule.account.tables;
 
-import com.open.schedule.io.Tables;
+import com.open.schedule.account.Tables;
 import com.open.schedule.utility.Utility;
 
 import java.util.ArrayList;

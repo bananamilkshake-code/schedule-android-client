@@ -5,12 +5,12 @@ import com.open.schedule.io.packet.server.TablePacket;
 import com.open.schedule.io.packet.server.TaskPacket;
 import com.open.schedule.io.packet.server.RegisteredPacket;
 
-public abstract class ServerPacket extends Packet {
+public abstract class ServerPacket implements Packet {
 	public enum Type {
 		REGISTERED(false),
 		LOGGED(false),
 		NOT_USED_GLOBAL_TABLE_ID,        // Локальная база данных клиента занесена в глобальную базу даных
-		NOT_USED_GLOBAL_TASK_ID,            // Локальное задание клиента занесено в глобальную базу данных
+		NOT_USED_GLOBAL_TASK_ID,         // Локальное задание клиента занесено в глобальную базу данных
 		TABLE,
 		TASK,
 		NOT_USED_PERMISSION,
@@ -29,29 +29,81 @@ public abstract class ServerPacket extends Packet {
 	}
 
 	private final Type type;
+	private final byte[] buffer;
+	private int offset;
 
-	protected ServerPacket(Type type) {
+	protected ServerPacket(Type type, byte[] data) {
 		this.type = type;
+		this.buffer = data;
+		this.offset = 0;
 	}
 
-	public static ServerPacket get(Type type) {
+	public static ServerPacket get(Type type, byte[] data) {
+		ServerPacket packet = null;
+
 		switch (type) {
 			case REGISTERED:
-				return new RegisteredPacket();
+				packet = new RegisteredPacket(data);
+				break;
 			case LOGGED:
-				return new LoggedPacket();
+				packet = new LoggedPacket(data);
+				break;
 			case TABLE:
-				return new TablePacket();
+				packet = new TablePacket(data);
+				break;
 			case TASK:
-				return new TaskPacket();
+				packet = new TaskPacket(data);
+				break;
 		}
 
-		return null;
+		packet.init();
+		return packet;
 	}
 
 	public Type getType() {
 		return type;
 	}
 
-	public abstract void init(byte[] data);
+	public abstract void init();
+
+	protected Byte getByte() {
+		return new Byte(buffer[this.offset++]);
+	}
+
+	protected Short getShort() {
+		Short result = new Short((short) 0);
+
+		for (int i = 0; i < Short.SIZE / 8; i++)
+			result = (short) ((result << 8) | buffer[this.offset++]);
+
+		return result;
+	}
+
+	protected Integer getInt() {
+		Integer result = 0;
+
+		for (int i = 0; i < Integer.SIZE / 8; i++)
+			result = (result << 8) | buffer[this.offset++];
+
+		return result;
+	}
+
+	protected Long getLong() {
+		Long result = Integer.valueOf(0).longValue();
+
+		for (int i = 0; i < Long.SIZE / 8; i++)
+			result = (result << 8) | this.buffer[this.offset++];
+
+		return result;
+	}
+
+	protected String getString() {
+		short length = this.getShort();
+
+		String result = new String(this.buffer, this.offset, length);
+
+		this.offset += length;
+
+		return result;
+	}
 }

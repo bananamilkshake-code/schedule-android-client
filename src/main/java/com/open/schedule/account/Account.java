@@ -4,7 +4,6 @@ import com.open.schedule.account.tables.Plans;
 import com.open.schedule.account.tables.Table;
 import com.open.schedule.account.tables.Task;
 import com.open.schedule.io.Client;
-import com.open.schedule.io.Tables;
 
 import java.util.Date;
 import java.util.SortedMap;

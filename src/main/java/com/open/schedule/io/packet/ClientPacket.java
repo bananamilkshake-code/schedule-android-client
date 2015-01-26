@@ -1,20 +1,16 @@
 package com.open.schedule.io.packet;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public abstract class ClientPacket extends Packet {
+public abstract class ClientPacket implements Packet {
 	public static final int MAX_PACKET_SIZE = Short.MAX_VALUE;
 
-	private ByteBuffer buffer = ByteBuffer.allocate(MAX_PACKET_SIZE);
-	private final Type type;
+	public final Type type;
+
+	private final ByteBuffer buffer = ByteBuffer.allocate(MAX_PACKET_SIZE);
 
 	public ClientPacket(Type type) {
 		this.type = type;
-	}
-
-	public Type getType() {
-		return type;
 	}
 
 	public short getSize() {
@@ -25,29 +21,44 @@ public abstract class ClientPacket extends Packet {
 		return this.buffer.array();
 	}
 
-	protected void writeString(String value) {
-		this.buffer.putShort((short) (Byte.SIZE * value.length()));
-		this.buffer.put(value.getBytes());
+	protected void write(byte type, Object data) {
+		if (data == null)
+			return;
+
+		this.write(type);
+
+		if (data instanceof Byte) {
+			this.write((Byte) data);
+		} else if (data instanceof Short) {
+			this.write((Short) data);
+		} else if (data instanceof Integer) {
+			this.write((Integer) data);
+		} else if (data instanceof Long) {
+			this.write((Long) data);
+		} else if (data instanceof String) {
+			this.write((String) data);
+		}
 	}
 
-	protected void writeFixedString(String value) {
-		this.buffer.put(value.getBytes());
-	}
-
-	protected void writeByte(Byte value) {
+	protected void write(Byte value) {
 		this.buffer.put(value);
 	}
 
-	protected void writeShort(Short value) {
+	protected void write(Short value) {
 		this.buffer.putShort(value);
 	}
 
-	protected void writeInt(Integer value) {
+	protected void write(Integer value) {
 		this.buffer.putInt(value);
 	}
 
-	protected void writeLong(Long value) {
+	protected void write(Long value) {
 		this.buffer.putLong(value);
+	}
+
+	protected void write(String value) {
+		this.buffer.putShort((short) (Byte.SIZE * value.length()));
+		this.buffer.put(value.getBytes());
 	}
 
 	public enum Type {

@@ -5,9 +5,9 @@ import com.open.schedule.io.packet.ClientPacket;
 public class CreateTablePacket extends ClientPacket {
 	public CreateTablePacket(Integer tableId, Long time, String name, String description) {
 		super(ClientPacket.Type.CREATE_TABLE);
-		this.writeInt(tableId);
-		this.writeLong(time);
-		this.writeString(name);
-		this.writeString(description);
+		this.write(tableId);
+		this.write(time);
+		this.write(name);
+		this.write(description);
 	}
 }
