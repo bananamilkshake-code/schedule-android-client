@@ -9,6 +9,7 @@ import com.open.schedule.account.Account;
 import com.open.schedule.account.tables.ChangeableData;
 import com.open.schedule.account.tables.Table;
 import com.open.schedule.account.tables.Task;
+import com.open.schedule.account.tables.TimeFormat;
 import com.open.schedule.activity.UiMessageHandler;
 import com.open.schedule.activity.UiMessageType;
 import com.open.schedule.io.packet.*;
@@ -44,9 +45,6 @@ public class Client extends ChannelDuplexHandler {
 	private boolean logged = false;
 
 	private final HashSet<Handler> messageHandlers[] = new HashSet[UiMessageType.values().length];
-
-	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("ddMMyyyy", Locale.US);
-	private static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("HHmm", Locale.US);
 
 	public Client(Account account) {
 		this.account = account;
@@ -184,10 +182,10 @@ public class Client extends ChannelDuplexHandler {
 	}
 
 	private void newTask(TaskPacket packet) {
-		Date startDate = Utility.parseToDate(packet.startDate, DATE_FORMATTER);
-		Date endDate = Utility.parseToDate(packet.endDate, DATE_FORMATTER);
-		Date startTime = Utility.parseToDate(packet.startTime, TIME_FORMATTER);
-		Date endTime = Utility.parseToDate(packet.endTime, TIME_FORMATTER);
+		Date startDate = Utility.parseToDate(packet.startDate, TimeFormat.DATE_FORMATTER);
+		Date endDate = Utility.parseToDate(packet.endDate, TimeFormat.DATE_FORMATTER);
+		Date startTime = Utility.parseToDate(packet.startTime, TimeFormat.TIME_FORMATTER);
+		Date endTime = Utility.parseToDate(packet.endTime, TimeFormat.TIME_FORMATTER);
 
 		this.account.createTask(packet.tableId, packet.name, packet.description, packet.creatorId,
 				startDate, endDate, startTime, endTime, packet.period, false);

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.open.schedule.R;
 import com.open.schedule.account.tables.Task;
+import com.open.schedule.account.tables.TimeFormat;
 import com.open.schedule.utility.Utility;
 
 public class ViewTaskActivity extends ScheduleActivity {
@@ -82,10 +83,10 @@ public class ViewTaskActivity extends ScheduleActivity {
 		intent.putExtra(EditTaskActivity.EXTRA_CHANGE, true);
 		intent.putExtra(EditTaskActivity.EXTRA_NAME, data.name);
 		intent.putExtra(EditTaskActivity.EXTRA_DESCRIPTION, data.description);	
-		intent.putExtra(EditTaskActivity.EXTRA_START_DATE, Utility.parseToString(data.startDate, EditTaskActivity.DATE_FORMATTER));
-		intent.putExtra(EditTaskActivity.EXTRA_END_DATE, Utility.parseToString(data.endDate, EditTaskActivity.DATE_FORMATTER));
-		intent.putExtra(EditTaskActivity.EXTRA_START_TIME, Utility.parseToString(data.startTime, EditTaskActivity.TIME_FORMATTER));
-		intent.putExtra(EditTaskActivity.EXTRA_END_TIME, Utility.parseToString(data.endTime, EditTaskActivity.TIME_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_START_DATE, Utility.parseToString(data.startDate, TimeFormat.DATE_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_END_DATE, Utility.parseToString(data.endDate, TimeFormat.DATE_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_START_TIME, Utility.parseToString(data.startTime, TimeFormat.TIME_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_END_TIME, Utility.parseToString(data.endTime, TimeFormat.TIME_FORMATTER));
 		intent.putExtra(EditTaskActivity.EXTRA_PERIOD, data.period);
 
 		startActivityForResult(intent, REQUEST_CHANGE);
@@ -109,10 +110,10 @@ public class ViewTaskActivity extends ScheduleActivity {
 
 			activity.taskName.setText(data.name);
 			activity.taskDesc.setText(data.description);
-			activity.taskStartDate.setText(Utility.parseToString(data.startDate, EditTaskActivity.DATE_FORMATTER));
-			activity.taskEndDate.setText(Utility.parseToString(data.endDate, EditTaskActivity.DATE_FORMATTER));
-			activity.taskStartTime.setText(Utility.parseToString(data.startTime, EditTaskActivity.DATE_FORMATTER));
-			activity.taskEndTime.setText(Utility.parseToString(data.endTime, EditTaskActivity.DATE_FORMATTER));
+			activity.taskStartDate.setText(Utility.parseToString(data.startDate, TimeFormat.DATE_FORMATTER));
+			activity.taskEndDate.setText(Utility.parseToString(data.endDate, TimeFormat.DATE_FORMATTER));
+			activity.taskStartTime.setText(Utility.parseToString(data.startTime, TimeFormat.DATE_FORMATTER));
+			activity.taskEndTime.setText(Utility.parseToString(data.endTime, TimeFormat.DATE_FORMATTER));
 			activity.taskPeriod.setText(data.period.toString());
 
 			return rootView;

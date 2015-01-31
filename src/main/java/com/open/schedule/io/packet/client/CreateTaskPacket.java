@@ -1,6 +1,8 @@
 package com.open.schedule.io.packet.client;
 
+import com.open.schedule.account.tables.TimeFormat;
 import com.open.schedule.io.packet.ClientPacket;
+import com.open.schedule.utility.Utility;
 
 import java.util.Date;
 
@@ -24,10 +26,10 @@ public class CreateTaskPacket extends ClientPacket {
 
 		this.write((byte) Fields.NAME.ordinal(), name);
 		this.write((byte) Fields.DESCRIPTION.ordinal(), description);
-		this.write((byte) Fields.START_DATE.ordinal(), startDate.toString());
-		this.write((byte) Fields.END_DATE.ordinal(), endDate.toString());
-		this.write((byte) Fields.START_TIME.ordinal(), startTime.toString());
-		this.write((byte) Fields.END_TIME.ordinal(), endTime.toString());
-		this.write((byte) Fields.PERIOD.ordinal(), period.toString());
+		this.write((byte) Fields.START_DATE.ordinal(), Utility.parseToString(startDate, TimeFormat.DATE_FORMATTER));
+		this.write((byte) Fields.END_DATE.ordinal(), Utility.parseToString(endDate, TimeFormat.DATE_FORMATTER));
+		this.write((byte) Fields.START_TIME.ordinal(), Utility.parseToString(startTime, TimeFormat.DATE_FORMATTER));
+		this.write((byte) Fields.END_TIME.ordinal(), Utility.parseToString(endTime, TimeFormat.DATE_FORMATTER));
+		this.write((byte) Fields.PERIOD.ordinal(), period);
 	}
 }

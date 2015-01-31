@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.open.schedule.R;
+import com.open.schedule.account.tables.TimeFormat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,9 +42,6 @@ public class EditTaskActivity extends ScheduleActivity implements OnClickListene
 	public static final String EXTRA_START_TIME = "TASK_START_TIME";
 	public static final String EXTRA_END_TIME = "TASK_END_TIME";
 	public static final String EXTRA_PERIOD = "TASK_PERIOD";
-
-	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-	public static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("HH:mm", Locale.US);
 
 	private Spinner periodSpinner;
 	private TextView periodView;
@@ -142,7 +140,7 @@ public class EditTaskActivity extends ScheduleActivity implements OnClickListene
 		int minute;
 
 		try {
-			Date time = EditTaskActivity.DATE_FORMATTER.parse((String) textView.getText());
+			Date time = TimeFormat.DATE_FORMATTER.parse((String) textView.getText());
 			Calendar timeValue = new GregorianCalendar();
 			timeValue.setTime(time);
 
