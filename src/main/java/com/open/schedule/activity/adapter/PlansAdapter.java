@@ -10,8 +10,9 @@ import com.open.schedule.R;
 import com.open.schedule.account.tables.Plans;
 import com.open.schedule.account.tables.Table;
 import com.open.schedule.account.tables.Task;
-import com.open.schedule.activity.CreateTaskActivity;
+import com.open.schedule.activity.EditTaskActivity;
 import com.open.schedule.activity.MainActivity;
+import com.open.schedule.utility.Utility;
 
 public class PlansAdapter extends BaseExpandableListAdapter {
 	private final Plans plans;
@@ -61,8 +62,8 @@ public class PlansAdapter extends BaseExpandableListAdapter {
 
 		Task.TaskChange data = (Task.TaskChange) task.getData();
 		taskTitle.setText(data.name);
-		taskTimeStart.setText(CreateTaskActivity.timeFormatter.format(data.startTime));
-		taskTimeEnd.setText(CreateTaskActivity.timeFormatter.format(data.endTime));
+		taskTimeStart.setText(Utility.parseToString(data.startTime, EditTaskActivity.TIME_FORMATTER));
+		taskTimeEnd.setText(Utility.parseToString(data.endTime, EditTaskActivity.TIME_FORMATTER));
 
 		convertView.setOnClickListener(new View.OnClickListener() {
 			@Override

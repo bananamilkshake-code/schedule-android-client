@@ -8,7 +8,7 @@ public class Task extends ChangeableData {
 
 	private final int tableId;
 
-	public Task(int id, int tableId, String name, String description, int creatorId, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
+	public Task(int id, int tableId, String name, String description, int creatorId, Date startDate, Date endDate, Date startTime, Date endTime, Short period) {
 		super(id);
 
 		this.tableId = tableId;
@@ -28,9 +28,9 @@ public class Task extends ChangeableData {
 		public Date endDate = null;
 		public Date startTime = null;
 		public Date endTime = null;
-		public Integer period = null;
+		public Short period = null;
 
-		public TaskChange(Integer creatorId, long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Integer period) {
+		public TaskChange(Integer creatorId, long time, String name, String description, Date startDate, Date endDate, Date startTime, Date endTime, Short period) {
 			super(creatorId, time);
 			this.name = name;
 			this.description = description;

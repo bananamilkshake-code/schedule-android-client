@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.open.schedule.R;
 import com.open.schedule.account.tables.Task;
+import com.open.schedule.utility.Utility;
 
 public class ViewTaskActivity extends ScheduleActivity {
 	public static final int REQUEST_CHANGE = 1;
@@ -34,8 +35,8 @@ public class ViewTaskActivity extends ScheduleActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_task);
 
-		this.tableId = getIntent().getExtras().getInt(ViewTableActivity.TABLE_ID);
-		this.taskId = getIntent().getExtras().getInt(ViewTableActivity.TASK_ID);
+		this.tableId = getIntent().getExtras().getInt(ViewTableActivity.EXTRA_TABLE_ID);
+		this.taskId = getIntent().getExtras().getInt(ViewTableActivity.EXTRA_TASK_ID);
 		this.task = this.getAccount().getTables().get(tableId).getTask(taskId);
 
 		if (savedInstanceState == null) {
@@ -77,14 +78,15 @@ public class ViewTaskActivity extends ScheduleActivity {
 	private void openChangeTaskActivity() {
 		Task.TaskChange data = (Task.TaskChange) task.getData();
 
-		Intent intent = new Intent(ViewTaskActivity.this, CreateTaskActivity.class);
-		intent.putExtra(CreateTaskActivity.NAME, data.name);
-		intent.putExtra(CreateTaskActivity.DESCRIPTION, data.description);
-		intent.putExtra(CreateTaskActivity.START_DATE, CreateTaskActivity.dateFormatter.format(data.startDate));
-		intent.putExtra(CreateTaskActivity.END_DATE, CreateTaskActivity.dateFormatter.format(data.endDate));
-		intent.putExtra(CreateTaskActivity.START_TIME, CreateTaskActivity.timeFormatter.format(data.startTime));
-		intent.putExtra(CreateTaskActivity.END_TIME, CreateTaskActivity.timeFormatter.format(data.endTime));
-		intent.putExtra(CreateTaskActivity.PERIOD, data.period);
+		Intent intent = new Intent(ViewTaskActivity.this, EditTaskActivity.class);
+		intent.putExtra(EditTaskActivity.EXTRA_CHANGE, true);
+		intent.putExtra(EditTaskActivity.EXTRA_NAME, data.name);
+		intent.putExtra(EditTaskActivity.EXTRA_DESCRIPTION, data.description);	
+		intent.putExtra(EditTaskActivity.EXTRA_START_DATE, Utility.parseToString(data.startDate, EditTaskActivity.DATE_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_END_DATE, Utility.parseToString(data.endDate, EditTaskActivity.DATE_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_START_TIME, Utility.parseToString(data.startTime, EditTaskActivity.TIME_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_END_TIME, Utility.parseToString(data.endTime, EditTaskActivity.TIME_FORMATTER));
+		intent.putExtra(EditTaskActivity.EXTRA_PERIOD, data.period);
 
 		startActivityForResult(intent, REQUEST_CHANGE);
 	}
@@ -97,20 +99,20 @@ public class ViewTaskActivity extends ScheduleActivity {
 			ViewTaskActivity activity = (ViewTaskActivity) getActivity();
 			Task.TaskChange data = (Task.TaskChange) activity.task.getData();
 
-			activity.taskName = (TextView) rootView.findViewById(R.id.text_task_name);
-			activity.taskDesc = (TextView) rootView.findViewById(R.id.text_task_desc);
-			activity.taskStartDate = (TextView) rootView.findViewById(R.id.text_task_date_start);
-			activity.taskEndDate = (TextView) rootView.findViewById(R.id.text_task_date_end);
-			activity.taskStartTime = (TextView) rootView.findViewById(R.id.text_task_time_start);
-			activity.taskEndTime = (TextView) rootView.findViewById(R.id.text_task_time_end);
-			activity.taskPeriod = (TextView) rootView.findViewById(R.id.text_task_period);
+			activity.taskName = (TextView) rootView.findViewById(R.id.view_task_name);
+			activity.taskDesc = (TextView) rootView.findViewById(R.id.view_task_desc);
+			activity.taskStartDate = (TextView) rootView.findViewById(R.id.view_task_start_date);
+			activity.taskEndDate = (TextView) rootView.findViewById(R.id.view_task_date_end);
+			activity.taskStartTime = (TextView) rootView.findViewById(R.id.view_task_start_time);
+			activity.taskEndTime = (TextView) rootView.findViewById(R.id.view_task_end_time);
+			activity.taskPeriod = (TextView) rootView.findViewById(R.id.view_task_period);
 
 			activity.taskName.setText(data.name);
 			activity.taskDesc.setText(data.description);
-			activity.taskStartDate.setText(CreateTaskActivity.dateFormatter.format(data.startDate));
-			activity.taskEndDate.setText(CreateTaskActivity.dateFormatter.format(data.endDate));
-			activity.taskStartTime.setText(CreateTaskActivity.dateFormatter.format(data.startTime));
-			activity.taskEndTime.setText(CreateTaskActivity.dateFormatter.format(data.endTime));
+			activity.taskStartDate.setText(Utility.parseToString(data.startDate, EditTaskActivity.DATE_FORMATTER));
+			activity.taskEndDate.setText(Utility.parseToString(data.endDate, EditTaskActivity.DATE_FORMATTER));
+			activity.taskStartTime.setText(Utility.parseToString(data.startTime, EditTaskActivity.DATE_FORMATTER));
+			activity.taskEndTime.setText(Utility.parseToString(data.endTime, EditTaskActivity.DATE_FORMATTER));
 			activity.taskPeriod.setText(data.period.toString());
 
 			return rootView;

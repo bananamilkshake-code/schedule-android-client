@@ -2,8 +2,6 @@
 <resources>
     <string name="text_task_name">Название</string>
     <string name="text_task_description">Описание</string>
-    <string name="text_desc_task_name">Название нового задания</string>
-    <string name="desc_text_task_desc">Описание для нового задания</string>
     <string name="new_task_date_start">Дата начала</string>
     <string name="new_task_date_end">Дата окончания</string>
     <string name="new_task_time_start">Время начала</string>
@@ -11,6 +9,9 @@
     <string name="button_create_task">Создать</string>
     <string name="button_task_change">Изменить</string>
     <string name="hint_task_period">Период повторения</string>
+    <string name="time_picker_date">Выберите дату</string>
+    <string name="time_picker_time">Выберите время</string>
+    <string name="error_task_name_is_empty">Необходимо указать название задания</string>
 
     <string name="periods_choose">Выберете период для задания</string>
     <string-array name="periods">

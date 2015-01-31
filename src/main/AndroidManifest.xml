@@ -30,7 +30,7 @@
             android:windowSoftInputMode="adjustResize|stateVisible">
         </activity>
         <activity
-            android:name=".activity.CreateTableActivity"
+            android:name=".activity.EditTableActivity"
             android:label="@string/title_activity_create_table">
         </activity>
         <activity
@@ -38,7 +38,7 @@
             android:label="@string/title_activity_view_tables">
         </activity>
         <activity
-            android:name=".activity.CreateTaskActivity"
+            android:name=".activity.EditTaskActivity"
             android:label="@string/title_activity_create_task">
         </activity>
         <activity

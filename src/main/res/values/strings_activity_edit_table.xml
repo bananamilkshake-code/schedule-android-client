@@ -4,4 +4,5 @@
     <string name="button_table_change">Изменить</string>
     <string name="hint_new_table_name">Название</string>
     <string name="new_table_description">Описание</string>
+    <string name="error_table_name_is_empty">Необходимо указать название расписания</string>
 </resources>

@@ -43,7 +43,7 @@ public class Account {
 		return table.getId();
 	}
 
-	public void createTask(int tableId, String name, String description, int creatorId, Date startDate, Date endDate, Date startTime, Date endTime, int period, boolean local) {
+	public void createTask(int tableId, String name, String description, int creatorId, Date startDate, Date endDate, Date startTime, Date endTime, Short period, boolean local) {
 		Task task = this.tables.createTask(tableId, name, description, creatorId, startDate, endDate, startTime, endTime, period);
 
 		if (local)

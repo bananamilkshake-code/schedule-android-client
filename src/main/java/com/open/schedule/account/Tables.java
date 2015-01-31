@@ -1,4 +1,4 @@
-package com.open.schedule.io;
+package com.open.schedule.account;
 
 import com.open.schedule.account.tables.Table;
 import com.open.schedule.account.tables.Task;
@@ -20,7 +20,7 @@ public class Tables {
 		return table;
 	}
 
-	public Task createTask(Integer tableId, final String name, final String description, int creatorId, Date startDate, Date endDate, Date startTime, Date endTime, int period) {
+	public Task createTask(Integer tableId, final String name, final String description, int creatorId, Date startDate, Date endDate, Date startTime, Date endTime, Short period) {
 		Table table = this.tables.get(tableId);
 		int taskId = table.getTasks().size();
 

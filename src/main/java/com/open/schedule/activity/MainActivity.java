@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.SortedMap;
 
 public class MainActivity extends ScheduleActivity {
-	public static final String TABLE_ID = "TABLE_ID";
+	public static final String TABLE_ID = "EXTRA_TABLE_ID";
 
 	public static final int REQUEST_NEW_TABLE = 1;
 
@@ -143,11 +143,11 @@ public class MainActivity extends ScheduleActivity {
 	}
 
 	private void createNewTable(Intent data) {
-		if (!data.hasExtra(CreateTableActivity.EXTRA_NAME))
+		if (!data.hasExtra(EditTableActivity.EXTRA_NAME))
 			return;
 
-		String name = data.getExtras().getString(CreateTableActivity.EXTRA_NAME);
-		String description = data.getExtras().getString(CreateTableActivity.EXTRA_DESCRIPTION);
+		String name = data.getExtras().getString(EditTableActivity.EXTRA_NAME);
+		String description = data.getExtras().getString(EditTableActivity.EXTRA_DESCRIPTION);
 
 		Account account = this.getAccount();
 		account.createTable(name, description, account.getId(), true);
@@ -166,7 +166,7 @@ public class MainActivity extends ScheduleActivity {
 	}
 
 	private void openNewTableActivity() {
-		Intent newTableIntent = new Intent(MainActivity.this, CreateTableActivity.class);
+		Intent newTableIntent = new Intent(MainActivity.this, EditTableActivity.class);
 
 		startActivityForResult(newTableIntent, REQUEST_NEW_TABLE);
 
@@ -182,8 +182,8 @@ public class MainActivity extends ScheduleActivity {
 
 	public void openTaskActivity(Integer tableId, Integer taskId) {
 		Intent intent = new Intent(MainActivity.this, ViewTaskActivity.class);
-		intent.putExtra(ViewTableActivity.TABLE_ID, tableId);
-		intent.putExtra(ViewTableActivity.TASK_ID, taskId);
+		intent.putExtra(ViewTableActivity.EXTRA_TABLE_ID, tableId);
+		intent.putExtra(ViewTableActivity.EXTRA_TASK_ID, taskId);
 
 		startActivity(intent);
 	}

@@ -3,6 +3,7 @@ package com.open.schedule.activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,9 +13,9 @@ import android.widget.EditText;
 
 import com.open.schedule.R;
 
-public class CreateTableActivity extends ScheduleActivity implements OnClickListener {
-	public final static String EXTRA_NAME = "Table Name";
-	public final static String EXTRA_DESCRIPTION = "Table decription";
+public class EditTableActivity extends ScheduleActivity implements OnClickListener {
+	public final static String EXTRA_NAME = "TABLE_NAME";
+	public final static String EXTRA_DESCRIPTION = "TABLE_DESCRIPTION";
 
 	private EditText nameField;
 	private EditText descField;
@@ -33,12 +34,15 @@ public class CreateTableActivity extends ScheduleActivity implements OnClickList
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btCreateTable:
-				returnNewTable();
+				createTable();
 				return;
 		}
 	}
 
-	private void returnNewTable() {
+	private void createTable() {
+		if (!this.checkValues())
+			return;
+
 		String tableName = nameField.getText().toString();
 		String tableDesc = descField.getText().toString();
 
@@ -50,6 +54,21 @@ public class CreateTableActivity extends ScheduleActivity implements OnClickList
 		finish();
 	}
 
+	private boolean checkValues() {
+		this.nameField.setError(null);
+
+		String name = this.nameField.getText().toString();
+
+		if (!TextUtils.isEmpty(name)) {
+			return true;
+		}
+
+		this.nameField.setError(this.getString(R.string.error_table_name_is_empty));
+		this.nameField.requestFocus();
+
+		return false;
+	}
+
 	public static class PlaceholderFragment extends Fragment {
 		public PlaceholderFragment() {}
 
@@ -58,7 +77,7 @@ public class CreateTableActivity extends ScheduleActivity implements OnClickList
 			View rootView = inflater.inflate(R.layout.fragment_create_table, container, false);
 
 			Button acceptButton = (Button) rootView.findViewById(R.id.btCreateTable);
-			CreateTableActivity activity = (CreateTableActivity) getActivity();
+			EditTableActivity activity = (EditTableActivity) getActivity();
 
 			acceptButton.setOnClickListener(activity);
 

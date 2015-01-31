@@ -102,9 +102,8 @@ public class LoginActivity extends ScheduleActivity implements UiMessageHandler 
 				return;
 			}
 			default:
-				throw new IllegalArgumentException("Wrong message  type" + type);
+				throw new IllegalArgumentException("Wrong message type " + type);
 		}
-
 	}
 
 	private void openRegisterActivity() {

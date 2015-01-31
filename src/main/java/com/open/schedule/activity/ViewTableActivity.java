@@ -20,8 +20,8 @@ import com.open.schedule.account.Account;
 import com.open.schedule.account.tables.Table;
 import com.open.schedule.account.tables.Task;
 import com.open.schedule.account.tables.Task.TaskChange;
+import com.open.schedule.utility.Utility;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.SortedMap;
@@ -32,10 +32,10 @@ public class ViewTableActivity extends ScheduleActivity {
 	public static final int REQUEST_CREATE_TASK = 1;
 	public static final int REQUEST_CHANGE = 2;
 
-	public static final String TABLE_ID = "tableId";
-	public static final String TASK_ID = "taskId";
-	public static final String TABLE_NAME = "name";
-	public static final String TABLE_DESC = "desc";
+	public static final String EXTRA_TABLE_ID = "TABLE_ID";
+	public static final String EXTRA_TASK_ID = "TASK_ID";
+	public static final String TABLE_NAME = "NAME";
+	public static final String TABLE_DESC = "DESC";
 
 	private Integer tableId;
 	private Table table;
@@ -54,7 +54,7 @@ public class ViewTableActivity extends ScheduleActivity {
 		this.table = this.getAccount().getTables().get(tableId);
 
 		this.tableName = (TextView) findViewById(R.id.text_table_name);
-		this.tableDesc = ((TextView) findViewById(R.id.text_table_description));
+		this.tableDesc = (TextView) findViewById(R.id.text_table_description);
 
 		showTable();
 	}
@@ -76,6 +76,7 @@ public class ViewTableActivity extends ScheduleActivity {
 				showCreateTaskActivity();
 				return true;
 		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -94,27 +95,18 @@ public class ViewTableActivity extends ScheduleActivity {
 	}
 
 	private void newTask(Intent data) {
-		String name = data.getExtras().getString(CreateTaskActivity.NAME);
-		String description = data.getExtras().getString(CreateTaskActivity.DESCRIPTION);
-		String startDate = data.getExtras().getString(CreateTaskActivity.START_DATE);
-		String endDate = data.getExtras().getString(CreateTaskActivity.END_DATE);
-		String startTime = data.getExtras().getString(CreateTaskActivity.START_TIME);
-		String endTime = data.getExtras().getString(CreateTaskActivity.END_TIME);
-		Integer period = data.getExtras().getInt(CreateTaskActivity.PERIOD);
+		String name = data.getExtras().getString(EditTaskActivity.EXTRA_NAME);
+		String description = data.getExtras().getString(EditTaskActivity.EXTRA_DESCRIPTION);
+		String startDate = data.getExtras().getString(EditTaskActivity.EXTRA_START_DATE);
+		String endDate = data.getExtras().getString(EditTaskActivity.EXTRA_END_DATE);
+		String startTime = data.getExtras().getString(EditTaskActivity.EXTRA_START_TIME);
+		String endTime = data.getExtras().getString(EditTaskActivity.EXTRA_END_TIME);
+		Short period = Short.valueOf(data.getExtras().getString(EditTaskActivity.EXTRA_PERIOD));
 
-		Date startDateVal = null;
-		Date endDateVal = null;
-		Date startTimeVal = null;
-		Date endTimeVal = null;
-
-		try {
-			startDateVal = CreateTaskActivity.dateFormatter.parse(startDate);
-			endDateVal = CreateTaskActivity.dateFormatter.parse(endDate);
-			startTimeVal = CreateTaskActivity.timeFormatter.parse(startTime);
-			endTimeVal = CreateTaskActivity.timeFormatter.parse(endTime);
-		} catch (ParseException e) {
-			Log.w(LOG_TAG, "Date task changes parsing", e);
-		}
+		Date startDateVal = Utility.parseToDate(startDate, EditTaskActivity.DATE_FORMATTER);
+		Date endDateVal = Utility.parseToDate(endDate, EditTaskActivity.DATE_FORMATTER);
+		Date startTimeVal = Utility.parseToDate(startTime, EditTaskActivity.TIME_FORMATTER);
+		Date endTimeVal = Utility.parseToDate(endTime, EditTaskActivity.TIME_FORMATTER);
 
 		final Account account = this.getAccount();
 		account.createTask(this.tableId, name, description, account.getId(), startDateVal, endDateVal, startTimeVal, endTimeVal, period, true);
@@ -141,20 +133,20 @@ public class ViewTableActivity extends ScheduleActivity {
 
 	private void showTask(Integer taskId) {
 		Intent intent = new Intent(ViewTableActivity.this, ViewTaskActivity.class);
-		intent.putExtra(TABLE_ID, this.tableId);
-		intent.putExtra(TASK_ID, taskId);
+		intent.putExtra(EXTRA_TABLE_ID, this.tableId);
+		intent.putExtra(EXTRA_TASK_ID, taskId);
 		startActivity(intent);
 	}
 
 	private void showChangeTableActivity() {
-		Intent intent = new Intent(ViewTableActivity.this, CreateTableActivity.class);
+		Intent intent = new Intent(ViewTableActivity.this, EditTableActivity.class);
 		intent.putExtra(TABLE_NAME, ((Table.TableChange) table.getData()).name);
 		intent.putExtra(TABLE_DESC, ((Table.TableChange) table.getData()).description);
 		startActivityForResult(intent, REQUEST_CHANGE);
 	}
 
 	private void showCreateTaskActivity() {
-		Intent intent = new Intent(ViewTableActivity.this, CreateTaskActivity.class);
+		Intent intent = new Intent(ViewTableActivity.this, EditTaskActivity.class);
 		startActivityForResult(intent, REQUEST_CREATE_TASK);
 	}
 
@@ -200,6 +192,7 @@ public class ViewTableActivity extends ScheduleActivity {
 
 			Task task = tasks.get(idsByPos.get(position));
 			TaskChange data = (TaskChange) task.getData();
+
 			TextView taskName = (TextView) rowView.findViewById(R.id.item_task_name);
 			TextView taskDescription = (TextView) rowView.findViewById(R.id.item_task_description);
 			TextView taskStartDate = (TextView) rowView.findViewById(R.id.item_task_date_start);
@@ -208,13 +201,13 @@ public class ViewTableActivity extends ScheduleActivity {
 			TextView taskEndTime = (TextView) rowView.findViewById(R.id.item_task_time_end);
 			TextView taskPeriod = (TextView) rowView.findViewById(R.id.item_task_period);
 
-			taskName.setText((CharSequence) (data.name));
-			taskDescription.setText((CharSequence) (data.description));
-			taskStartDate.setText((CharSequence) (CreateTaskActivity.dateFormatter.format(data.startDate)));
-			taskEndDate.setText((CharSequence) (CreateTaskActivity.dateFormatter.format(data.endDate)));
-			taskStartTime.setText((CharSequence) (CreateTaskActivity.timeFormatter.format(data.startTime)));
-			taskEndTime.setText((CharSequence) (CreateTaskActivity.timeFormatter.format(data.endTime)));
-			taskPeriod.setText((CharSequence) (data.period.toString()));
+			taskName.setText(data.name);
+			taskDescription.setText(data.description);
+			taskStartDate.setText(Utility.parseToString(data.startDate, EditTaskActivity.DATE_FORMATTER));
+			taskEndDate.setText(Utility.parseToString(data.endDate, EditTaskActivity.DATE_FORMATTER));
+			taskStartTime.setText(Utility.parseToString(data.startTime, EditTaskActivity.TIME_FORMATTER));
+			taskEndTime.setText(Utility.parseToString(data.endTime, EditTaskActivity.TIME_FORMATTER));
+			taskPeriod.setText(data.period.toString());
 
 			return rowView;
 		}
