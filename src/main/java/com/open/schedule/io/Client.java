@@ -20,9 +20,10 @@ import com.open.schedule.io.packet.server.LoggedPacket;
 import com.open.schedule.io.packet.server.RegisteredPacket;
 import com.open.schedule.io.packet.server.TablePacket;
 import com.open.schedule.io.packet.server.TaskPacket;
+import com.open.schedule.utility.Utility;
+
 import static com.open.schedule.activity.UiMessageType.*;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -110,7 +111,7 @@ public class Client extends ChannelDuplexHandler {
 
 		data.writeByte(packet.type.ordinal());
 		data.writeShort(size * Byte.SIZE);
-		data.writeBytes(packet.getBuffer(), 0, (int) size);
+		data.writeBytes(packet.getBuffer().array(), 0, (int) size);
 
 		this.context.writeAndFlush(data);
 	}
@@ -183,21 +184,13 @@ public class Client extends ChannelDuplexHandler {
 	}
 
 	private void newTask(TaskPacket packet) {
-		Date startDate = null;
-		Date endDate = null;
-		Date startTime = null;
-		Date endTime = null;
+		Date startDate = Utility.parseToDate(packet.startDate, DATE_FORMATTER);
+		Date endDate = Utility.parseToDate(packet.endDate, DATE_FORMATTER);
+		Date startTime = Utility.parseToDate(packet.startTime, TIME_FORMATTER);
+		Date endTime = Utility.parseToDate(packet.endTime, TIME_FORMATTER);
 
-		try {
-			startDate = DATE_FORMATTER.parse(packet.startDate);
-			endDate = DATE_FORMATTER.parse(packet.endDate);
-			startTime = TIME_FORMATTER.parse(packet.startTime);
-			endTime = TIME_FORMATTER.parse(packet.endTime);
-		} catch (ParseException e) {
-			Log.w(LOG_TAG, "NewTask parsing exception", e);
-		}
-
-		this.account.createTask(packet.tableId, packet.name, packet.description, packet.creatorId, startDate, endDate, startTime, endTime, packet.period, false);
+		this.account.createTask(packet.tableId, packet.name, packet.description, packet.creatorId,
+				startDate, endDate, startTime, endTime, packet.period, false);
 	}
 
 	private void addMessageListener(final UiMessageType messageType, final UiMessageHandler activity) {

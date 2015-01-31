@@ -85,7 +85,7 @@ public class EditTableActivity extends ScheduleActivity implements OnClickListen
 			activity.descField = (EditText) rootView.findViewById(R.id.editTableDescription);
 
 			Intent intent = getActivity().getIntent();
-			if (intent.hasExtra(ViewTableActivity.TABLE_NAME)) {
+			if (intent.getBooleanExtra(ViewTableActivity.TABLE_CHANGE, false)) {
 				activity.nameField.setText(intent.getStringExtra(ViewTableActivity.TABLE_NAME));
 				activity.descField.setText(intent.getStringExtra(ViewTableActivity.TABLE_DESC));
 

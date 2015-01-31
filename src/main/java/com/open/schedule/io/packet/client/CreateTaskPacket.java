@@ -5,7 +5,7 @@ import com.open.schedule.io.packet.ClientPacket;
 import java.util.Date;
 
 public class CreateTaskPacket extends ClientPacket {
-	private enum Types {
+	private enum Fields {
 		NAME,
 		DESCRIPTION,
 		START_DATE,
@@ -22,12 +22,12 @@ public class CreateTaskPacket extends ClientPacket {
 		this.write(tableId);
 		this.write(time);
 
-		this.write((byte) Types.NAME.ordinal(), name);
-		this.write((byte) Types.DESCRIPTION.ordinal(), description);
-		this.write((byte) Types.START_DATE.ordinal(), startDate.toString());
-		this.write((byte) Types.END_DATE.ordinal(), endDate.toString());
-		this.write((byte) Types.START_TIME.ordinal(), startTime.toString());
-		this.write((byte) Types.END_TIME.ordinal(), endTime.toString());
-		this.write((byte) Types.PERIOD.ordinal(), period.toString());
+		this.write((byte) Fields.NAME.ordinal(), name);
+		this.write((byte) Fields.DESCRIPTION.ordinal(), description);
+		this.write((byte) Fields.START_DATE.ordinal(), startDate.toString());
+		this.write((byte) Fields.END_DATE.ordinal(), endDate.toString());
+		this.write((byte) Fields.START_TIME.ordinal(), startTime.toString());
+		this.write((byte) Fields.END_TIME.ordinal(), endTime.toString());
+		this.write((byte) Fields.PERIOD.ordinal(), period.toString());
 	}
 }

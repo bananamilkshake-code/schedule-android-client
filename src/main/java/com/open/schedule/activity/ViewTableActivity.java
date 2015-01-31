@@ -34,6 +34,8 @@ public class ViewTableActivity extends ScheduleActivity {
 
 	public static final String EXTRA_TABLE_ID = "TABLE_ID";
 	public static final String EXTRA_TASK_ID = "TASK_ID";
+
+	public static final String TABLE_CHANGE = "TABLE_CHANGE";
 	public static final String TABLE_NAME = "NAME";
 	public static final String TABLE_DESC = "DESC";
 
@@ -140,6 +142,7 @@ public class ViewTableActivity extends ScheduleActivity {
 
 	private void showChangeTableActivity() {
 		Intent intent = new Intent(ViewTableActivity.this, EditTableActivity.class);
+		intent.putExtra(TABLE_CHANGE, true);
 		intent.putExtra(TABLE_NAME, ((Table.TableChange) table.getData()).name);
 		intent.putExtra(TABLE_DESC, ((Table.TableChange) table.getData()).description);
 		startActivityForResult(intent, REQUEST_CHANGE);
